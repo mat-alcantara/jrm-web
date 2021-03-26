@@ -20,5 +20,24 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "@typescript-eslint/ban-types": "off",
+        "no-unused-expressions": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/prop-types": "off",
+        "prettier/prettier": "error",
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+        "import/no-unresolved": "error",
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+              "ts": "never",
+              "tsx": "never"
+            }
+          ],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error"],
+        "import/prefer-default-export": "off",
+        "camelcase": "off"
     }
 }
