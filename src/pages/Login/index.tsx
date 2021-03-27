@@ -1,5 +1,17 @@
 import React from 'react';
 
-const Login: React.FC = () => <h1>ok</h1>;
+import { Container } from './styles';
+
+const Login: React.FC = () => (
+  <Container>
+    <form>
+      <h1>Login</h1>
+
+      <input type="text" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <button type="submit">Entrar</button>
+    </form>
+  </Container>
+);
 
 export default Login;
