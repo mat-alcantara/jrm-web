@@ -5,10 +5,10 @@ import Login from '../pages/Login';
 
 const routes: React.FC = () => (
   <Switch>
-    <Route path="/" exact>
+    {/* <Route path="/" exact>
       <h1>ok</h1>
-    </Route>
-    <Route path="/login" component={Login} />
+    </Route> */}
+    <Route path="/" exact component={Login} />
   </Switch>
 );
 
