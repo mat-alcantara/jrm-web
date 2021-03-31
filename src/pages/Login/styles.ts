@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  margin-top: 64px;
+
   width: 100%;
   display: flex;
   justify-content: center;
@@ -14,18 +16,21 @@ export const Container = styled.div`
 
     h1 {
       margin: 64px auto 16px auto;
+      font-size: 48px;
     }
 
     input {
       text-align: center;
-      min-width: 350px;
+      width: 535px;
       margin-bottom: 8px;
-      height: 32px;
+      height: 53px;
+      font-size: 24px;
     }
 
     button {
-      min-width: 350px;
-      padding: 8px 0;
+      width: 300px;
+      height: 53px;
+      background-color: #e76905;
     }
   }
 `;
