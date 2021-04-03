@@ -1,7 +1,81 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
+import LogInBackground from '../../assets/LogInBackground.jpg';
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  height: 100vh; // Container terá 100% da parte visível da tela
 
-export const Content = styled.div``;
+  display: flex; // Itens um ao lado do outro
+  align-items: stretch; // Faz com que os itens tenham height de 100vh também
+`;
 
-export const Background = styled.div``;
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 700px;
+
+  img {
+    height: 180px;
+    width: 340px;
+    margin: 0 auto; // Centraliza a imagem de logotipo
+  }
+
+  form {
+    margin: 80px 0px;
+    width: 340px;
+    text-align: center;
+
+    h1 {
+      margin-bottom: 24px;
+    }
+
+    input {
+      background: #7f3803;
+      text-align: center;
+      border-radius: 10px;
+      border: 2px solid #7f3803; // Border para quando tiver erro mudar a cor
+      padding: 16px;
+      width: 100%;
+      color: #fff;
+
+      & + input {
+        // Todo input precedido por outro
+        margin-top: 8px;
+      }
+
+      &::placeholder {
+        color: #fff 0.5;
+      }
+    }
+
+    button {
+      background: #e76905;
+      height: 56px;
+      border-radius: 10px;
+      border: 0;
+      padding: 0 16px;
+      color: #000;
+      width: 108px;
+      font-weight: 500;
+      margin-top: 16px;
+      transition: background-color 0.2s;
+
+      #LogInIcon {
+        margin-right: 8px;
+      }
+
+      &:hover {
+        background: ${shade(0.2, '#e76905')};
+      }
+    }
+  }
+`;
+
+export const Background = styled.div`
+  flex: 1; // Ocupa todo o espaço restante, menos os 700 mínimos do Content
+  background: url(${LogInBackground}) no-repeat center;
+`;
