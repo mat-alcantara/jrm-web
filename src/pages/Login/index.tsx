@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import React from 'react';
+// eslint-disable-next-line object-curly-newline
 import { Formik, Form, Field } from 'formik';
 import { FiMail, FiLock } from 'react-icons/fi';
-
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background } from './styles';
 
@@ -14,8 +14,8 @@ const Login: React.FC = () => (
     <Content>
       <img src={Logo} alt="JRM Compensados" />
       <Formik
-        initialValues={{ email: '', password: '' }}
-        onSubmit={(data) => console.log(data)}
+        initialValues={{ email: '312', password: '321' }}
+        onSubmit={(values) => console.log(values)}
       >
         <Form>
           <h1>Faça o seu login</h1>
@@ -40,5 +40,4 @@ const Login: React.FC = () => (
     <Background />
   </Container>
 );
-
 export default Login;
