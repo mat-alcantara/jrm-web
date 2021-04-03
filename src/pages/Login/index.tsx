@@ -1,8 +1,11 @@
 import React from 'react';
-import { FiLogIn } from 'react-icons/fi';
+import { FiMail, FiLock } from 'react-icons/fi';
 
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background } from './styles';
+
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 const Login: React.FC = () => (
   <Container>
@@ -10,12 +13,14 @@ const Login: React.FC = () => (
       <img src={Logo} alt="JRM Compensados" />
       <form>
         <h1>Faça o seu login</h1>
-        <input type="text" placeholder="E-mail" />
-        <input type="password" placeholder="Senha" />
-        <button type="submit">
-          <FiLogIn id="LogInIcon" />
-          Entrar
-        </button>
+        <Input name="E-mail" icon={FiMail} type="text" placeholder="E-mail" />
+        <Input
+          name="Password"
+          icon={FiLock}
+          type="password"
+          placeholder="Senha"
+        />
+        <Button type="submit">Entrar</Button>
       </form>
     </Content>
     <Background />

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { shade } from 'polished';
 import LogInBackground from '../../assets/LogInBackground.jpg';
 
 export const Container = styled.div`
@@ -31,46 +30,6 @@ export const Content = styled.div`
 
     h1 {
       margin-bottom: 24px;
-    }
-
-    input {
-      background: #7f3803;
-      text-align: center;
-      border-radius: 10px;
-      border: 2px solid #7f3803; // Border para quando tiver erro mudar a cor
-      padding: 16px;
-      width: 100%;
-      color: #fff;
-
-      & + input {
-        // Todo input precedido por outro
-        margin-top: 8px;
-      }
-
-      &::placeholder {
-        color: #fff 0.5;
-      }
-    }
-
-    button {
-      background: #e76905;
-      height: 56px;
-      border-radius: 10px;
-      border: 0;
-      padding: 0 16px;
-      color: #000;
-      width: 108px;
-      font-weight: 500;
-      margin-top: 16px;
-      transition: background-color 0.2s;
-
-      #LogInIcon {
-        margin-right: 8px;
-      }
-
-      &:hover {
-        background: ${shade(0.2, '#e76905')};
-      }
     }
   }
 `;
