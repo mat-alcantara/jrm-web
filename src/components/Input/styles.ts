@@ -10,7 +10,7 @@ export const Container = styled.div`
   border: 2px solid #7f3803; // Border para quando tiver erro mudar a cor
   padding: 16px;
   width: 100%;
-  color: #ececec;
+  color: #fff;
 
   & + div {
     margin-top: 8px;
@@ -24,7 +24,7 @@ export const Container = styled.div`
     background: transparent;
 
     &::placeholder {
-      color: #ececec;
+      color: #fff;
     }
   }
 
