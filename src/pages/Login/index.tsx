@@ -8,6 +8,7 @@ import { FiMail, FiLock } from 'react-icons/fi';
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
+import { useAuth } from '../../hooks/AuthContext';
 // import api from '../../services/api';
 
 import Input from '../../components/Input';
@@ -20,6 +21,8 @@ interface submitProps {
 
 const Login: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+
+  const { signIn } = useAuth();
 
   const validateLoginProps = useCallback(
     async ({ email, password }: submitProps) => {
@@ -49,13 +52,17 @@ const Login: React.FC = () => {
         formRef.current?.setErrors({});
 
         await validateLoginProps({ email, password });
-      } catch (err) {
-        const errors = getValidationErrors(err);
 
-        formRef.current?.setErrors(errors);
+        signIn({ email, password });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+        }
       }
     },
-    [validateLoginProps],
+    [validateLoginProps, signIn],
   );
 
   return (
