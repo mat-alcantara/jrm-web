@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core'; // List of props for form reference
 import * as Yup from 'yup';
 import { FiMail, FiLock } from 'react-icons/fi';
 
@@ -17,11 +18,10 @@ interface submitProps {
 }
 
 const Login: React.FC = () => {
-  const formRef = useRef(null);
+  const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async ({ email, password }: submitProps) => {
-    try {
-      console.log(formRef);
+  const validateLoginProps = useCallback(
+    async ({ email, password }: submitProps) => {
       const schema = Yup.object().shape({
         email: Yup.string()
           .email('Digite um e-mail válido')
@@ -29,17 +29,31 @@ const Login: React.FC = () => {
         password: Yup.string().min(6, 'Senha deve ter pelo menos 6 dígitos'),
       });
 
-      await schema.validate(
+      const isPropsValid = await schema.validate(
         { email, password },
         {
           // Faz com que todos os erros sejam pegos pelo catch
           abortEarly: false,
         },
       );
-    } catch (err) {
-      console.log(err.errors);
-    }
-  }, []);
+
+      return isPropsValid;
+    },
+    [],
+  );
+
+  const handleSubmit = useCallback(
+    async ({ email, password }: submitProps) => {
+      try {
+        await validateLoginProps({ email, password });
+      } catch (err) {
+        formRef.current?.setErrors({
+          email: 'deu merda',
+        });
+      }
+    },
+    [validateLoginProps],
+  );
   return (
     <Container>
       <Content>

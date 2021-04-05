@@ -20,7 +20,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   const inputReference = useRef<HTMLInputElement>(null);
 
   // Values used by Unform
-  const { defaultValue, fieldName, registerField } = useField(name);
+  const { defaultValue, fieldName, error, registerField } = useField(name);
 
   // Register the form field immediately after render
   useEffect(() => {
@@ -58,6 +58,8 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
         ref={inputReference}
         defaultValue={defaultValue}
       />
+
+      {error}
     </Container>
   );
 };
