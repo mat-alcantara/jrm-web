@@ -8,7 +8,7 @@ import { FiMail, FiLock } from 'react-icons/fi';
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
-import { useAuth } from '../../hooks/AuthContext';
+import { useAuth } from '../../hooks/Auth';
 // import api from '../../services/api';
 
 import Input from '../../components/Input';

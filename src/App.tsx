@@ -5,13 +5,13 @@ import GlobalStyle from './styles/global';
 import Routes from './routes';
 import ToastContainer from './components/ToastContainer';
 
-import { AuthProvider } from './hooks/AuthContext';
+import AppProvider from './hooks';
 
 const App: React.FC = () => (
   <Router>
-    <AuthProvider>
+    <AppProvider>
       <Routes />
-    </AuthProvider>
+    </AppProvider>
 
     <ToastContainer />
     <GlobalStyle />
