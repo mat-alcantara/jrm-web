@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 import React, { useCallback } from 'react';
-// eslint-disable-next-line object-curly-newline
 import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import { FiMail, FiLock } from 'react-icons/fi';
 
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background } from './styles';
-import api from '../../services/api';
+// import api from '../../services/api';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -19,14 +19,22 @@ interface submitProps {
 const Login: React.FC = () => {
   const handleSubmit = useCallback(async ({ email, password }: submitProps) => {
     try {
-      const loginData = await api.post('/session', { email, password });
+      const schema = Yup.object().shape({
+        email: Yup.string()
+          .email('Digite um e-mail válido')
+          .required('E-mail obrigatório'),
+        password: Yup.string().min(6, 'Senha deve ter pelo menos 6 dígitos'),
+      });
 
-      const { token } = loginData.data;
-      const { user } = loginData.data;
-
-      console.log(token, user);
-    } catch (e) {
-      throw new Error(e);
+      await schema.validate(
+        { email, password },
+        {
+          // Faz com que todos os erros sejam pegos pelo catch
+          abortEarly: false,
+        },
+      );
+    } catch (err) {
+      console.log(err.errors);
     }
   }, []);
 
