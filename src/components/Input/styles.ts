@@ -1,10 +1,12 @@
 /* eslint-disable operator-linebreak */
 /* eslint-disable implicit-arrow-linebreak */
 import styled, { css } from 'styled-components';
+import Tooltip from '../Tooltip';
 
 interface ContainerProps {
   isFocused: boolean;
   isFilled: boolean;
+  isErrored: boolean;
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -17,9 +19,17 @@ export const Container = styled.div<ContainerProps>`
   padding: 16px;
   width: 100%;
 
-  border: 2px solid #b46530;
+  border: 3px solid #b46530;
   color: #fff;
 
+  /* CSS in case of input is errored */
+  ${(props) =>
+    props.isErrored &&
+    css`
+      border-color: #b00020;
+    `}
+
+  /* CSS in case of input is focused */
   ${(props) =>
     props.isFocused &&
     css`
@@ -27,6 +37,7 @@ export const Container = styled.div<ContainerProps>`
       border-color: #4f0e00;
     `}
 
+  /* CSS in case of input is filled */
   ${(props) =>
     props.isFilled &&
     css`
@@ -51,5 +62,23 @@ export const Container = styled.div<ContainerProps>`
 
   svg {
     margin-right: 16px;
+  }
+`;
+
+export const Error = styled(Tooltip)`
+  height: 20px;
+  margin-left: 16px;
+
+  svg {
+    margin-right: 0;
+  }
+
+  span {
+    background: #b00020;
+    color: #fff;
+
+    &::before {
+      border-color: #b00020 transparent;
+    }
   }
 `;
