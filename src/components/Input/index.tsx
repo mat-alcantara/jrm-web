@@ -3,45 +3,60 @@ import React, {
   useState,
   useCallback,
   useRef,
+  useEffect,
 } from 'react';
 import { IconBaseProps } from 'react-icons';
+import { useField } from '@unform/core';
 
 import { Container } from './styles';
 
-// Create a interface with input html pattern props and another props created by the user
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
-  icon?: React.ComponentType<IconBaseProps>; // component type
+  // React.ComponentType allows to pass a component as a property
+  icon?: React.ComponentType<IconBaseProps>;
 }
 
-const Input: React.FC<InputProps> = ({ icon: Icon, ...rest }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
+  const inputReference = useRef<HTMLInputElement>(null);
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [isFilled, setIsFilled] = useState(false);
+  // Values used by Unform
+  const { defaultValue, fieldName, registerField } = useField(name);
+
+  // Register the form field immediately after render
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputReference.current,
+      path: 'value',
+    });
+  }, [fieldName, registerField]);
+
+  const [isInputFocused, setisInputFocused] = useState(false);
+  const [isInputFilled, setisInputFilled] = useState(false);
 
   const handleInputFocus = useCallback(() => {
-    setIsFocused(true);
+    setisInputFocused(true);
   }, []);
 
   const handleInputBlur = useCallback(() => {
-    setIsFocused(false);
+    setisInputFocused(false);
 
-    if (inputRef.current?.value) {
-      setIsFilled(true);
+    if (inputReference.current?.value) {
+      setisInputFilled(true);
     } else {
-      setIsFilled(false);
+      setisInputFilled(false);
     }
   }, []);
 
   return (
-    <Container isFocused={isFocused} isFilled={isFilled}>
+    <Container isFocused={isInputFocused} isFilled={isInputFilled}>
       {Icon && <Icon size={20} />}
       <input
         {...rest}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
-        ref={inputRef}
+        ref={inputReference}
+        defaultValue={defaultValue}
       />
     </Container>
   );

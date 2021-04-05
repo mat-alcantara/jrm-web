@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import React, { useCallback } from 'react';
-import { Formik, Form, Field } from 'formik';
+import React, { useCallback, useRef } from 'react';
+import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FiMail, FiLock } from 'react-icons/fi';
 
@@ -17,8 +17,11 @@ interface submitProps {
 }
 
 const Login: React.FC = () => {
+  const formRef = useRef(null);
+
   const handleSubmit = useCallback(async ({ email, password }: submitProps) => {
     try {
+      console.log(formRef);
       const schema = Yup.object().shape({
         email: Yup.string()
           .email('Digite um e-mail válido')
@@ -37,34 +40,22 @@ const Login: React.FC = () => {
       console.log(err.errors);
     }
   }, []);
-
   return (
     <Container>
       <Content>
         <img src={Logo} alt="JRM Compensados" />
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          onSubmit={(values) => handleSubmit(values)}
-        >
-          <Form>
-            <h1>Faça o seu login</h1>
-            <Field
-              as={Input}
-              name="email"
-              icon={FiMail}
-              type="text"
-              placeholder="E-mail"
-            />
-            <Field
-              as={Input}
-              name="password"
-              icon={FiLock}
-              type="password"
-              placeholder="Senha"
-            />
-            <Button type="submit">Entrar</Button>
-          </Form>
-        </Formik>
+
+        <Form onSubmit={handleSubmit} ref={formRef}>
+          <h1>Faça o seu login</h1>
+          <Input name="email" icon={FiMail} type="text" placeholder="E-mail" />
+          <Input
+            name="password"
+            icon={FiLock}
+            type="password"
+            placeholder="Senha"
+          />
+          <Button type="submit">Entrar</Button>
+        </Form>
       </Content>
       <Background />
     </Container>
