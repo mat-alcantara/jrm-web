@@ -7,6 +7,7 @@ import { FiMail, FiLock } from 'react-icons/fi';
 
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background } from './styles';
+import getValidationErrors from '../../utils/getValidationErrors';
 // import api from '../../services/api';
 
 import Input from '../../components/Input';
@@ -45,11 +46,13 @@ const Login: React.FC = () => {
   const handleSubmit = useCallback(
     async ({ email, password }: submitProps) => {
       try {
+        formRef.current?.setErrors({});
+
         await validateLoginProps({ email, password });
       } catch (err) {
-        formRef.current?.setErrors({
-          email: 'deu merda',
-        });
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
       }
     },
     [validateLoginProps],
