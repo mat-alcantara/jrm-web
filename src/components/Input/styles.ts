@@ -1,16 +1,37 @@
-import styled from 'styled-components';
+/* eslint-disable operator-linebreak */
+/* eslint-disable implicit-arrow-linebreak */
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+interface ContainerProps {
+  isFocused: boolean;
+  isFilled: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
   display: flex;
   align-items: center;
 
-  background: #7f3803;
+  background: #b46530;
   text-align: center;
   border-radius: 10px;
-  border: 2px solid #7f3803; // Border para quando tiver erro mudar a cor
   padding: 16px;
   width: 100%;
+
+  border: 2px solid #b46530;
   color: #fff;
+
+  ${(props) =>
+    props.isFocused &&
+    css`
+      color: #4f0e00;
+      border-color: #4f0e00;
+    `}
+
+  ${(props) =>
+    props.isFilled &&
+    css`
+      color: #4f0e00;
+    `}
 
   & + div {
     margin-top: 8px;
