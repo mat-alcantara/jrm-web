@@ -2,6 +2,7 @@
 /* eslint-disable implicit-arrow-linebreak */
 
 import styled, { css } from 'styled-components';
+import { animated } from 'react-spring';
 
 const ToastTypeVariation = {
   info: css`
@@ -22,7 +23,7 @@ interface ToastProps {
   type?: 'success' | 'error' | 'info';
   hasDescription: boolean;
 }
-export const Container = styled.div<ToastProps>`
+export const Container = styled(animated.div)<ToastProps>`
   width: 360px;
   position: relative;
   padding: 16px 30px 16px 16px;
