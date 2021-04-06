@@ -3,7 +3,7 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core'; // List of props for form reference
 import * as Yup from 'yup';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background, AnimationContainer } from './styles';
@@ -25,6 +25,7 @@ const Login: React.FC = () => {
 
   const { signIn } = useAuth();
   const { addToast } = useToast();
+  const history = useHistory();
 
   const validateLoginProps = useCallback(
     async ({ email, password }: submitProps) => {
@@ -56,6 +57,8 @@ const Login: React.FC = () => {
         await validateLoginProps({ email, password });
 
         await signIn({ email, password });
+
+        history.push('/dashboard');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
