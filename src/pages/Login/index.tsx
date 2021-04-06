@@ -1,16 +1,25 @@
 /* eslint-disable no-console */
+// Dependencies
 import React, { useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core'; // List of props for form reference
 import * as Yup from 'yup';
 import { FiMail, FiLock } from 'react-icons/fi';
 
+// Svg
 import Logo from '../../assets/logo.svg';
-import { Container, Content, Background } from './styles';
-import getValidationErrors from '../../utils/getValidationErrors';
-import { useAuth } from '../../hooks/Auth';
-// import api from '../../services/api';
 
+// CSS
+import { Container, Content, Background } from './styles';
+
+// Utils
+import getValidationErrors from '../../utils/getValidationErrors';
+
+// Hooks
+import { useAuth } from '../../hooks/Auth';
+import { useToast } from '../../hooks/Toast';
+
+// Components
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -23,6 +32,7 @@ const Login: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { signIn } = useAuth();
+  const { addToast } = useToast();
 
   const validateLoginProps = useCallback(
     async ({ email, password }: submitProps) => {
@@ -53,16 +63,23 @@ const Login: React.FC = () => {
 
         await validateLoginProps({ email, password });
 
-        signIn({ email, password });
+        await signIn({ email, password });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
           formRef.current?.setErrors(errors);
         }
+
+        addToast({
+          type: 'error',
+          title: 'Erro na autenticação',
+          description:
+            'Ocorreu um erro ao fazer login. Cheque as suas credenciais.',
+        });
       }
     },
-    [validateLoginProps, signIn],
+    [validateLoginProps, signIn, addToast],
   );
 
   return (

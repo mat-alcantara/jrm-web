@@ -3,7 +3,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import GlobalStyle from './styles/global';
 import Routes from './routes';
-import ToastContainer from './components/ToastContainer';
 
 import AppProvider from './hooks';
 
@@ -13,7 +12,6 @@ const App: React.FC = () => (
       <Routes />
     </AppProvider>
 
-    <ToastContainer />
     <GlobalStyle />
   </Router>
 );
