@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-// Dependencies
 import React, { useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core'; // List of props for form reference

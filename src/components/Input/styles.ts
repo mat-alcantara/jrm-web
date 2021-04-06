@@ -1,5 +1,3 @@
-/* eslint-disable operator-linebreak */
-/* eslint-disable implicit-arrow-linebreak */
 import styled, { css } from 'styled-components';
 import Tooltip from '../Tooltip';
 
