@@ -4,22 +4,16 @@ import React, { useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core'; // List of props for form reference
 import * as Yup from 'yup';
-import { FiMail, FiLock } from 'react-icons/fi';
+import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
-// Svg
 import Logo from '../../assets/logo.svg';
-
-// CSS
-import { Container, Content, Background } from './styles';
-
-// Utils
+import { Container, Content, Background, AnimationContainer } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-// Hooks
 import { useAuth } from '../../hooks/Auth';
 import { useToast } from '../../hooks/Toast';
 
-// Components
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -85,19 +79,30 @@ const Login: React.FC = () => {
   return (
     <Container>
       <Content>
-        <img src={Logo} alt="JRM Compensados" />
+        <AnimationContainer>
+          <img src={Logo} alt="JRM Compensados" />
 
-        <Form onSubmit={handleSubmit} ref={formRef}>
-          <h1>Faça o seu login</h1>
-          <Input name="email" icon={FiMail} type="text" placeholder="E-mail" />
-          <Input
-            name="password"
-            icon={FiLock}
-            type="password"
-            placeholder="Senha"
-          />
-          <Button type="submit">Entrar</Button>
-        </Form>
+          <Form onSubmit={handleSubmit} ref={formRef}>
+            <h1>Faça o seu login</h1>
+            <Input
+              name="email"
+              icon={FiMail}
+              type="text"
+              placeholder="E-mail"
+            />
+            <Input
+              name="password"
+              icon={FiLock}
+              type="password"
+              placeholder="Senha"
+            />
+            <Button type="submit">Entrar</Button>
+          </Form>
+          <Link to="/signup">
+            <FiLogIn />
+            Criar conta
+          </Link>
+        </AnimationContainer>
       </Content>
       <Background />
     </Container>
