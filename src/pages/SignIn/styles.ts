@@ -57,6 +57,10 @@ export const AnimationContainer = styled.div`
     h1 {
       margin-bottom: 24px;
     }
+
+    button {
+      margin-top: 8px;
+    }
   }
 
   > a {

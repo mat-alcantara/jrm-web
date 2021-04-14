@@ -13,9 +13,8 @@ import { useAuth } from '../../hooks/Auth';
 import { useToast } from '../../hooks/Toast';
 
 import Input from '../../components/Input';
-import Button from '../../components/Button';
 
-// import AntButton from '../../components/AntButton';
+import AntButton from '../../components/AntButton';
 
 interface submitProps {
   email: string;
@@ -99,7 +98,9 @@ const Login: React.FC = () => {
               type="password"
               placeholder="Senha"
             />
-            <Button type="submit">Entrar</Button>
+            <AntButton block type="primary" htmlType="submit">
+              Entrar
+            </AntButton>
           </Form>
           <Link to="/signup">
             <FiLogIn />
