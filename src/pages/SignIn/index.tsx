@@ -12,9 +12,8 @@ import getValidationErrors from '../../utils/getValidationErrors';
 import { useAuth } from '../../hooks/Auth';
 import { useToast } from '../../hooks/Toast';
 
-import Input from '../../components/Input';
-
 import AntButton from '../../components/AntButton';
+import AntInput from '../../components/AntInput';
 
 interface submitProps {
   email: string;
@@ -86,15 +85,19 @@ const Login: React.FC = () => {
 
           <Form onSubmit={handleSubmit} ref={formRef}>
             <h1>Faça o seu login</h1>
-            <Input
+            <AntInput
               name="email"
               icon={FiMail}
+              size="large"
+              iconSize={20}
               type="text"
               placeholder="E-mail"
             />
-            <Input
+            <AntInput
               name="password"
               icon={FiLock}
+              size="large"
+              iconSize={20}
               type="password"
               placeholder="Senha"
             />

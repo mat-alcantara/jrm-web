@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
+import { Card } from 'antd';
 import LogInBackground from '../../assets/LogInBackground.jpg';
 
 const appearFromLeft = keyframes`
@@ -20,7 +21,7 @@ export const Container = styled.div`
   align-items: stretch; // Faz com que os itens tenham height de 100vh também
 `;
 
-export const Content = styled.div`
+export const Content = styled(Card)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,6 +57,10 @@ export const AnimationContainer = styled.div`
 
     h1 {
       margin-bottom: 24px;
+    }
+
+    > span {
+      margin-bottom: 8px;
     }
 
     button {
