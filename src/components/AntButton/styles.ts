@@ -1,6 +1,4 @@
 import { Button } from 'antd';
 import styled from 'styled-components';
 
-export const Container = styled(Button)`
-  background: #e76905;
-`;
+export const Container = styled(Button)``;
