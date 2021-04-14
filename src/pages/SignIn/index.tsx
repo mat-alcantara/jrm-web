@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
 
+import { Button as AntButton } from 'antd';
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background, AnimationContainer } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
@@ -98,6 +99,7 @@ const Login: React.FC = () => {
               placeholder="Senha"
             />
             <Button type="submit">Entrar</Button>
+            <AntButton block>Teste</AntButton>
           </Form>
           <Link to="/signup">
             <FiLogIn />
