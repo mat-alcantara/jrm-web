@@ -92,6 +92,7 @@ const Login: React.FC = () => {
               iconSize={20}
               type="text"
               placeholder="E-mail"
+              autoFocus
             />
             <AntInput
               name="password"
@@ -101,7 +102,7 @@ const Login: React.FC = () => {
               type="password"
               placeholder="Senha"
             />
-            <AntButton block type="primary" htmlType="submit">
+            <AntButton block type="primary" htmlType="submit" size="large">
               Entrar
             </AntButton>
           </Form>

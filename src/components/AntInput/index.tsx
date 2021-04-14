@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { InputProps, Input } from 'antd';
 import { IconBaseProps } from 'react-icons';
 
@@ -19,7 +19,7 @@ const AntInput: React.FC<IInputProps> = ({
   iconSize,
   ...rest
 }) => {
-  const inputReference = useRef(null);
+  const inputReference = useRef<Input>(null);
 
   // Values used by Unform
   const { defaultValue, fieldName, error, registerField } = useField(name);
@@ -33,12 +33,34 @@ const AntInput: React.FC<IInputProps> = ({
     });
   }, [fieldName, registerField]);
 
+  const [isInputFocused, setisInputFocused] = useState(false);
+  const [isInputFilled, setisInputFilled] = useState(false);
+
+  const handleInputFocus = useCallback(() => {
+    setisInputFocused(true);
+  }, [isInputFocused]);
+
+  const handleInputBlur = useCallback(() => {
+    setisInputFocused(false);
+
+    if (inputReference.current?.state.value) {
+      setisInputFilled(true);
+    } else {
+      setisInputFilled(false);
+    }
+  }, [isInputFocused, isInputFilled]);
+
   return (
     <Container
+      iserrored={error ? 1 : 0}
+      isfocused={isInputFocused ? 1 : 0}
+      isfilled={isInputFilled ? 1 : 0}
       ref={inputReference}
       prefix={Icon && <Icon size={iconSize} />}
       {...rest}
       defaultValue={defaultValue}
+      onFocus={handleInputFocus}
+      onBlur={handleInputBlur}
       suffix={
         error && (
           <Error title={error}>
