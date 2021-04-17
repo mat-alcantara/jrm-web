@@ -1,13 +1,17 @@
 import React, { useCallback } from 'react';
 import { FiMenu, FiUser } from 'react-icons/fi';
 import { Menu } from 'antd';
-import { useAuth } from '../../hooks/Auth';
+import { useAuth } from '../../../hooks/Auth';
 
 import { StyledHeader, StyledMenu } from './styles';
 
 const { SubMenu, Item } = Menu;
 
-const AntHeader: React.FC = () => {
+interface AntHeaderProps {
+  selectedPage: string;
+}
+
+const AntHeader: React.FC<AntHeaderProps> = ({ selectedPage }) => {
   const { signOut } = useAuth();
 
   const handleLogOut = useCallback(async () => {
@@ -19,23 +23,24 @@ const AntHeader: React.FC = () => {
       <h1>JRM Compensados</h1>
       <StyledMenu
         mode="horizontal"
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={[selectedPage]}
         overflowedIndicator={<FiMenu size={20} />}
       >
-        <Item key="1">Novo serviço</Item>
+        <Item key="Novo serviço">Novo serviço</Item>
         <SubMenu title="Cortes">
-          <Item key="2">Em produção</Item>
-          <Item key="3">Liberados para transporte</Item>
-          <Item key="4">Concluídos</Item>
-          <Item key="5">Orçamentos</Item>
-          <Item key="6">Todos os cortes</Item>
+          <Item key="Em produção">Em produção</Item>
+          <Item key="Liberados para transporte">Liberados para transporte</Item>
+          <Item key="Concluídos">Concluídos</Item>
+          <Item key="Orçamentos">Orçamentos</Item>
+          <Item key="Todos os cortes">Todos os cortes</Item>
         </SubMenu>
         <SubMenu title="Clientes">
-          <Item key="7">Novo cliente</Item>
+          <Item key="Novo cliente">Novo cliente</Item>
+          <Item key="Todos os clientes">Todos os clientes</Item>
         </SubMenu>
         <SubMenu icon={<FiUser size={20} style={{ margin: '0 auto' }} />}>
-          <Item key="8">Ajustes</Item>
-          <Item key="9" onClick={handleLogOut}>
+          <Item key="Ajustes">Ajustes</Item>
+          <Item key="Sair" onClick={handleLogOut}>
             Sair
           </Item>
         </SubMenu>

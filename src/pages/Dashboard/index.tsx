@@ -9,7 +9,7 @@ const Dashboard: React.FC = () => {
   const { Content } = Layout;
 
   return (
-    <AntDashboard>
+    <AntDashboard whereIAm="Novo cliente">
       <Content style={{ marginTop: '16px', marginBottom: '16px' }}>
         <div className="site-layout-content">
           <h1>Novo corte</h1>
