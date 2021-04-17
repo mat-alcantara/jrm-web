@@ -7,11 +7,7 @@ import { StyledHeader, StyledMenu } from './styles';
 
 const { SubMenu, Item } = Menu;
 
-interface AntHeaderProps {
-  selectedPage: string;
-}
-
-const AntHeader: React.FC<AntHeaderProps> = ({ selectedPage }) => {
+const AntHeader: React.FC = () => {
   const { signOut } = useAuth();
 
   const handleLogOut = useCallback(async () => {
@@ -21,11 +17,7 @@ const AntHeader: React.FC<AntHeaderProps> = ({ selectedPage }) => {
   return (
     <StyledHeader>
       <h1>JRM Compensados</h1>
-      <StyledMenu
-        mode="horizontal"
-        defaultSelectedKeys={[selectedPage]}
-        overflowedIndicator={<FiMenu size={20} />}
-      >
+      <StyledMenu mode="horizontal" overflowedIndicator={<FiMenu size={20} />}>
         <Item key="Novo serviço">Novo serviço</Item>
         <SubMenu title="Cortes">
           <Item key="Em produção">Em produção</Item>

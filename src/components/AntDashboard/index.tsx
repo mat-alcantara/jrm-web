@@ -5,16 +5,10 @@ import { StyledLayout } from './styles';
 import AntHeader from './AntHeader';
 import AntFooter from './AntFooter';
 
-interface AntDashboardProps {
-  whereIAm: string;
-}
-
-const AntDashboard: React.FC<AntDashboardProps> = ({ children, whereIAm }) => {
-  const selectedPage = whereIAm;
-
+const AntDashboard: React.FC = ({ children }) => {
   return (
     <StyledLayout>
-      <AntHeader selectedPage={selectedPage} />
+      <AntHeader />
       {children}
       <AntFooter />
     </StyledLayout>
