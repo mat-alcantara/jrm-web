@@ -1,9 +1,11 @@
 .site-layout-content {
   min-height: 280px;
-  max-width: 1080px;
+  height: 100%;
+  max-width: 1350px;
   padding: 24px;
   background: #fff;
   margin: 0 auto;
+  text-align: center;
 }
 #components-layout-demo-top .logo {
   float: left;
