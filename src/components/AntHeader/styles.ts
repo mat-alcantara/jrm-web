@@ -14,5 +14,5 @@ export const StyledHeader = styled(Header)`
 `;
 
 export const StyledMenu = styled(Menu)`
-  margin-left: 300px;
+  margin-left: 150px;
 `;

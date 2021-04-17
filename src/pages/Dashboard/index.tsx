@@ -2,10 +2,9 @@ import React from 'react';
 import { Layout } from 'antd';
 
 import AntHeader from '../../components/AntHeader';
+import AntFooter from '../../components/AntFooter';
 
 import './styles.css';
-
-const { Footer } = Layout;
 
 const Dashboard: React.FC = () => {
   const { Content } = Layout;
@@ -18,9 +17,7 @@ const Dashboard: React.FC = () => {
           <h1>Novo corte</h1>
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center', backgroundColor: 'white' }}>
-        JRM Compensados ©2021 Created by Mateus Alcantara
-      </Footer>
+      <AntFooter />
     </Layout>
   );
 };
