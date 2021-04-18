@@ -6,8 +6,6 @@ import { FormHandles } from '@unform/core'; // List of props for form reference
 import { Form } from '@unform/web';
 import { Container } from './styles';
 
-// import { areasOfAngraDosReis } from '../../../../utils/listOfAreas';
-
 import AntDashboard from '../../../../components/AntDashboard';
 import AntContent from '../../../../components/AntContent';
 
@@ -15,10 +13,10 @@ import AntInput from '../../../../components/AntInput';
 import AntButton from '../../../../components/AntButton';
 import ReactSelect from '../../../../components/ReactSelect';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
+const cityOptions = [
+  { value: 'angra dos reis', label: 'Angra dos Reis' },
+  { value: 'paraty', label: 'Paraty' },
+  { value: 'são joão de meriti', label: 'São João de Meriti' },
 ];
 
 interface ISubmitData {
@@ -33,15 +31,8 @@ interface ISubmitData {
 const CreateCustomer: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = ({
-    name,
-    email,
-    state,
-    area,
-    city,
-    tel,
-  }: ISubmitData) => {
-    console.log(name, email, state, area, city, tel);
+  const handleSubmit = ({ name, email, area, city, tel }: ISubmitData) => {
+    const state = 'RJ';
   };
 
   return (
@@ -54,10 +45,11 @@ const CreateCustomer: React.FC = () => {
             <AntInput size="large" name="email" placeholder="Email" />
             <AntInput size="large" name="tel" placeholder="Telefone" />
             <AntInput size="large" name="area" placeholder="Bairro" />
-
-            <div>
-              <ReactSelect name="optionss" options={options} />
-            </div>
+            <ReactSelect
+              placeholder="Cidade"
+              name="city"
+              options={cityOptions}
+            />
 
             <AntButton block type="primary" htmlType="submit">
               Criar
