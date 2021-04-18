@@ -5,13 +5,22 @@ import ReactSelect, {
 } from 'react-select';
 import { useField } from '@unform/core';
 
+import { GroupContainer, BadgeContainer } from './styles';
+
 interface Props extends SelectProps<OptionTypeBase> {
   name: string;
 }
 
+const formatGroupLabel = (data: any) => (
+  <GroupContainer>
+    <span>{data.label}</span>
+    <BadgeContainer>{data.options.length}</BadgeContainer>
+  </GroupContainer>
+);
+
 const Select: React.FC<Props> = ({ name, ...rest }) => {
   const selectRef = useRef(null);
-  const { fieldName, defaultValue, registerField, error } = useField(name);
+  const { fieldName, defaultValue, registerField } = useField(name);
   useEffect(() => {
     registerField({
       name: fieldName,
@@ -36,6 +45,7 @@ const Select: React.FC<Props> = ({ name, ...rest }) => {
       defaultValue={defaultValue}
       ref={selectRef}
       classNamePrefix="react-select"
+      formatGroupLabel={formatGroupLabel}
       {...rest}
     />
   );
