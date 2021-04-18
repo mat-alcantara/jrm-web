@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { FiMenu, FiUser } from 'react-icons/fi';
 import { Menu } from 'antd';
 import { useAuth } from '../../../hooks/Auth';
@@ -16,7 +17,9 @@ const AntHeader: React.FC = () => {
 
   return (
     <StyledHeader>
-      <h1>JRM Compensados</h1>
+      <Link to="/dashboard">
+        <h1>JRM Compensados</h1>
+      </Link>
       <StyledMenu mode="horizontal" overflowedIndicator={<FiMenu size={20} />}>
         <Item key="Novo serviço">Novo serviço</Item>
         <SubMenu title="Cortes">
@@ -27,7 +30,9 @@ const AntHeader: React.FC = () => {
           <Item key="Todos os cortes">Todos os cortes</Item>
         </SubMenu>
         <SubMenu title="Clientes">
-          <Item key="Novo cliente">Novo cliente</Item>
+          <Item key="Novo cliente">
+            <Link to="/newcustomer">Novo cliente</Link>
+          </Item>
           <Item key="Todos os clientes">Todos os clientes</Item>
         </SubMenu>
         <SubMenu icon={<FiUser size={20} style={{ margin: '0 auto' }} />}>
