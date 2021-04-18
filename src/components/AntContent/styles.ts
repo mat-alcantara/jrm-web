@@ -7,8 +7,8 @@ export const StyledContent = styled(Content)`
   margin-top: 16px;
   margin-bottom: 16px;
 
-  div {
-    min-height: 280px;
+  > div {
+    min-height: 80vh;
     height: 100%;
     max-width: 1350px;
     padding: 24px;
