@@ -13,7 +13,7 @@ export const Container = styled.div`
       margin-bottom: 8px;
     }
 
-    div {
+    > div {
       display: flex;
       flex-direction: row;
     }

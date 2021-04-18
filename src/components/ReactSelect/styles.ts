@@ -1,20 +1,14 @@
 import styled from 'styled-components';
+import Select from 'react-select';
 
-export const GroupContainer = styled.div`
-  display: 'flex';
-  align-items: 'center';
-  justify-content: 'space-between';
-`;
+export const StyledReactSelect = styled(Select)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 
-export const BadgeContainer = styled.span`
-  background-color: '#EBECF0';
-  border-radius: '2em';
-  color: '#172B4D';
-  display: 'inline-block';
-  font-size: 12;
-  font-weight: 'normal';
-  line-height: '1';
-  min-width: 1;
-  padding: '0.16666666666667em 0.5em';
-  text-align: 'center';
+  .react-select__control {
+    width: 120px;
+  }
 `;

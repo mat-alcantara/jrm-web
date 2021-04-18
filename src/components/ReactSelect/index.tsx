@@ -1,22 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useEffect } from 'react';
-import ReactSelect, {
-  OptionTypeBase,
-  Props as SelectProps,
-} from 'react-select';
+import { OptionTypeBase, Props as SelectProps } from 'react-select';
 import { useField } from '@unform/core';
 
-import { GroupContainer, BadgeContainer } from './styles';
+import { StyledReactSelect } from './styles';
 
 interface Props extends SelectProps<OptionTypeBase> {
   name: string;
 }
-
-const formatGroupLabel = (data: any) => (
-  <GroupContainer>
-    <span>{data.label}</span>
-    <BadgeContainer>{data.options.length}</BadgeContainer>
-  </GroupContainer>
-);
 
 const Select: React.FC<Props> = ({ name, ...rest }) => {
   const selectRef = useRef(null);
@@ -41,11 +32,12 @@ const Select: React.FC<Props> = ({ name, ...rest }) => {
   }, [fieldName, registerField, rest.isMulti]);
 
   return (
-    <ReactSelect
+    <StyledReactSelect
+      isClearable
+      isSearchable
       defaultValue={defaultValue}
       ref={selectRef}
       classNamePrefix="react-select"
-      formatGroupLabel={formatGroupLabel}
       {...rest}
     />
   );

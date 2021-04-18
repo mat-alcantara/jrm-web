@@ -13,6 +13,13 @@ import AntContent from '../../../../components/AntContent';
 
 import AntInput from '../../../../components/AntInput';
 import AntButton from '../../../../components/AntButton';
+import ReactSelect from '../../../../components/ReactSelect';
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
+];
 
 interface ISubmitData {
   name: string;
@@ -48,7 +55,9 @@ const CreateCustomer: React.FC = () => {
             <AntInput size="large" name="tel" placeholder="Telefone" />
             <AntInput size="large" name="area" placeholder="Bairro" />
 
-            <div />
+            <div>
+              <ReactSelect name="optionss" options={options} />
+            </div>
 
             <AntButton block type="primary" htmlType="submit">
               Criar
