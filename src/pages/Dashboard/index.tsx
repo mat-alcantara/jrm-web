@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
     <AntDashboard>
       <Content style={{ marginTop: '16px', marginBottom: '16px' }}>
         <div className="site-layout-content">
-          <h1>Novo corte</h1>
+          <h1>Dashboard</h1>
         </div>
       </Content>
     </AntDashboard>
