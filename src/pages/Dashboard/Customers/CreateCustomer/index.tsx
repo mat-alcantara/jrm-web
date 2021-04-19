@@ -49,7 +49,8 @@ const CreateCustomer: React.FC = () => {
     city,
     tel,
   }: ISubmitData) => {
-    console.log(tel);
+    const telephone = tel.replace(/[^A-Z0-9]/gi, '');
+    console.log(telephone);
     const state = 'RJ';
 
     await api.post('/customers', {
