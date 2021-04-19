@@ -13,6 +13,8 @@ import AntInput from '../../../../components/AntInput';
 import AntButton from '../../../../components/AntButton';
 import ReactSelect from '../../../../components/ReactSelect';
 
+import api from '../../../../services/api';
+
 const cityOptions = [
   { value: 'angra dos reis', label: 'Angra dos Reis' },
   { value: 'paraty', label: 'Paraty' },
@@ -31,8 +33,23 @@ interface ISubmitData {
 const CreateCustomer: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = ({ name, email, area, city, tel }: ISubmitData) => {
+  const handleSubmit = async ({
+    name,
+    email,
+    area,
+    city,
+    tel,
+  }: ISubmitData) => {
     const state = 'RJ';
+
+    await api.post('/customers', {
+      name,
+      email,
+      area,
+      city,
+      state,
+      tel,
+    });
   };
 
   return (

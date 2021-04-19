@@ -1,15 +1,14 @@
 import React from 'react';
 
-import AntDashboard from '../../components/AntDashboard';
-import AntContent from '../../components/AntContent';
-
 const Dashboard: React.FC = () => {
   return (
-    <AntDashboard>
-      <AntContent>
-        <h1>Dashboard</h1>
-      </AntContent>
-    </AntDashboard>
+    <>
+      <input placeholder="Nome" type="text" />
+      <input placeholder="Email" type="text" />
+      <input placeholder="Telefone" type="text" />
+      <input placeholder="Bairro" type="text" />
+      <input placeholder="Cidade" type="text" />
+    </>
   );
 };
 
