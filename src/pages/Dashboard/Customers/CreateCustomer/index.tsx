@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-curly-newline */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { FormHandles } from '@unform/core'; // List of props for form reference
 
 import { Form } from '@unform/web';
@@ -14,6 +14,7 @@ import AntButton from '../../../../components/AntButton';
 import ReactSelect from '../../../../components/ReactSelect';
 
 import api from '../../../../services/api';
+import normalizeTelephoneInput from '../../../../utils/normalizeTelephoneInput';
 
 const cityOptions = [
   { value: 'angra dos reis', label: 'Angra dos Reis' },
@@ -33,6 +34,14 @@ interface ISubmitData {
 const CreateCustomer: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
+  const [phone, setPhone] = useState('');
+
+  const handleChange = (value: string) => {
+    setPhone((prevValue: string): string =>
+      normalizeTelephoneInput(value, prevValue),
+    );
+  };
+
   const handleSubmit = async ({
     name,
     email,
@@ -40,6 +49,7 @@ const CreateCustomer: React.FC = () => {
     city,
     tel,
   }: ISubmitData) => {
+    console.log(tel);
     const state = 'RJ';
 
     await api.post('/customers', {
@@ -60,7 +70,13 @@ const CreateCustomer: React.FC = () => {
           <Form ref={formRef} onSubmit={handleSubmit}>
             <AntInput size="large" name="name" placeholder="Nome completo" />
             <AntInput size="large" name="email" placeholder="Email" />
-            <AntInput size="large" name="tel" placeholder="Telefone" />
+            <AntInput
+              size="large"
+              name="tel"
+              placeholder="Telefone"
+              value={phone}
+              onChange={(e) => handleChange(e.target.value)}
+            />
             <AntInput size="large" name="area" placeholder="Bairro" />
             <ReactSelect
               placeholder="Cidade"
