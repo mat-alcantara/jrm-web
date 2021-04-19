@@ -1,4 +1,5 @@
-export const areasOfAngraDosReis = [
+export const areas = [
+  'São João de Meriti',
   'Balneário',
   'Bonfim',
   'Centro',

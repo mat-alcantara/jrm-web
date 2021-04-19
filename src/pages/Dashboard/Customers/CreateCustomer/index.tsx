@@ -15,11 +15,19 @@ import ReactSelect from '../../../../components/ReactSelect';
 
 import api from '../../../../services/api';
 import normalizeTelephoneInput from '../../../../utils/normalizeTelephoneInput';
+import { areas } from '../../../../utils/listOfAreas';
+
+const areaOptions = areas.map((area: string) => {
+  return {
+    value: area.toLowerCase(),
+    label: area,
+  };
+});
 
 const cityOptions = [
   { value: 'angra dos reis', label: 'Angra dos Reis' },
   { value: 'paraty', label: 'Paraty' },
-  { value: 'são joão de meriti', label: 'São João de Meriti' },
+  { value: 'rio de janeiro', label: 'Rio de Janeiro' },
 ];
 
 interface ISubmitData {
@@ -50,7 +58,6 @@ const CreateCustomer: React.FC = () => {
     tel,
   }: ISubmitData) => {
     const telephone = tel.replace(/[^A-Z0-9]/gi, '');
-    console.log(telephone);
     const state = 'RJ';
 
     await api.post('/customers', {
@@ -59,7 +66,7 @@ const CreateCustomer: React.FC = () => {
       area,
       city,
       state,
-      tel,
+      telephone,
     });
   };
 
@@ -79,6 +86,11 @@ const CreateCustomer: React.FC = () => {
               onChange={(e) => handleChange(e.target.value)}
             />
             <AntInput size="large" name="area" placeholder="Bairro" />
+            <ReactSelect
+              placeholder="Bairro"
+              name="area"
+              options={areaOptions}
+            />
             <ReactSelect
               placeholder="Cidade"
               name="city"
