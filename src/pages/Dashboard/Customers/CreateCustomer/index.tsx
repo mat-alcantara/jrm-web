@@ -86,7 +86,7 @@ const CreateCustomer: React.FC = () => {
       const state = 'Rio de Janeiro';
 
       try {
-        validateCustomerProps({
+        await validateCustomerProps({
           name,
           email,
           tel: telephone,
@@ -101,11 +101,9 @@ const CreateCustomer: React.FC = () => {
 
           formRef.current?.setErrors(errors);
         }
-
-        throw new Error(err);
       }
     },
-    [],
+    [validateCustomerProps, getValidationErrors],
   );
 
   return (
@@ -114,23 +112,23 @@ const CreateCustomer: React.FC = () => {
         <Container>
           <h1>Crie um novo cliente</h1>
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <AntInput size="large" name="name" placeholder="Nome completo" />
+            <AntInput size="large" name="name" placeholder="Nome completo*" />
             <AntInput size="large" name="email" placeholder="Email" />
             <AntInput
               size="large"
               name="tel"
-              placeholder="Telefone"
+              placeholder="Telefone*"
               value={phone}
               onChange={(e) => handleChange(e.target.value)}
             />
-            <AntInput size="large" name="street" placeholder="Endereço" />
+            <AntInput size="large" name="street" placeholder="Endereço*" />
             <ReactSelect
-              placeholder="Bairro"
+              placeholder="Bairro*"
               name="area"
               options={areaOptions}
             />
             <ReactSelect
-              placeholder="Cidade"
+              placeholder="Cidade*"
               name="city"
               options={cityOptions}
             />

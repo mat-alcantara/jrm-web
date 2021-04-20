@@ -9,9 +9,9 @@ export const Container = styled.div`
     max-width: 350px;
     margin: 0 auto;
 
-    > input {
+    /* input {
       margin-bottom: 8px;
-    }
+    } */
 
     > div {
       display: flex;

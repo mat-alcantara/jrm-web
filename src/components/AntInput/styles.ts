@@ -9,6 +9,7 @@ interface ContainerProps {
 }
 
 export const Container = styled(Input)<ContainerProps>`
+  margin-bottom: 8px;
   svg {
     color: #a9a9a9;
     margin-right: 8px;
