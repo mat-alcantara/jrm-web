@@ -11,6 +11,5 @@ export const StyledReactSelect = styled(Select)`
   .react-select__control {
     width: 100%;
     margin-bottom: 8px;
-    border-color: red;
   }
 `;
