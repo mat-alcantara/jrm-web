@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
 
+import AntButton from 'components/AntButton';
 import Logo from '../../assets/logo.svg';
 import { Container, Content, Background, AnimationContainer } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
@@ -12,7 +13,6 @@ import getValidationErrors from '../../utils/getValidationErrors';
 import { useAuth } from '../../hooks/Auth';
 import { useToast } from '../../hooks/Toast';
 
-import AntButton from '../../components/AntButton';
 import AntInput from '../../components/AntInput';
 
 interface submitProps {
