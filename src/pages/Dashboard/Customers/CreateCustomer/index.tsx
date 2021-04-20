@@ -1,10 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-curly-newline */
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { FormHandles } from '@unform/core'; // List of props for form reference
+import * as Yup from 'yup';
 
 import { Form } from '@unform/web';
 import { Container } from './styles';
+import getValidationErrors from '../../../../utils/getValidationErrors';
 
 import AntDashboard from '../../../../components/AntDashboard';
 import AntContent from '../../../../components/AntContent';
@@ -13,11 +15,11 @@ import AntInput from '../../../../components/AntInput';
 import AntButton from '../../../../components/AntButton';
 import ReactSelect from '../../../../components/ReactSelect';
 
-import api from '../../../../services/api';
+// import api from '../../../../services/api';
 import normalizeTelephoneInput from '../../../../utils/normalizeTelephoneInput';
 import { areas } from '../../../../utils/listOfAreas';
 
-const areaOptions = areas.map((area: string) => {
+const areaOptions = areas.sort().map((area: string) => {
   return {
     value: area.toLowerCase(),
     label: area,
@@ -32,11 +34,12 @@ const cityOptions = [
 
 interface ISubmitData {
   name: string;
-  email: string;
+  email?: string;
   tel: string;
+  street: string;
   area: string;
   city: string;
-  state: string;
+  state?: string;
 }
 
 const CreateCustomer: React.FC = () => {
@@ -44,31 +47,66 @@ const CreateCustomer: React.FC = () => {
 
   const [phone, setPhone] = useState('');
 
+  const validateCustomerProps = useCallback(
+    async ({ name, email, tel, street, area, city, state }: ISubmitData) => {
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        email: Yup.string().email('Digite um e-mail válido'),
+        tel: Yup.string()
+          .required('Telefone obrigatório')
+          .min(10, 'Numero de telefone deve conter entre 10 e 11 números'),
+        area: Yup.string().required('Bairro obrigatório'),
+        street: Yup.string().required('Endereço obrigatório'),
+        city: Yup.string().required('Cidade obrigatória'),
+        state: Yup.string().required('UF obrigatório'),
+      });
+
+      const isPropsValid = await schema.validate(
+        { name, email, tel, street, area, city, state },
+        {
+          // Faz com que todos os erros sejam pegos pelo catch
+          abortEarly: false,
+        },
+      );
+
+      return isPropsValid;
+    },
+    [],
+  );
+
   const handleChange = (value: string) => {
     setPhone((prevValue: string): string =>
       normalizeTelephoneInput(value, prevValue),
     );
   };
 
-  const handleSubmit = async ({
-    name,
-    email,
-    area,
-    city,
-    tel,
-  }: ISubmitData) => {
-    const telephone = tel.replace(/[^A-Z0-9]/gi, '');
-    const state = 'RJ';
+  const handleSubmit = useCallback(
+    async ({ name, email, tel, area, street, city }: ISubmitData) => {
+      const telephone = tel.replace(/[^A-Z0-9]/gi, '');
+      const state = 'Rio de Janeiro';
 
-    await api.post('/customers', {
-      name,
-      email,
-      area,
-      city,
-      state,
-      telephone,
-    });
-  };
+      try {
+        validateCustomerProps({
+          name,
+          email,
+          tel: telephone,
+          area,
+          street,
+          state,
+          city,
+        });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+        }
+
+        throw new Error(err);
+      }
+    },
+    [],
+  );
 
   return (
     <AntDashboard>
@@ -85,7 +123,7 @@ const CreateCustomer: React.FC = () => {
               value={phone}
               onChange={(e) => handleChange(e.target.value)}
             />
-            <AntInput size="large" name="area" placeholder="Bairro" />
+            <AntInput size="large" name="street" placeholder="Endereço" />
             <ReactSelect
               placeholder="Bairro"
               name="area"
