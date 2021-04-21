@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const api = axios.create({
+const apiConnection = axios.create({
   baseURL: 'https://api.jrmcompensados.com',
 });
 
-export default api;
+export default apiConnection;

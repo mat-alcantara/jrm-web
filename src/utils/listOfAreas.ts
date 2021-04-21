@@ -1,4 +1,7 @@
+// This file has an array with all areas to use in customer creation
+
 export const areas = [
+  'Paraty',
   'São João de Meriti',
   'Balneário',
   'Bonfim',
