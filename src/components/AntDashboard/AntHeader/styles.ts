@@ -6,6 +6,7 @@ const { Header } = Layout;
 export const StyledHeader = styled(Header)`
   display: flex;
   justify-content: space-between;
+
   background-color: #fff;
 
   h1 {
