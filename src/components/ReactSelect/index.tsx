@@ -20,15 +20,18 @@ const Select: React.FC<Props> = ({ name, ...rest }) => {
       name: fieldName,
       ref: selectRef.current,
       getValue: (ref: any) => {
+        // In case of multi select is activated
         if (rest.isMulti) {
           if (!ref.state.value) {
             return [];
           }
           return ref.state.value.map((option: OptionTypeBase) => option.value);
         }
+        // In case of no item selected
         if (!ref.state.value) {
           return '';
         }
+
         return ref.state.value.value;
       },
     });

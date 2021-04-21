@@ -8,6 +8,7 @@ interface TooltipProps {
 }
 
 const Tooltip: React.FC<TooltipProps> = ({ className, children, title }) => (
+  // className needs to be sent to styled components style the component with styled()
   <Container className={className}>
     {children}
     <span>{title}</span>

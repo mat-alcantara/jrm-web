@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   position: relative;
 
+  // This part of the code will only appear while hover
   span {
     background: #ff9000;
     width: 160px;
@@ -34,6 +35,7 @@ export const Container = styled.div`
     }
   }
 
+  // Make span appear
   &:hover span {
     opacity: 1;
     visibility: visible;

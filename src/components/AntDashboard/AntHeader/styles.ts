@@ -15,5 +15,6 @@ export const StyledHeader = styled(Header)`
 `;
 
 export const StyledMenu = styled(Menu)`
+  /* This margin-left is made as a way of breakpoint in mobile devices */
   margin-left: 150px;
 `;
