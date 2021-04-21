@@ -10,11 +10,12 @@ interface ContainerProps {
 
 export const Container = styled(Input)<ContainerProps>`
   margin-bottom: 8px;
+
   svg {
     color: #a9a9a9;
     margin-right: 8px;
 
-    /* CSS in case of input is focused */
+    /* svg color changes in case of input is focused or filled */
     ${(props) =>
       (props.isfocused || props.isfilled) &&
       css`
@@ -22,7 +23,7 @@ export const Container = styled(Input)<ContainerProps>`
       `}
   }
 
-  /* CSS in case of input is errored */
+  /* border color changes in case of input is errored */
   ${(props) =>
     props.iserrored &&
     css`

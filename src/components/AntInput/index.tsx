@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { InputProps, Input } from 'antd';
 import { IconBaseProps } from 'react-icons';
-
-import { useField } from '@unform/core';
 import { FiAlertCircle } from 'react-icons/fi';
+import { useField } from '@unform/core';
 
 import { Container, Error } from './styles';
 
@@ -29,7 +28,7 @@ const AntInput: React.FC<IInputProps> = ({
     registerField({
       name: fieldName,
       ref: inputReference.current,
-      path: 'state.value',
+      path: 'state.value', // Path where the input value is stored
     });
   }, [fieldName, registerField]);
 
@@ -43,6 +42,7 @@ const AntInput: React.FC<IInputProps> = ({
   const handleInputBlur = useCallback(() => {
     setisInputFocused(false);
 
+    // inputReference value will be null if input is not filled
     if (inputReference.current?.state.value) {
       setisInputFilled(true);
     } else {
