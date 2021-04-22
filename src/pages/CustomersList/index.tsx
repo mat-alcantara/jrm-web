@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { List } from 'antd';
 
 import api from '../../services/api';
@@ -23,6 +23,7 @@ interface ICustomersProps {
 }
 
 interface ICustomersData {
+  id: string;
   title: string;
   description: string;
 }
@@ -31,6 +32,7 @@ const CustomersList: React.FC = () => {
   const token = localStorage.getItem('@JRMCompensados:token');
 
   const [customersData, setCustomersData] = useState<ICustomersData[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [allCustomers] = useState<Promise<ICustomersProps[]>>(async () => {
     const allCustomersFromApi = await api.get<ICustomersProps[]>('/customers', {
       headers: {
@@ -57,6 +59,24 @@ const CustomersList: React.FC = () => {
     return allCustomersFromApi.data;
   });
 
+  const handleRemoveCustomer = useCallback(
+    async (id: string) => {
+      await api.delete('/customers', {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+        data: {
+          id,
+        },
+      });
+
+      setCustomersData(() => {
+        return customersData.filter((customer) => customer.id !== id);
+      });
+    },
+    [customersData],
+  );
+
   return (
     <AntDashboard>
       <AntContent>
@@ -69,7 +89,11 @@ const CustomersList: React.FC = () => {
               renderItem={(customer) => (
                 <List.Item
                   actions={[
-                    <AntButton block type="link">
+                    <AntButton
+                      block
+                      type="link"
+                      onClick={() => handleRemoveCustomer(customer.id)}
+                    >
                       Excluir
                     </AntButton>,
                   ]}
