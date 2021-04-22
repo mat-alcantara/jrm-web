@@ -23,7 +23,7 @@ import { areas } from '../../utils/listOfAreas';
 
 const areaOptions = areas.sort().map((area: string) => {
   return {
-    value: area.toLowerCase(),
+    value: area,
     label: area,
   };
 });

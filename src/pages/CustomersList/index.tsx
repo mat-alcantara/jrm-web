@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-// import {List} from 'antd';
+import React, { useState } from 'react';
+import { List } from 'antd';
 
 import api from '../../services/api';
 
@@ -21,51 +21,58 @@ interface ICustomersProps {
   updated_at: string;
 }
 
-interface ICustomersNamesForList {
+interface ICustomersData {
   title: string;
+  description: string;
 }
 
 const CustomersList: React.FC = () => {
-  const [allCustomers, setAllCustomers] = useState<ICustomersProps[]>([]);
-  const [customersNamesForList, setCustomersNamesForList] = useState<
-    ICustomersNamesForList[]
-  >([]);
-
   const token = localStorage.getItem('@JRMCompensados:token');
 
-  const getAllCustomersFromApi = useCallback(async () => {
+  const [customersData, setCustomersData] = useState<ICustomersData[]>([]);
+  const [allCustomers] = useState<Promise<ICustomersProps[]>>(async () => {
     const allCustomersFromApi = await api.get<ICustomersProps[]>('/customers', {
       headers: {
         Authorization: `bearer ${token}`,
       },
     });
 
-    setAllCustomers([...allCustomersFromApi.data]);
-  }, [allCustomers]);
-
-  const createCustomersNamesToUseInList = useCallback(() => {
-    allCustomers.forEach((customer) => {
-      setCustomersNamesForList((prevValue) => [
+    await allCustomersFromApi.data.forEach((customer) => {
+      setCustomersData((prevValue) => [
         ...prevValue,
-        { title: customer.name },
+        {
+          title: customer.name,
+          description: `${
+            customer.street.charAt(0).toUpperCase() + customer.street.slice(1)
+          }, ${
+            customer.area.charAt(0).toUpperCase() + customer.area.slice(1)
+          } - ${customer.city.charAt(0).toUpperCase() + customer.city.slice(1)}
+          `,
+        },
       ]);
     });
-  }, [customersNamesForList]);
 
-  useEffect(() => {
-    getAllCustomersFromApi();
-    createCustomersNamesToUseInList();
-  }, []);
+    return allCustomersFromApi.data;
+  });
 
   return (
     <AntDashboard>
       <AntContent>
         <Container>
-          {allCustomers.map((customer) => (
-            <div key={customer.id}>
-              <h1>{customer.name}</h1>
-            </div>
-          ))}
+          {customersData && (
+            <List
+              itemLayout="horizontal"
+              dataSource={customersData}
+              renderItem={(customer) => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={customer.title}
+                    description={customer.description}
+                  />
+                </List.Item>
+              )}
+            />
+          )}
         </Container>
       </AntContent>
     </AntDashboard>
