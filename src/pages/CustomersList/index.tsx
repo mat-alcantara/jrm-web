@@ -21,8 +21,16 @@ interface ICustomersProps {
   updated_at: string;
 }
 
+interface ICustomersNamesForList {
+  title: string;
+}
+
 const CustomersList: React.FC = () => {
   const [allCustomers, setAllCustomers] = useState<ICustomersProps[]>([]);
+  const [customersNamesForList, setCustomersNamesForList] = useState<
+    ICustomersNamesForList[]
+  >([]);
+
   const token = localStorage.getItem('@JRMCompensados:token');
 
   const getAllCustomersFromApi = useCallback(async () => {
@@ -35,14 +43,30 @@ const CustomersList: React.FC = () => {
     setAllCustomers([...allCustomersFromApi.data]);
   }, [allCustomers]);
 
+  const createCustomersNamesToUseInList = useCallback(() => {
+    allCustomers.forEach((customer) => {
+      setCustomersNamesForList((prevValue) => [
+        ...prevValue,
+        { title: customer.name },
+      ]);
+    });
+  }, [customersNamesForList]);
+
   useEffect(() => {
     getAllCustomersFromApi();
+    createCustomersNamesToUseInList();
   }, []);
 
   return (
     <AntDashboard>
       <AntContent>
-        <Container>Lista de clientes</Container>
+        <Container>
+          {allCustomers.map((customer) => (
+            <div key={customer.id}>
+              <h1>{customer.name}</h1>
+            </div>
+          ))}
+        </Container>
       </AntContent>
     </AntDashboard>
   );
