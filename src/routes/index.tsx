@@ -8,12 +8,14 @@ import SignIn from '../pages/SignIn';
 import Dashboard from '../pages/Dashboard';
 import NewCustomer from '../pages/NewCustomer';
 import CustomersList from '../pages/CustomersList';
+import NewCutlist from '../pages/NewCutlist';
 
 const routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={SignIn} />
     <Route path="/dashboard" exact component={Dashboard} isPrivate />
     <Route path="/newcustomer" exact component={NewCustomer} isPrivate />
+    <Route path="/newcutlist" exact component={NewCutlist} isPrivate />
     <Route path="/customerslist" exact component={CustomersList} isPrivate />
   </Switch>
 );
