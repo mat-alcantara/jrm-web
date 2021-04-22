@@ -34,7 +34,9 @@ const AntHeader: React.FC = () => {
           <Item>
             <Link to="/newcustomer">Novo cliente</Link>
           </Item>
-          <Item>Todos os clientes</Item>
+          <Item>
+            <Link to="/customerslist">Todos os clientes</Link>
+          </Item>
         </SubMenu>
         <SubMenu icon={<FiUser size={20} style={{ margin: '0 auto' }} />}>
           <Item>Ajustes</Item>
