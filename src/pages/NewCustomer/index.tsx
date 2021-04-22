@@ -29,9 +29,9 @@ const areaOptions = areas.sort().map((area: string) => {
 });
 
 const cityOptions = [
-  { value: 'angra dos reis', label: 'Angra dos Reis' },
-  { value: 'paraty', label: 'Paraty' },
-  { value: 'rio de janeiro', label: 'Rio de Janeiro' },
+  { value: 'Angra dos Reis', label: 'Angra dos Reis' },
+  { value: 'Paraty', label: 'Paraty' },
+  { value: 'Rio de Janeiro', label: 'Rio de Janeiro' },
 ];
 
 interface ISubmitData {

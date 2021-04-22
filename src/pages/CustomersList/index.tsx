@@ -5,6 +5,7 @@ import api from '../../services/api';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
+import AntButton from '../../components/AntButton';
 
 import { Container } from './styles';
 
@@ -41,6 +42,7 @@ const CustomersList: React.FC = () => {
       setCustomersData((prevValue) => [
         ...prevValue,
         {
+          id: customer.id,
           title: customer.name,
           description: `${
             customer.street.charAt(0).toUpperCase() + customer.street.slice(1)
@@ -61,10 +63,17 @@ const CustomersList: React.FC = () => {
         <Container>
           {customersData && (
             <List
+              style={{ maxWidth: '600px', margin: '0 auto' }}
               itemLayout="horizontal"
               dataSource={customersData}
               renderItem={(customer) => (
-                <List.Item>
+                <List.Item
+                  actions={[
+                    <AntButton block type="link">
+                      Excluir
+                    </AntButton>,
+                  ]}
+                >
                   <List.Item.Meta
                     title={customer.title}
                     description={customer.description}
