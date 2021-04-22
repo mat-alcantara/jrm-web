@@ -7,19 +7,19 @@ import { useHistory } from 'react-router-dom';
 
 import { Form } from '@unform/web';
 import { Container } from './styles';
-import getValidationErrors from '../../../../utils/getValidationErrors';
-import { useToast } from '../../../../hooks/Toast';
+import getValidationErrors from '../../utils/getValidationErrors';
+import { useToast } from '../../hooks/Toast';
 
-import AntDashboard from '../../../../components/AntDashboard';
-import AntContent from '../../../../components/AntContent';
+import AntDashboard from '../../components/AntDashboard';
+import AntContent from '../../components/AntContent';
 
-import AntInput from '../../../../components/AntInput';
-import AntButton from '../../../../components/AntButton';
-import ReactSelect from '../../../../components/ReactSelect';
+import AntInput from '../../components/AntInput';
+import AntButton from '../../components/AntButton';
+import ReactSelect from '../../components/ReactSelect';
 
-import api from '../../../../services/api';
-import normalizeTelephoneInput from '../../../../utils/normalizeTelephoneInput';
-import { areas } from '../../../../utils/listOfAreas';
+import api from '../../services/api';
+import normalizeTelephoneInput from '../../utils/normalizeTelephoneInput';
+import { areas } from '../../utils/listOfAreas';
 
 const areaOptions = areas.sort().map((area: string) => {
   return {

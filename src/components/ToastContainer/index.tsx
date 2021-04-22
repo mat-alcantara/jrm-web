@@ -2,8 +2,8 @@ import React from 'react';
 import { useTransition } from 'react-spring';
 
 import Toast from './Toast';
-
 import { IToastMessage } from '../../hooks/Toast';
+
 import { Container } from './styles';
 
 interface IToastContainerProps {
@@ -11,6 +11,7 @@ interface IToastContainerProps {
 }
 
 const ToastContainer: React.FC<IToastContainerProps> = ({ messages }) => {
+  // Toast animation
   const messagesWithTransitions = useTransition(
     messages,
     (message) => message.id,

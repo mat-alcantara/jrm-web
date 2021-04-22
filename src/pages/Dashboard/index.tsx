@@ -2,7 +2,6 @@ import React from 'react';
 import { Layout } from 'antd';
 
 import AntDashboard from '../../components/AntDashboard';
-// import AntContent from '../../components/AntContent';
 
 const Dashboard: React.FC = () => {
   const { Content } = Layout;
