@@ -23,4 +23,11 @@ export const OrderContainer = styled.div`
   margin: 0 auto;
 `;
 
-export const CutlistContainer = styled.div``;
+export const CutlistContainer = styled.div`
+  margin: 32px auto;
+
+  div div + div {
+    /* width: 150px; */
+    margin-left: 8px;
+  }
+`;

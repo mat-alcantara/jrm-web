@@ -15,6 +15,8 @@ import {
 
 import AntInput from '../../components/AntInput';
 import AntSelect from '../../components/ReactSelect';
+import AntInputNumber from '../../components/AntInputNumber';
+import AntButton from '../../components/AntButton';
 
 interface ICustomersProps {
   id: string;
@@ -119,6 +121,8 @@ const NewCutlist: React.FC = () => {
           <h1>Dados do pedido</h1>
           <OrderContainer>
             <Form onSubmit={handleSubmit}>
+              <AntInput name="seller" placeholder="Vendedor" size="large" />
+
               <AntSelect
                 name="orderStore"
                 placeholder="Loja do pedido"
@@ -137,29 +141,58 @@ const NewCutlist: React.FC = () => {
               <AntInput name="ps" placeholder="Observações" size="large" />
 
               <CutlistContainer>
-                <AntInput name="material" placeholder="Material" />
-                <AntInput name="quantidade" placeholder="Quantidade" />
-                <AntInput
-                  name="side_a_size"
-                  maxLength={4}
-                  placeholder="Tamanho: Lado A"
-                />
-                <AntInput
-                  name="side_a_border"
-                  placeholder="Fita: Lado A"
-                  maxLength={1}
-                />
-                <AntInput
-                  name="side_b_size"
-                  maxLength={4}
-                  placeholder="Tamanho: Lado B"
-                />
-                <AntInput
-                  name="side_b_border"
-                  maxLength={1}
-                  placeholder="Fita: Lado B"
-                />
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <AntInput
+                    name="material"
+                    placeholder="Material"
+                    style={{
+                      textAlign: 'center',
+                      marginRight: '8px',
+                    }}
+                  />
+                  <p style={{ width: '150px' }}>R$ 500,00</p>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    width: '100%',
+                  }}
+                >
+                  <AntInputNumber
+                    name="quantidade"
+                    placeholder="Qtd"
+                    style={{ flex: '1' }}
+                  />
+                  <AntInputNumber
+                    name="side_a_size"
+                    maxLength={4}
+                    placeholder="Lado A"
+                  />
+                  <AntInputNumber
+                    name="side_a_border"
+                    placeholder="Fita A"
+                    maxLength={1}
+                  />
+                  <AntInputNumber
+                    name="side_b_size"
+                    maxLength={4}
+                    placeholder="Lado B"
+                  />
+                  <AntInputNumber
+                    name="side_b_border"
+                    maxLength={1}
+                    placeholder="Fita B"
+                  />
+                </div>
+                <AntButton block type="link" style={{ marginTop: '8px' }}>
+                  Remover
+                </AntButton>
               </CutlistContainer>
+
+              <AntButton block type="primary" htmlType="submit">
+                Criar
+              </AntButton>
             </Form>
           </OrderContainer>
         </Container>
