@@ -94,6 +94,7 @@ const NewCutlist: React.FC = () => {
   );
 
   const handleSubmit = useCallback((data) => {
+    // eslint-disable-next-line no-console
     console.log(data);
   }, []);
 
