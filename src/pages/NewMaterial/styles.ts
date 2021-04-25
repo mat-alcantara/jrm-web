@@ -1,3 +1,30 @@
 import styled from 'styled-components';
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+
+    > div {
+      width: 100%;
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 16px;
+
+      > div {
+        width: 100%;
+      }
+
+      div + div {
+        margin-left: 8px;
+      }
+    }
+  }
+`;

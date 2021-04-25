@@ -9,6 +9,7 @@ import Dashboard from '../pages/Dashboard';
 import NewCustomer from '../pages/NewCustomer';
 import CustomersList from '../pages/CustomersList';
 import NewCutlist from '../pages/NewCutlist';
+import NewMaterial from '../pages/NewMaterial';
 
 const routes: React.FC = () => (
   <Switch>
@@ -17,6 +18,7 @@ const routes: React.FC = () => (
     <Route path="/newcustomer" exact component={NewCustomer} isPrivate />
     <Route path="/newcutlist" exact component={NewCutlist} isPrivate />
     <Route path="/customerslist" exact component={CustomersList} isPrivate />
+    <Route path="/newmaterial" exact component={NewMaterial} isPrivate />
   </Switch>
 );
 
