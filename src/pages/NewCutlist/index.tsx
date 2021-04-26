@@ -1,12 +1,20 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React, { useCallback, useEffect, useState } from 'react';
-import { AutoComplete, Divider, Steps } from 'antd';
+import { AutoComplete, Divider, Steps, Typography } from 'antd';
+import { CheckCircleOutlined } from '@ant-design/icons';
 import { Form } from '@unform/web';
 
 import api from '../../services/api';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
-import { Container, CustomerPageContainer, StepsContainer } from './styles';
+import {
+  Container,
+  CustomerPageContainer,
+  StepsContainer,
+  CustomerPageData,
+  CustomerAutocompleteAndButton,
+} from './styles';
 
 import AntInput from '../../components/AntInput';
 import AntSelect from '../../components/ReactSelect';
@@ -87,8 +95,8 @@ const NewCutlist: React.FC = () => {
 
     return (
       <CustomerPageContainer>
-        <h1>Selecione um cliente</h1>
-        <div>
+        <Typography.Title level={2}>Selecione um cliente</Typography.Title>
+        <CustomerAutocompleteAndButton>
           <AutoComplete
             placeholder="Digite o nome de um cliente"
             options={autoCompleteOptions}
@@ -101,8 +109,18 @@ const NewCutlist: React.FC = () => {
           >
             Próximo
           </AntButton>
-        </div>
-        {selectedCustomer && <p>{selectedCustomer.name}</p>}
+        </CustomerAutocompleteAndButton>
+        {selectedCustomer && (
+          <CustomerPageData>
+            <CheckCircleOutlined style={{ color: 'green' }} />
+            <Typography.Title level={4}>
+              {selectedCustomer.name}
+            </Typography.Title>
+            <Typography>
+              {`${selectedCustomer.street}, ${selectedCustomer.area} - ${selectedCustomer.city}`}
+            </Typography>
+          </CustomerPageData>
+        )}
       </CustomerPageContainer>
     );
   };
@@ -113,13 +131,11 @@ const NewCutlist: React.FC = () => {
         <Container>
           {page === 1 && <CustomerPage />}
           <StepsContainer>
-            <Divider />
             <Steps current={page - 1}>
               <Step title="Cliente" description="Selecione um cliente" />
               <Step title="Dados" description="Forneça os dados do pedido" />
               <Step title="Peças" description="Forneça a lista de peças" />
             </Steps>
-            <Divider />
           </StepsContainer>
         </Container>
       </AntContent>
