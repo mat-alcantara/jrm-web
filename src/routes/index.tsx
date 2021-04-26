@@ -10,6 +10,7 @@ import NewCustomer from '../pages/NewCustomer';
 import CustomersList from '../pages/CustomersList';
 import NewCutlist from '../pages/NewCutlist';
 import NewMaterial from '../pages/NewMaterial';
+import MaterialsList from '../pages/MaterialsList';
 
 const routes: React.FC = () => (
   <Switch>
@@ -19,6 +20,7 @@ const routes: React.FC = () => (
     <Route path="/newcutlist" exact component={NewCutlist} isPrivate />
     <Route path="/customerslist" exact component={CustomersList} isPrivate />
     <Route path="/newmaterial" exact component={NewMaterial} isPrivate />
+    <Route path="/materialslist" exact component={MaterialsList} isPrivate />
   </Switch>
 );
 
