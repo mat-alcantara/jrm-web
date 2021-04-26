@@ -1,33 +1,31 @@
 import styled from 'styled-components';
 
-export const Container = styled.div``;
-
-export const CustomerList = styled.div`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 600px;
-  margin: 0 auto;
-  margin-top: 16px;
+  align-items: center;
+  width: 100%;
+`;
 
-  span {
-    text-align: left;
+export const CustomerPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  width: 100%;
 
-    & + span {
-      margin-top: 8px;
+  div {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    button {
+      margin-left: 8px;
     }
   }
 `;
 
-export const OrderContainer = styled.div`
-  max-width: 500px;
-  margin: 0 auto;
-`;
-
-export const CutlistContainer = styled.div`
-  margin: 32px auto;
-
-  div div + div {
-    /* width: 150px; */
-    margin-left: 8px;
-  }
+export const StepsContainer = styled.div`
+  margin-top: 128px;
+  max-width: 900px;
+  width: 100%;
 `;

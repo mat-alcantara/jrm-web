@@ -40,6 +40,7 @@ const MaterialsList: React.FC = () => {
         },
       });
 
+      console.log(allMaterials);
       allMaterials.data.forEach((material) => {
         setMaterialsListOptions((prevValue) => [
           ...prevValue,

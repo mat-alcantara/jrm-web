@@ -1,21 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { AutoComplete, Divider } from 'antd';
+import { AutoComplete, Divider, Steps } from 'antd';
 import { Form } from '@unform/web';
 
 import api from '../../services/api';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
-import {
-  CustomerList,
-  Container,
-  OrderContainer,
-  CutlistContainer,
-} from './styles';
+import { Container, CustomerPageContainer, StepsContainer } from './styles';
 
 import AntInput from '../../components/AntInput';
 import AntSelect from '../../components/ReactSelect';
-import AntInputNumber from '../../components/AntInputNumber';
 import AntButton from '../../components/AntButton';
 
 interface ICustomersProps {
@@ -27,35 +21,32 @@ interface ICustomersProps {
   area: string;
   city: string;
   state: string;
-  created_at: string;
-  updated_at: string;
 }
-
-const orderOptions = {
-  orderStore: [
-    { value: 'Japuíba', label: 'Japuíba' },
-    { value: 'Frade', label: 'Frade' },
-    { value: 'São João de Meriti', label: 'São João de Meriti' },
-  ],
-  orderStatus: [
-    { value: 'Em Produção', label: 'Para Produzir' },
-    { value: 'Orçamento', label: 'Orçamento' },
-  ],
-  paymentType: [
-    { value: 'Pago', label: 'Pago' },
-    { value: 'Parcialmente Pago', label: 'Parcialmente Pago' },
-    { value: 'Receber na Entrega', label: 'Receber na Entrega' },
-  ],
-};
 
 const NewCutlist: React.FC = () => {
   const token = localStorage.getItem('@JRMCompensados:token');
+  const { Step } = Steps;
+  const options = {
+    orderStore: [
+      { value: 'Japuíba', label: 'Japuíba' },
+      { value: 'Frade', label: 'Frade' },
+      { value: 'São João de Meriti', label: 'São João de Meriti' },
+    ],
 
-  const [selectedCustomer, setSelectedCustomer] = useState<ICustomersProps>();
+    paymentType: [
+      { value: 'Pago', label: 'Pago' },
+      { value: 'Parcialmente Pago', label: 'Parcialmente Pago' },
+      { value: 'Receber na Entrega', label: 'Receber na Entrega' },
+      { value: 'Orçamento', label: 'Orçamento' },
+    ],
+  };
+
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<
     { value: string; id: string }[]
   >([]);
   const [allCustomers, setAllCustomers] = useState<ICustomersProps[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<ICustomersProps>();
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     async function loadCustomersFromApi() {
@@ -82,120 +73,54 @@ const NewCutlist: React.FC = () => {
     loadCustomersFromApi();
   }, []);
 
-  const handleSelectedCustomer = useCallback(
-    (value: string, option) => {
-      const customerSelectedByAutocomplete = allCustomers.find(
-        (customer) => customer.id === option.id,
-      );
+  const CustomerPage: React.FC = () => {
+    const handleSelectedCustomer = useCallback(
+      (value: string, option) => {
+        const customerSelectedByAutocomplete = allCustomers.find(
+          (customer) => customer.id === option.id,
+        );
 
-      setSelectedCustomer(customerSelectedByAutocomplete);
-    },
-    [allCustomers, selectedCustomer],
-  );
+        setSelectedCustomer(customerSelectedByAutocomplete);
+      },
+      [allCustomers, selectedCustomer],
+    );
 
-  const handleSubmit = useCallback((data) => {
-    // eslint-disable-next-line no-console
-    console.log(data);
-  }, []);
+    return (
+      <CustomerPageContainer>
+        <h1>Selecione um cliente</h1>
+        <div>
+          <AutoComplete
+            placeholder="Digite o nome de um cliente"
+            options={autoCompleteOptions}
+            onSelect={handleSelectedCustomer}
+          />
+          <AntButton
+            type="default"
+            disabled={!selectedCustomer}
+            onClick={() => setPage(2)}
+          >
+            Próximo
+          </AntButton>
+        </div>
+        {selectedCustomer && <p>{selectedCustomer.name}</p>}
+      </CustomerPageContainer>
+    );
+  };
 
   return (
     <AntDashboard>
       <AntContent>
         <Container>
-          <h1>Selecione um cliente</h1>
-          <AutoComplete
-            options={autoCompleteOptions}
-            style={{ width: 400 }}
-            placeholder="Digite o nome do cliente"
-            onSelect={handleSelectedCustomer}
-          />
-          {selectedCustomer && (
-            <CustomerList>
-              <span>{`Cliente: ${selectedCustomer.name}`}</span>
-              <span>
-                {`Endereço: ${selectedCustomer.street}, ${selectedCustomer.area}, ${selectedCustomer.city}`}
-              </span>
-              <span>{`Telefone: ${selectedCustomer.telephone[0]}`}</span>
-            </CustomerList>
-          )}
-          <Divider />
-          <h1>Dados do pedido</h1>
-          <OrderContainer>
-            <Form onSubmit={handleSubmit}>
-              <AntInput name="seller" placeholder="Vendedor" size="large" />
-
-              <AntSelect
-                name="orderStore"
-                placeholder="Loja do pedido"
-                options={orderOptions.orderStore}
-              />
-              <AntSelect
-                name="orderStatus"
-                placeholder="Tipo de pedido"
-                options={orderOptions.orderStatus}
-              />
-              <AntSelect
-                name="paymentStatus"
-                placeholder="Tipo de pagamento"
-                options={orderOptions.paymentType}
-              />
-              <AntInput name="ps" placeholder="Observações" size="large" />
-
-              <CutlistContainer>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <AntInput
-                    name="material"
-                    placeholder="Material"
-                    style={{
-                      textAlign: 'center',
-                      marginRight: '8px',
-                    }}
-                  />
-                  <p style={{ width: '150px' }}>R$ 500,00</p>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '100%',
-                  }}
-                >
-                  <AntInputNumber
-                    name="quantidade"
-                    placeholder="Qtd"
-                    style={{ flex: '1' }}
-                  />
-                  <AntInputNumber
-                    name="side_a_size"
-                    maxLength={4}
-                    placeholder="Lado A"
-                  />
-                  <AntInputNumber
-                    name="side_a_border"
-                    placeholder="Fita A"
-                    maxLength={1}
-                  />
-                  <AntInputNumber
-                    name="side_b_size"
-                    maxLength={4}
-                    placeholder="Lado B"
-                  />
-                  <AntInputNumber
-                    name="side_b_border"
-                    maxLength={1}
-                    placeholder="Fita B"
-                  />
-                </div>
-                <AntButton block type="link" style={{ marginTop: '8px' }}>
-                  Remover
-                </AntButton>
-              </CutlistContainer>
-
-              <AntButton block type="primary" htmlType="submit">
-                Criar
-              </AntButton>
-            </Form>
-          </OrderContainer>
+          {page === 1 && <CustomerPage />}
+          <StepsContainer>
+            <Divider />
+            <Steps current={page - 1}>
+              <Step title="Cliente" description="Selecione um cliente" />
+              <Step title="Dados" description="Forneça os dados do pedido" />
+              <Step title="Peças" description="Forneça a lista de peças" />
+            </Steps>
+            <Divider />
+          </StepsContainer>
         </Container>
       </AntContent>
     </AntDashboard>
