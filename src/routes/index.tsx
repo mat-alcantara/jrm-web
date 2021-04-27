@@ -14,7 +14,7 @@ import MaterialsList from '../pages/MaterialsList';
 const routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={SignIn} />
-    <Route path="/dashboard" exact component={NewCustomer} isPrivate />
+    <Route path="/dashboard" exact component={NewCutlist} isPrivate />
     <Route path="/newcustomer" exact component={NewCustomer} isPrivate />
     <Route path="/newcutlist" exact component={NewCutlist} isPrivate />
     <Route path="/customerslist" exact component={CustomersList} isPrivate />
