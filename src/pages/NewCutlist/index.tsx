@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { AutoComplete, Steps, Typography } from 'antd';
+import { AutoComplete, Divider, Steps, Typography } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core'; // List of props for form reference
 
+import AntInputNumber from 'components/AntInputNumber';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import api from '../../services/api';
@@ -20,6 +21,8 @@ import {
   CustomerAutocompleteAndButton,
   DataPageContainer,
   DataPageNextAndBackButton,
+  CutlistPageContainer,
+  InputCutlistContainer,
 } from './styles';
 
 import AntInput from '../../components/AntInput';
@@ -297,7 +300,53 @@ const NewCutlist: React.FC = () => {
   };
 
   const CutlistPage: React.FC = () => {
-    return <h1>Cutlist Page</h1>;
+    const formRef = useRef<FormHandles>(null);
+
+    const options = {
+      sideOptions: [
+        { value: '0', label: '0' },
+        { value: '1', label: '1' },
+        { value: '2', label: '2' },
+      ],
+    };
+
+    const handleSubmit = useCallback((data) => {
+      console.log(data);
+    }, []);
+
+    return (
+      <CutlistPageContainer>
+        <Typography.Title level={2}>Peças do pedido</Typography.Title>
+        <InputCutlistContainer>
+          <Form onSubmit={handleSubmit} ref={formRef}>
+            <AntSelect
+              name="quantidade"
+              placeholder="Material"
+              className="materialSelect"
+            />
+            <AntInput name="side_a_size" placeholder="Lado A" size="large" />
+            <AntSelect
+              name="side_a_border"
+              options={options.sideOptions}
+              placeholder="Fita A"
+            />
+            <AntInput name="side_b_size" placeholder="Lado B" size="large" />
+            <AntSelect
+              name="side_b_border"
+              options={options.sideOptions}
+              placeholder="Fita B"
+            />
+            <Typography.Text type="success" strong>
+              R$ 250
+            </Typography.Text>
+            <AntButton htmlType="submit" type="link">
+              Adicionar
+            </AntButton>
+          </Form>
+        </InputCutlistContainer>
+        <Divider />
+      </CutlistPageContainer>
+    );
   };
 
   return (

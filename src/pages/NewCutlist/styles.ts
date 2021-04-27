@@ -64,3 +64,45 @@ export const DataPageNextAndBackButton = styled.div`
     margin-left: 8px;
   }
 `;
+
+export const CutlistPageContainer = styled.div``;
+
+export const InputCutlistContainer = styled.div`
+  margin-top: 32px;
+
+  form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
+
+    .materialSelect div .react-select__value-container {
+      width: 250px;
+    }
+
+    > div + input {
+      margin-left: 8px;
+    }
+
+    > input + div {
+      margin-left: 8px;
+    }
+
+    > span {
+      margin-left: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      strong {
+        width: 70px;
+      }
+    }
+
+    button {
+      margin-left: 8px;
+    }
+  }
+`;
