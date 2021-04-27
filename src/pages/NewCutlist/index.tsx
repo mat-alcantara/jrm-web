@@ -1,12 +1,11 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { AutoComplete, Divider, Steps, Typography } from 'antd';
+import { AutoComplete, Divider, Steps, Typography, Table } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core'; // List of props for form reference
 
-import AntInputNumber from 'components/AntInputNumber';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import api from '../../services/api';
@@ -48,6 +47,34 @@ interface IOrderDataProps {
   ps?: string;
 }
 
+interface IMaterialsProps {
+  name: string;
+  width: number;
+  height: number;
+  price: number;
+}
+
+interface ICutlistProps {
+  material: string;
+  quantidade: number;
+  side_a_size: number;
+  side_b_size: number;
+  side_a_border: number;
+  side_b_border: number;
+  price?: number;
+}
+
+interface ICutlistDataSource {
+  key: number;
+  material: string;
+  quantidade: number;
+  side_a_size: number;
+  side_b_size: number;
+  side_a_border: number;
+  side_b_border: number;
+  price: number | undefined;
+}
+
 const NewCutlist: React.FC = () => {
   const token = localStorage.getItem('@JRMCompensados:token');
 
@@ -56,13 +83,19 @@ const NewCutlist: React.FC = () => {
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<
     { value: string; id: string }[]
   >([]);
+  const [allMaterials, setAllMaterials] = useState<IMaterialsProps[]>([]);
   const [allCustomers, setAllCustomers] = useState<ICustomersProps[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomersProps>();
   const [orderData, setOrderData] = useState<IOrderDataProps | null>();
   const [page, setPage] = useState<number>(1);
+  const [cutlist, setCutlist] = useState<ICutlistProps[]>([]);
+  const [cutlistDataSource, setCutlistDataSource] = useState<
+    ICutlistDataSource[]
+  >([]);
 
   useEffect(() => {
     async function loadCustomersFromApi() {
+      // Load Customers
       const allCustomersFromApi = await api.get<ICustomersProps[]>(
         '/customers',
         {
@@ -83,7 +116,27 @@ const NewCutlist: React.FC = () => {
       setAllCustomers([...allCustomersFromApi.data]);
     }
 
+    async function loadMaterialsFromApi() {
+      // Load materials
+      const allMaterialsFromApi = await api.get<IMaterialsProps[]>(
+        '/materials',
+        {
+          headers: {
+            Authorization: `bearer ${token}`,
+          },
+        },
+      );
+
+      setAllMaterials([...allMaterialsFromApi.data]);
+    }
+
     loadCustomersFromApi();
+    loadMaterialsFromApi();
+  }, []);
+
+  const handleSubmitData = useCallback(() => {
+    // eslint-disable-next-line no-console
+    console.log('ok');
   }, []);
 
   const CustomerPage: React.FC = () => {
@@ -153,7 +206,7 @@ const NewCutlist: React.FC = () => {
       ],
     };
 
-    const validateCustomerProps = useCallback(
+    const validateDataPageProps = useCallback(
       async ({
         seller,
         orderStore,
@@ -193,7 +246,7 @@ const NewCutlist: React.FC = () => {
         ps,
       }: IOrderDataProps) => {
         try {
-          await validateCustomerProps({
+          await validateDataPageProps({
             seller,
             orderStore,
             paymentStatus,
@@ -302,17 +355,167 @@ const NewCutlist: React.FC = () => {
   const CutlistPage: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
 
+    const allMaterialsOptions = allMaterials.map((material) => {
+      return {
+        value: material.name,
+        label: material.name,
+      };
+    });
+
     const options = {
       sideOptions: [
         { value: '0', label: '0' },
         { value: '1', label: '1' },
         { value: '2', label: '2' },
       ],
+      materialsOptions: [...allMaterialsOptions],
     };
 
-    const handleSubmit = useCallback((data) => {
-      console.log(data);
-    }, []);
+    const columns = [
+      {
+        title: 'Material',
+        dataIndex: 'material',
+        key: 'material',
+      },
+      {
+        title: 'Quantidade',
+        dataIndex: 'quantidade',
+        key: 'quantidade',
+      },
+      {
+        title: 'Tamanho A',
+        dataIndex: 'side_a_size',
+        key: 'side_a_size',
+      },
+      {
+        title: 'Fita A',
+        dataIndex: 'side_a_border',
+        key: 'side_b_border',
+      },
+      {
+        title: 'Tamanho B',
+        dataIndex: 'side_b_size',
+        key: 'side_b_size',
+      },
+      {
+        title: 'Fita B',
+        dataIndex: 'side_b_border',
+        key: 'side_b_border',
+      },
+      {
+        title: 'Preço',
+        dataIndex: 'price',
+        key: 'price',
+      },
+    ];
+
+    const validateCutlistPageProps = useCallback(
+      async ({
+        material,
+        quantidade,
+        price,
+        side_a_border,
+        side_a_size,
+        side_b_border,
+        side_b_size,
+      }: ICutlistProps) => {
+        const schema = Yup.object().shape({
+          material: Yup.string().required(),
+          quantidade: Yup.number().required('Quantidade necessária'),
+          price: Yup.number().required(),
+          side_a_size: Yup.number()
+            .min(60, 'Deve ter pelo menos 6mm')
+            .max(2750, 'Não deve ultrapassar 2750mm')
+            .required('Tamanho necessário'),
+          side_b_size: Yup.number()
+            .min(60, 'Deve ter pelo menos 6mm')
+            .max(2750, 'Não deve ultrapassar 2750mm')
+            .required('Tamanho necessário'),
+          side_a_border: Yup.number().min(0).max(2).required(),
+          side_b_border: Yup.number().min(0).max(2).required(),
+        });
+
+        const isPropsValid = await schema.validate(
+          {
+            material,
+            quantidade,
+            price,
+            side_a_border,
+            side_a_size,
+            side_b_border,
+            side_b_size,
+          },
+          {
+            // Faz com que todos os erros sejam pegos pelo catch
+            abortEarly: false,
+          },
+        );
+
+        return isPropsValid;
+      },
+      [],
+    );
+
+    const handleSubmit = useCallback(
+      async ({
+        material,
+        quantidade,
+        side_a_size,
+        side_a_border,
+        side_b_border,
+        side_b_size,
+      }: ICutlistProps) => {
+        try {
+          const materialValue = allMaterials.find(
+            (materialFound) => materialFound.name === material,
+          );
+
+          await validateCutlistPageProps({
+            material,
+            quantidade,
+            price: materialValue?.price,
+            side_a_size,
+            side_a_border,
+            side_b_border,
+            side_b_size,
+          });
+
+          await setCutlist((prevVal) => [
+            ...prevVal,
+            {
+              material,
+              quantidade,
+              price: materialValue?.price,
+              side_a_size,
+              side_a_border,
+              side_b_border,
+              side_b_size,
+            },
+          ]);
+
+          await setCutlistDataSource((prevVal) => [
+            ...prevVal,
+            {
+              key: cutlistDataSource.length + 1,
+              material,
+              quantidade,
+              price: materialValue?.price,
+              side_a_size,
+              side_a_border,
+              side_b_border,
+              side_b_size,
+            },
+          ]);
+        } catch (err) {
+          if (err instanceof Yup.ValidationError) {
+            const errors = getValidationErrors(err);
+
+            formRef.current?.setErrors(errors);
+          }
+        }
+      },
+      [cutlist, cutlistDataSource],
+    );
 
     return (
       <CutlistPageContainer>
@@ -320,10 +523,12 @@ const NewCutlist: React.FC = () => {
         <InputCutlistContainer>
           <Form onSubmit={handleSubmit} ref={formRef}>
             <AntSelect
-              name="quantidade"
+              name="material"
               placeholder="Material"
               className="materialSelect"
+              options={options.materialsOptions}
             />
+            <AntInput name="quantidade" placeholder="Qtd" size="large" />
             <AntInput name="side_a_size" placeholder="Lado A" size="large" />
             <AntSelect
               name="side_a_border"
@@ -336,15 +541,13 @@ const NewCutlist: React.FC = () => {
               options={options.sideOptions}
               placeholder="Fita B"
             />
-            <Typography.Text type="success" strong>
-              R$ 250
-            </Typography.Text>
             <AntButton htmlType="submit" type="link">
               Adicionar
             </AntButton>
           </Form>
         </InputCutlistContainer>
         <Divider />
+        <Table columns={columns} dataSource={cutlistDataSource} />
       </CutlistPageContainer>
     );
   };
@@ -355,7 +558,20 @@ const NewCutlist: React.FC = () => {
         <Container>
           {page === 1 && <CustomerPage />}
           {page === 2 && <DataPage />}
-          {page === 3 && <CutlistPage />}
+          {page === 3 && (
+            <>
+              <CutlistPage />
+              <AntButton
+                block
+                type="primary"
+                size="large"
+                onClick={() => handleSubmitData()}
+                style={{ maxWidth: '1000px' }}
+              >
+                Confirmar pedido
+              </AntButton>
+            </>
+          )}
           <StepsContainer>
             <Steps current={page - 1}>
               <Step title="Cliente" description="Selecione um cliente" />

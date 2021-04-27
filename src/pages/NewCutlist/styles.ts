@@ -79,7 +79,7 @@ export const InputCutlistContainer = styled.div`
     max-width: 1000px;
 
     .materialSelect div .react-select__value-container {
-      width: 250px;
+      width: 275px;
     }
 
     > div + input {
@@ -90,15 +90,13 @@ export const InputCutlistContainer = styled.div`
       margin-left: 8px;
     }
 
-    > span {
+    > input + input {
       margin-left: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    }
 
-      strong {
-        width: 70px;
-      }
+    > span {
+      margin-right: 8px;
+      margin-left: 8px;
     }
 
     button {
