@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { AutoComplete, Divider, Steps, Typography, Table } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Form } from '@unform/web';
@@ -77,6 +78,7 @@ interface ICutlistDataSource {
 
 const NewCutlist: React.FC = () => {
   const token = localStorage.getItem('@JRMCompensados:token');
+  const history = useHistory();
 
   const { Step } = Steps;
 
@@ -134,10 +136,37 @@ const NewCutlist: React.FC = () => {
     loadMaterialsFromApi();
   }, []);
 
-  const handleSubmitData = useCallback(() => {
-    // eslint-disable-next-line no-console
-    console.log('ok');
-  }, []);
+  const handleSubmitData = useCallback(async () => {
+    const cutlistWithPriceRemoved = cutlist.map((currentCutlist) => {
+      return {
+        material: currentCutlist.material,
+        side_a_size: currentCutlist.side_a_size,
+        side_b_size: currentCutlist.side_b_size,
+        side_a_border: currentCutlist.side_a_border,
+        side_b_border: currentCutlist.side_b_border,
+        quantidade: currentCutlist.quantidade,
+      };
+    });
+
+    const orderPostData = {
+      customerId: selectedCustomer?.id,
+      cutlist: cutlistWithPriceRemoved,
+      orderStore: orderData?.orderStore,
+      orderStatus: orderData?.orderStatus,
+      paymentStatus: orderData?.paymentStatus,
+      ps: orderData?.ps,
+      seller: orderData?.seller,
+      price: 250,
+    };
+
+    await api.post('/orders', orderPostData, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    });
+
+    history.push('/newcustomer');
+  }, [selectedCustomer, orderData, cutlist]);
 
   const CustomerPage: React.FC = () => {
     const handleSelectedCustomer = useCallback(
@@ -188,7 +217,7 @@ const NewCutlist: React.FC = () => {
 
     const options = {
       orderStore: [
-        { value: 'Japuíba', label: 'Japuíba' },
+        { value: 'Japuiba', label: 'Japuíba' },
         { value: 'Frade', label: 'Frade' },
         { value: 'São João de Meriti', label: 'São João de Meriti' },
       ],
@@ -197,11 +226,10 @@ const NewCutlist: React.FC = () => {
         { value: 'Pago', label: 'Pago' },
         { value: 'Parcialmente Pago', label: 'Parcialmente Pago' },
         { value: 'Receber na Entrega', label: 'Receber na Entrega' },
-        { value: 'Orçamento', label: 'Orçamento' },
       ],
 
       orderStatus: [
-        { value: 'Em produção', label: 'Produção' },
+        { value: 'Em Produção', label: 'Produção' },
         { value: 'Orçamento', label: 'Orçamento' },
       ],
     };
@@ -220,7 +248,7 @@ const NewCutlist: React.FC = () => {
           paymentStatus: Yup.string().required(
             'Método de pagamento obrigatório',
           ),
-          ps: Yup.string(),
+          ps: Yup.string().nullable(),
           orderStatus: Yup.string(),
         });
 
@@ -279,8 +307,8 @@ const NewCutlist: React.FC = () => {
           onSubmit={handleSubmitDataPage}
           ref={formRef}
           initialData={{
-            seller: orderData?.seller || '',
-            ps: orderData?.ps || '',
+            seller: orderData?.seller,
+            ps: orderData?.ps,
           }}
         >
           <AntSelect
@@ -305,7 +333,7 @@ const NewCutlist: React.FC = () => {
           />
           <AntSelect
             name="paymentStatus"
-            placeholder="Método de pagamento"
+            placeholder="Status de pagamento"
             options={options.paymentType}
             defaultInputValue={orderData?.paymentStatus}
             isClearable
@@ -567,6 +595,7 @@ const NewCutlist: React.FC = () => {
                 size="large"
                 onClick={() => handleSubmitData()}
                 style={{ maxWidth: '1000px' }}
+                disabled={!!cutlist}
               >
                 Confirmar pedido
               </AntButton>
