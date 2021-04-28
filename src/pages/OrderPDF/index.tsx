@@ -6,6 +6,8 @@ import {
   View,
   Document,
   StyleSheet,
+  Svg,
+  Line,
 } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
@@ -53,10 +55,22 @@ const OrderPDF: React.FC = () => {
           >
             <View>
               <Text style={{ fontSize: '24', textAlign: 'center' }}>
-                Dados de Corte
+                Relatório de Corte
               </Text>
+
+              <Svg height="1" width="100%" style={{ marginTop: '8' }}>
+                <Line
+                  x1="0"
+                  y1="0"
+                  x2="1000"
+                  y2="0"
+                  strokeWidth={2}
+                  stroke="#c1c1c1"
+                />
+              </Svg>
+
               <View>
-                <Text style={{ fontSize: '16', margin: '32 0 12 0' }}>
+                <Text style={{ fontSize: '16', margin: '16 0 12 0' }}>
                   Dados do cliente
                 </Text>
                 <Text style={{ fontSize: '12', marginBottom: '4' }}>
@@ -68,8 +82,18 @@ const OrderPDF: React.FC = () => {
                 </Text>
                 <Text style={{ fontSize: '12' }}>Telefone: 24999710064</Text>
               </View>
+              <Svg height="1" width="100%" style={{ marginTop: '16' }}>
+                <Line
+                  x1="0"
+                  y1="0"
+                  x2="1000"
+                  y2="0"
+                  strokeWidth={2}
+                  stroke="#c1c1c1"
+                />
+              </Svg>
               <View>
-                <Text style={{ fontSize: '16', margin: '32 0 12 0' }}>
+                <Text style={{ fontSize: '16', margin: '16 0 12 0' }}>
                   Dados do Pedido
                 </Text>
                 <Text style={{ fontSize: '12', marginBottom: '4' }}>
@@ -85,8 +109,18 @@ const OrderPDF: React.FC = () => {
                   Observação: Entregar na casa do cliente
                 </Text>
               </View>
+              <Svg height="1" width="100%" style={{ marginTop: '16' }}>
+                <Line
+                  x1="0"
+                  y1="0"
+                  x2="1000"
+                  y2="0"
+                  strokeWidth={2}
+                  stroke="#c1c1c1"
+                />
+              </Svg>
               <View>
-                <Text style={{ fontSize: '16', margin: '32 0 16 0' }}>
+                <Text style={{ fontSize: '16', margin: '16 0 16 0' }}>
                   Lista de peças
                 </Text>
                 <View style={styles.table}>
