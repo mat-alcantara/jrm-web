@@ -50,6 +50,7 @@ interface IOrderDataProps {
 }
 
 interface IMaterialsProps {
+  id: string;
   name: string;
   width: number;
   height: number;
@@ -252,7 +253,10 @@ const NewCutlist: React.FC = () => {
           ),
           ps: Yup.string().nullable(),
           orderStatus: Yup.string(),
-          pricePercent: Yup.number().min(0).max(100).required(),
+          pricePercent: Yup.number()
+            .min(0, 'Valor deve ser maior que 0')
+            .max(100, 'Valor deve ser menor do que 100')
+            .required('Porcentagem necessária para calculo do preço'),
         });
 
         const isPropsValid = await schema.validate(
@@ -315,6 +319,7 @@ const NewCutlist: React.FC = () => {
           initialData={{
             seller: orderData?.seller,
             ps: orderData?.ps,
+            pricePercent: orderData?.pricePercent,
           }}
         >
           <AntSelect
@@ -397,7 +402,7 @@ const NewCutlist: React.FC = () => {
 
     const allMaterialsOptions = allMaterials.map((material) => {
       return {
-        value: material.name,
+        value: material.id,
         label: material.name,
       };
     });
@@ -448,6 +453,33 @@ const NewCutlist: React.FC = () => {
         key: 'price',
       },
     ];
+
+    const calculateCutlistPrice = useCallback(
+      (material: IMaterialsProps, cutlistData: ICutlistProps) => {
+        const qtd = cutlistData.quantidade;
+        const At = material.width * material.height;
+        const Ap = cutlistData.side_a_size * cutlistData.side_b_size;
+        const preço = material.price;
+        const LFp = cutlistData.side_a_size * cutlistData.side_a_border;
+        const AFp = cutlistData.side_b_size * cutlistData.side_b_border;
+        let porc: number;
+
+        if (orderData?.pricePercent) {
+          porc = orderData?.pricePercent;
+        } else {
+          porc = 75;
+        }
+
+        const calculatedMaterial = (Ap * preço * (1 + porc / 100)) / At;
+
+        const calculatedBorder = (3 * (LFp + AFp)) / 1000;
+
+        const calculatedPrice = calculatedMaterial + calculatedBorder;
+
+        return qtd * Math.ceil(calculatedPrice);
+      },
+      [orderData],
+    );
 
     const validateCutlistPageProps = useCallback(
       async ({
@@ -506,14 +538,27 @@ const NewCutlist: React.FC = () => {
         side_b_size,
       }: ICutlistProps) => {
         try {
-          const materialValue = allMaterials.find(
-            (materialFound) => materialFound.name === material,
+          const materialUsed = allMaterials.find(
+            (materialFound) => materialFound.id === material,
           );
 
-          await validateCutlistPageProps({
+          if (!materialUsed) {
+            throw new Error('Material does not exist');
+          }
+
+          const price = calculateCutlistPrice(materialUsed, {
             material,
             quantidade,
-            price: materialValue?.price,
+            side_a_size,
+            side_a_border,
+            side_b_border,
+            side_b_size,
+          });
+
+          await validateCutlistPageProps({
+            material: materialUsed.name,
+            quantidade,
+            price,
             side_a_size,
             side_a_border,
             side_b_border,
@@ -523,9 +568,9 @@ const NewCutlist: React.FC = () => {
           await setCutlist((prevVal) => [
             ...prevVal,
             {
-              material,
+              material: materialUsed.name,
               quantidade,
-              price: materialValue?.price,
+              price,
               side_a_size,
               side_a_border,
               side_b_border,
@@ -537,9 +582,9 @@ const NewCutlist: React.FC = () => {
             ...prevVal,
             {
               key: cutlistDataSource.length + 1,
-              material,
+              material: materialUsed.name,
               quantidade,
-              price: materialValue?.price,
+              price,
               side_a_size,
               side_a_border,
               side_b_border,
