@@ -46,6 +46,7 @@ interface IOrderDataProps {
   paymentStatus: string;
   orderStatus: string;
   ps?: string;
+  pricePercent: number;
 }
 
 interface IMaterialsProps {
@@ -241,6 +242,7 @@ const NewCutlist: React.FC = () => {
         orderStatus,
         paymentStatus,
         ps,
+        pricePercent,
       }: IOrderDataProps) => {
         const schema = Yup.object().shape({
           seller: Yup.string().required('Vendedor obrigatório'),
@@ -250,10 +252,11 @@ const NewCutlist: React.FC = () => {
           ),
           ps: Yup.string().nullable(),
           orderStatus: Yup.string(),
+          pricePercent: Yup.number().min(0).max(100).required(),
         });
 
         const isPropsValid = await schema.validate(
-          { seller, orderStore, paymentStatus, ps, orderStatus },
+          { seller, orderStore, paymentStatus, ps, orderStatus, pricePercent },
           {
             // Faz com que todos os erros sejam pegos pelo catch
             abortEarly: false,
@@ -272,6 +275,7 @@ const NewCutlist: React.FC = () => {
         paymentStatus,
         orderStatus,
         ps,
+        pricePercent,
       }: IOrderDataProps) => {
         try {
           await validateDataPageProps({
@@ -280,6 +284,7 @@ const NewCutlist: React.FC = () => {
             paymentStatus,
             ps,
             orderStatus,
+            pricePercent,
           });
 
           setOrderData({
@@ -288,6 +293,7 @@ const NewCutlist: React.FC = () => {
             paymentStatus,
             ps,
             orderStatus,
+            pricePercent,
           });
         } catch (err) {
           if (err instanceof Yup.ValidationError) {
@@ -337,6 +343,12 @@ const NewCutlist: React.FC = () => {
             options={options.paymentType}
             defaultInputValue={orderData?.paymentStatus}
             isClearable
+          />
+          <AntInput
+            name="pricePercent"
+            placeholder="Porcentagem do preço"
+            size="large"
+            defaultValue={orderData?.pricePercent}
           />
           <AntInput
             name="ps"
