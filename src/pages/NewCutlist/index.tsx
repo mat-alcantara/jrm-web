@@ -67,6 +67,16 @@ interface ICutlistProps {
   price?: number;
 }
 
+interface ICutlistStateProps {
+  material_id: string;
+  quantidade: number;
+  side_a_size: number;
+  side_b_size: number;
+  side_a_border: number;
+  side_b_border: number;
+  price?: number;
+}
+
 interface ICutlistDataSource {
   key: number;
   material: string;
@@ -92,7 +102,8 @@ const NewCutlist: React.FC = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomersProps>();
   const [orderData, setOrderData] = useState<IOrderDataProps | null>();
   const [page, setPage] = useState<number>(1);
-  const [cutlist, setCutlist] = useState<ICutlistProps[]>([]);
+  const [cutlist, setCutlist] = useState<ICutlistStateProps[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [cutlistDataSource, setCutlistDataSource] = useState<
     ICutlistDataSource[]
   >([]);
@@ -139,35 +150,42 @@ const NewCutlist: React.FC = () => {
   }, []);
 
   const handleSubmitData = useCallback(async () => {
-    const cutlistWithPriceRemoved = cutlist.map((currentCutlist) => {
-      return {
-        material: currentCutlist.material,
-        side_a_size: currentCutlist.side_a_size,
-        side_b_size: currentCutlist.side_b_size,
-        side_a_border: currentCutlist.side_a_border,
-        side_b_border: currentCutlist.side_b_border,
-        quantidade: currentCutlist.quantidade,
-      };
-    });
-
     const orderPostData = {
       customerId: selectedCustomer?.id,
-      cutlist: cutlistWithPriceRemoved,
+      cutlist,
       orderStore: orderData?.orderStore,
       orderStatus: orderData?.orderStatus,
       paymentStatus: orderData?.paymentStatus,
       ps: orderData?.ps,
       seller: orderData?.seller,
-      price: 250,
     };
 
-    await api.post('/orders', orderPostData, {
+    const orderCreated = await api.post('/orders', orderPostData, {
       headers: {
         Authorization: `bearer ${token}`,
       },
     });
 
-    history.push('/newcustomer');
+    const PDFCreatedInBlob = await api.post(
+      `/orderpdf/${orderCreated.data.id}`,
+      {},
+      {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+        responseType: 'blob',
+      },
+    );
+
+    const file = new Blob([PDFCreatedInBlob.data], {
+      type: 'application/pdf',
+    });
+
+    const fileURL = URL.createObjectURL(file);
+
+    window.open(fileURL);
+
+    history.push('/allcutlists');
   }, [selectedCustomer, orderData, cutlist]);
 
   const CustomerPage: React.FC = () => {
@@ -478,7 +496,7 @@ const NewCutlist: React.FC = () => {
 
         return qtd * Math.ceil(calculatedPrice);
       },
-      [orderData],
+      [orderData, cutlist],
     );
 
     const validateCutlistPageProps = useCallback(
@@ -568,7 +586,7 @@ const NewCutlist: React.FC = () => {
           await setCutlist((prevVal) => [
             ...prevVal,
             {
-              material: materialUsed.name,
+              material_id: material,
               quantidade,
               price,
               side_a_size,
@@ -577,6 +595,8 @@ const NewCutlist: React.FC = () => {
               side_b_size,
             },
           ]);
+
+          await setTotalPrice((prev) => prev + price);
 
           await setCutlistDataSource((prevVal) => [
             ...prevVal,
@@ -632,7 +652,11 @@ const NewCutlist: React.FC = () => {
           </Form>
         </InputCutlistContainer>
         <Divider />
-        <Table columns={columns} dataSource={cutlistDataSource} />
+        <Table
+          columns={columns}
+          dataSource={cutlistDataSource}
+          footer={() => `Total: ${totalPrice}`}
+        />
       </CutlistPageContainer>
     );
   };
@@ -652,7 +676,7 @@ const NewCutlist: React.FC = () => {
                 size="large"
                 onClick={() => handleSubmitData()}
                 style={{ maxWidth: '1000px' }}
-                disabled={!!cutlist}
+                disabled={cutlist.length === 0}
               >
                 Confirmar pedido
               </AntButton>
