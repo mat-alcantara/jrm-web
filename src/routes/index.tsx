@@ -10,7 +10,6 @@ import CustomersList from '../pages/CustomersList';
 import NewCutlist from '../pages/NewCutlist';
 import NewMaterial from '../pages/NewMaterial';
 import MaterialsList from '../pages/MaterialsList';
-import OrderPDF from '../pages/OrderPDF';
 import AllOrders from '../pages/AllOrders';
 
 const routes: React.FC = () => (
