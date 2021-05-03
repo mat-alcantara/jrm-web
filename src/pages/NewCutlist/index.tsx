@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AutoComplete, Divider, Steps, Typography, Table } from 'antd';
+import { AutoComplete, Divider, Steps, Typography, Table, Space } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core'; // List of props for form reference
+import { v4 } from 'uuid';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -68,6 +69,7 @@ interface ICutlistProps {
 }
 
 interface ICutlistStateProps {
+  id: string;
   material_id: string;
   quantidade: number;
   side_a_size: number;
@@ -78,7 +80,7 @@ interface ICutlistStateProps {
 }
 
 interface ICutlistDataSource {
-  key: number;
+  key: string;
   material: string;
   quantidade: number;
   side_a_size: number;
@@ -418,6 +420,16 @@ const NewCutlist: React.FC = () => {
   const CutlistPage: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
 
+    const handleRemoveCutlist = useCallback((id: string) => {
+      const newCutlistDataSourceState = cutlistDataSource.filter(
+        (cut) => cut.key !== id,
+      );
+      const newCutlistState = cutlist.filter((cut) => cut.id !== id);
+
+      setCutlistDataSource([...newCutlistDataSourceState]);
+      setCutlist([...newCutlistState]);
+    }, []);
+
     const allMaterialsOptions = allMaterials.map((material) => {
       return {
         value: material.id,
@@ -469,6 +481,20 @@ const NewCutlist: React.FC = () => {
         title: 'Preço',
         dataIndex: 'price',
         key: 'price',
+      },
+      {
+        title: '',
+        key: 'action',
+        render: (text: string, record: ICutlistDataSource) => (
+          <Space size="middle">
+            <AntButton
+              onClick={() => handleRemoveCutlist(record.key)}
+              type="link"
+            >
+              Remover
+            </AntButton>
+          </Space>
+        ),
       },
     ];
 
@@ -583,9 +609,12 @@ const NewCutlist: React.FC = () => {
             side_b_size,
           });
 
+          const cutlistId = v4();
+
           await setCutlist((prevVal) => [
             ...prevVal,
             {
+              id: cutlistId,
               material_id: material,
               quantidade,
               price,
@@ -601,7 +630,7 @@ const NewCutlist: React.FC = () => {
           await setCutlistDataSource((prevVal) => [
             ...prevVal,
             {
-              key: cutlistDataSource.length + 1,
+              key: cutlistId,
               material: materialUsed.name,
               quantidade,
               price,
