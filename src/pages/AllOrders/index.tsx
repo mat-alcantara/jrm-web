@@ -167,6 +167,31 @@ const AllOrders: React.FC = () => {
       title: 'Status do Pedido',
       dataIndex: 'orderStatus',
       key: 'orderStatus',
+      filters: [
+        {
+          text: 'Em Produção',
+          value: 'Em Produção',
+        },
+        {
+          text: 'Liberado para Transporte',
+          value: 'Liberado para Transporte',
+        },
+        {
+          text: 'Transportado',
+          value: 'Transportado',
+        },
+        {
+          text: 'Entregue',
+          value: 'Entregue',
+        },
+        {
+          text: 'Orçamento',
+          value: 'Orçamento',
+        },
+      ],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onFilter: (value: any, record: IDataSource) =>
+        record.orderStatus.indexOf(value) === 0,
     },
     {
       title: 'Preço',
@@ -184,7 +209,7 @@ const AllOrders: React.FC = () => {
       render: (text: string, record: IDataSource) => (
         <Space size="middle">
           <AntButton type="link" onClick={() => handleRemoveOrder(record.key)}>
-            Delete
+            Deletar
           </AntButton>
           <AntButton type="link" onClick={() => openPDF(record.key)}>
             Gerar PDF
