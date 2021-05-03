@@ -30,7 +30,9 @@ const AntHeader: React.FC = () => {
           <Item>Liberados para transporte</Item>
           <Item>Concluídos</Item>
           <Item>Orçamentos</Item>
-          <Item>Todos os cortes</Item>
+          <Item>
+            <Link to="/allorders">Todos os cortes</Link>
+          </Item>
         </SubMenu>
         <SubMenu title="Clientes">
           <Item>
