@@ -185,7 +185,7 @@ const NewCutlist: React.FC = () => {
 
     window.open(fileURL);
 
-    history.push('/allcutlists');
+    history.push('/allorders');
   }, [selectedCustomer, orderData, cutlist]);
 
   const CustomerPage: React.FC = () => {
