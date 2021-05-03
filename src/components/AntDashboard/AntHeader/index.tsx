@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { FiMenu, FiUser } from 'react-icons/fi';
+import { FiMenu } from 'react-icons/fi';
 import { Menu } from 'antd';
 
 import { useAuth } from '../../../hooks/Auth';
@@ -25,7 +25,10 @@ const AntHeader: React.FC = () => {
         <Item>
           <Link to="/newcutlist">Novo serviço</Link>
         </Item>
-        <SubMenu title="Cortes">
+        <Item>
+          <Link to="/allorders">Cortes</Link>
+        </Item>
+        {/* <SubMenu title="Cortes">
           <Item>Em produção</Item>
           <Item>Liberados para transporte</Item>
           <Item>Concluídos</Item>
@@ -33,7 +36,7 @@ const AntHeader: React.FC = () => {
           <Item>
             <Link to="/allorders">Todos os cortes</Link>
           </Item>
-        </SubMenu>
+        </SubMenu> */}
         <SubMenu title="Clientes">
           <Item>
             <Link to="/newcustomer">Novo cliente</Link>
@@ -50,10 +53,11 @@ const AntHeader: React.FC = () => {
             <Link to="/materialslist">Todos os materiais</Link>
           </Item>
         </SubMenu>
-        <SubMenu icon={<FiUser size={20} style={{ margin: '0 auto' }} />}>
+        <Item onClick={handleLogOut}>Sair</Item>
+        {/* <SubMenu icon={<FiUser size={20} style={{ margin: '0 auto' }} />}>
           <Item>Ajustes</Item>
           <Item onClick={handleLogOut}>Sair</Item>
-        </SubMenu>
+        </SubMenu> */}
       </StyledMenu>
     </StyledHeader>
   );
