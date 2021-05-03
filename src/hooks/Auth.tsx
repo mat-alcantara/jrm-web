@@ -15,6 +15,7 @@ interface ISignInCredentials {
 
 interface IAuthContext {
   user: object;
+  token: string;
   signIn(credentials: ISignInCredentials): Promise<void>;
   signOut(): void;
 }
@@ -58,7 +59,9 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user: data.user, token: data.token, signIn, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );
