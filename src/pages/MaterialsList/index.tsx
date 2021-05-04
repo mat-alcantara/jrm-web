@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { List } from 'antd';
 
-import api from '../../services/api';
+import { useMaterial } from '../../hooks/Material';
 
 import { Container } from './styles';
 
@@ -15,53 +15,31 @@ interface IMaterialsOptionsProps {
   id: string;
 }
 
-interface IMaterialsProps {
-  name: string;
-  price: number;
-  id: string;
-  width: number;
-  height: number;
-  created_at: number;
-  updated_at: number;
-}
-
 const MaterialsList: React.FC = () => {
-  const token = localStorage.getItem('@JRMCompensados:token');
+  const { allMaterials, removeMaterial } = useMaterial();
 
   const [materialsListOptions, setMaterialsListOptions] = useState<
     IMaterialsOptionsProps[]
   >([]);
 
   useEffect(() => {
-    async function loadMaterials() {
-      const allMaterials = await api.get<IMaterialsProps[]>('/materials', {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
-
-      allMaterials.data.forEach((material) => {
-        setMaterialsListOptions((prevValue) => [
-          ...prevValue,
-          { id: material.id, name: material.name, price: material.price },
-        ]);
-      });
-    }
-
-    loadMaterials();
+    allMaterials.forEach((material) => {
+      setMaterialsListOptions((prevValue) => [
+        ...prevValue,
+        { id: material.id, name: material.name, price: material.price },
+      ]);
+    });
   }, []);
 
   const handleRemoveMaterial = useCallback(
     async (id: string) => {
-      await api.delete(`/materials/${id}`, {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
+      await removeMaterial(id);
 
-      setMaterialsListOptions(() => {
-        return materialsListOptions.filter((material) => material.id !== id);
-      });
+      const filteredMaterialsList = materialsListOptions.filter(
+        (material) => material.id !== id,
+      );
+
+      setMaterialsListOptions([...filteredMaterialsList]);
     },
     [materialsListOptions],
   );
