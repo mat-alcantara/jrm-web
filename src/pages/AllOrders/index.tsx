@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Table, Space, Typography } from 'antd';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
-
-import generatePDF from '../../services/generatePDF';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
@@ -24,7 +22,7 @@ interface IDataSource {
 }
 
 const AllOrders: React.FC = () => {
-  const { allOrders, removeOrder } = useOrder();
+  const { allOrders, removeOrder, generatePDF } = useOrder();
   const { allCustomers } = useCustomer();
 
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
@@ -48,6 +46,17 @@ const AllOrders: React.FC = () => {
 
     setDataSource([...dataToSetDataSource]);
   }, []);
+
+  const handleRemoveOrder = useCallback(
+    async (id: string) => {
+      await removeOrder(id);
+
+      const filteredDataSource = dataSource.filter((order) => order.key !== id);
+
+      setDataSource([...filteredDataSource]);
+    },
+    [dataSource],
+  );
 
   const columns = [
     {
@@ -110,7 +119,7 @@ const AllOrders: React.FC = () => {
       key: 'action',
       render: (text: string, record: IDataSource) => (
         <Space size="middle">
-          <AntButton type="link" onClick={() => removeOrder(record.key)}>
+          <AntButton type="link" onClick={() => handleRemoveOrder(record.key)}>
             Deletar
           </AntButton>
           <AntButton type="link" onClick={() => generatePDF(record.key)}>

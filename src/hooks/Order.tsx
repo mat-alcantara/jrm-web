@@ -16,6 +16,7 @@ import IOrder from '../types/IOrder';
 interface IOrderContext {
   allOrders: IOrder[];
   removeOrder(id: string): Promise<void>;
+  generatePDF(id: string): Promise<void>;
 }
 
 const OrderContext = createContext<IOrderContext>({} as IOrderContext);
@@ -55,8 +56,29 @@ export const OrderProvider: React.FC = ({ children }) => {
     [allOrders],
   );
 
+  const generatePDF = useCallback(async (id: string) => {
+    const PDFCreatedInBlob = await api.post(
+      `/orderpdf/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+        responseType: 'blob',
+      },
+    );
+
+    const file = new Blob([PDFCreatedInBlob.data], {
+      type: 'application/pdf',
+    });
+
+    const fileURL = URL.createObjectURL(file);
+
+    window.open(fileURL);
+  }, []);
+
   return (
-    <OrderContext.Provider value={{ allOrders, removeOrder }}>
+    <OrderContext.Provider value={{ allOrders, removeOrder, generatePDF }}>
       {children}
     </OrderContext.Provider>
   );

@@ -30,6 +30,10 @@ import AntInput from '../../components/AntInput';
 import AntSelect from '../../components/ReactSelect';
 import AntButton from '../../components/AntButton';
 
+import CustomerSelection from './CustomerSelection';
+
+import ICustomer from '../../types/ICustomer';
+
 interface ICustomersProps {
   id: string;
   name: string;
@@ -99,9 +103,10 @@ const NewCutlist: React.FC = () => {
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<
     { value: string; id: string }[]
   >([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
+
   const [allMaterials, setAllMaterials] = useState<IMaterialsProps[]>([]);
   const [allCustomers, setAllCustomers] = useState<ICustomersProps[]>([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<ICustomersProps>();
   const [orderData, setOrderData] = useState<IOrderDataProps | null>();
   const [page, setPage] = useState<number>(1);
   const [cutlist, setCutlist] = useState<ICutlistStateProps[]>([]);
@@ -694,7 +699,13 @@ const NewCutlist: React.FC = () => {
     <AntDashboard>
       <AntContent>
         <Container>
-          {page === 1 && <CustomerPage />}
+          {page === 1 && (
+            <CustomerSelection
+              setPage={setPage}
+              setSelectedCustomer={setSelectedCustomer}
+              selectedCustomer={selectedCustomer}
+            />
+          )}
           {page === 2 && <DataPage />}
           {page === 3 && (
             <>
