@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { List } from 'antd';
+import { Table, Space, Typography } from 'antd';
 
 import { useCustomer } from '../../hooks/Customer';
 
@@ -9,33 +9,38 @@ import AntButton from '../../components/AntButton';
 
 import { Container } from './styles';
 
-interface ICustomersDataSource {
-  id: string;
-  title: string;
-  description: string;
+interface ICustomersTableProps {
+  key: string;
+  name: string;
+  telephone: string;
+  email: string;
+  street: string;
+  area: string;
+  city: string;
+  state: string;
 }
 
 const CustomersList: React.FC = () => {
   const { allCustomers, removeCustomer } = useCustomer();
 
-  const [customersData, setCustomersData] = useState<ICustomersDataSource[]>(
-    [],
-  );
+  const [customersDataSource, setCustomersDataSource] = useState<
+    ICustomersTableProps[]
+  >([]);
 
   // Load allCustomers from hook and set customersData
   useEffect(() => {
     allCustomers.forEach((customer) => {
-      setCustomersData((prevValue) => [
+      setCustomersDataSource((prevValue) => [
         ...prevValue,
         {
-          id: customer.id,
-          title: customer.name,
-          description: `${
-            customer.street.charAt(0).toUpperCase() + customer.street.slice(1)
-          }, ${
-            customer.area.charAt(0).toUpperCase() + customer.area.slice(1)
-          } - ${customer.city.charAt(0).toUpperCase() + customer.city.slice(1)}
-            `,
+          key: customer.id,
+          name: customer.name,
+          email: customer.email,
+          street: customer.street,
+          area: customer.area,
+          city: customer.city,
+          state: customer.state,
+          telephone: customer.telephone[0],
         },
       ]);
     });
@@ -43,47 +48,81 @@ const CustomersList: React.FC = () => {
 
   // Use the hook to remove the data from database and remove from customerdData
   const handleRemoveCustomer = useCallback(
-    (id: string) => {
-      removeCustomer(id);
+    async (id: string) => {
+      await removeCustomer(id);
 
-      const customersDataFiltered = customersData.filter(
-        (cdata) => cdata.id !== id,
+      const customersDataSourceFiltered = customersDataSource.filter(
+        (cdata) => cdata.key !== id,
       );
 
-      setCustomersData([...customersDataFiltered]);
+      setCustomersDataSource([...customersDataSourceFiltered]);
     },
-    [customersData],
+    [customersDataSource],
   );
+
+  const tableColumns = [
+    {
+      title: 'Cliente',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Telefone',
+      dataIndex: 'telephone',
+      key: 'telephone',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Endereço',
+      dataIndex: 'street',
+      key: 'street',
+    },
+    {
+      title: 'Bairro',
+      dataIndex: 'area',
+      key: 'area',
+    },
+    {
+      title: 'Cidade',
+      dataIndex: 'city',
+      key: 'city',
+    },
+    {
+      title: 'UF',
+      dataIndex: 'state',
+      key: 'state',
+    },
+    {
+      title: '',
+      key: 'actions',
+      render: (record: ICustomersTableProps) => (
+        <Space size="small">
+          <AntButton
+            type="link"
+            onClick={() => handleRemoveCustomer(record.key)}
+          >
+            Remover
+          </AntButton>
+          <a href="/">Editar</a>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <AntDashboard>
       <AntContent>
         <Container>
-          {customersData && (
-            <List
-              style={{ maxWidth: '600px', margin: '0 auto' }}
-              itemLayout="horizontal"
-              dataSource={customersData}
-              renderItem={(customer) => (
-                <List.Item
-                  actions={[
-                    <AntButton
-                      block
-                      type="link"
-                      onClick={() => handleRemoveCustomer(customer.id)}
-                    >
-                      Excluir
-                    </AntButton>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={customer.title}
-                    description={customer.description}
-                  />
-                </List.Item>
-              )}
-            />
-          )}
+          <Typography.Title level={2}>Lista de Clientes</Typography.Title>
+          <Table
+            dataSource={customersDataSource}
+            columns={tableColumns}
+            style={{ margin: '32px 0px' }}
+          />
         </Container>
       </AntContent>
     </AntDashboard>

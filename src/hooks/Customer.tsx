@@ -67,18 +67,26 @@ export const CustomerProvider: React.FC = ({ children }) => {
 
   const removeCustomer = useCallback(
     async (id: string) => {
-      await api.delete('/customers', {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-        data: {
-          id,
-        },
-      });
+      try {
+        await api.delete('/customers', {
+          headers: {
+            Authorization: `bearer ${token}`,
+          },
+          data: {
+            id,
+          },
+        });
 
-      await loadCustomers();
+        await loadCustomers();
 
-      addToast({ type: 'success', title: 'Usuário removido com sucesso' });
+        addToast({ type: 'success', title: 'Cliente removido com sucesso' });
+      } catch {
+        addToast({
+          type: 'error',
+          title: 'Erro na remoção do cliente',
+          description: 'Cliente pode estar atribuído a algum pedido',
+        });
+      }
     },
     [allCustomers],
   );
