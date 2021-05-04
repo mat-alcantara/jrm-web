@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Space, Typography } from 'antd';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
 
-import api from '../../services/api';
 import generatePDF from '../../services/generatePDF';
 
 import AntDashboard from '../../components/AntDashboard';
@@ -25,20 +24,10 @@ interface IDataSource {
 }
 
 const AllOrders: React.FC = () => {
-  const { allOrders } = useOrder();
+  const { allOrders, removeOrder } = useOrder();
   const { allCustomers } = useCustomer();
 
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
-
-  const handleRemoveOrder = useCallback(async (id) => {
-    await api.delete(`/orders/${id}`, {
-      headers: {
-        Authorization: `bearer ${token}`,
-      },
-    });
-
-    setAllOrders((prevVal) => prevVal.filter((val) => val.id !== id));
-  }, []);
 
   useEffect(() => {
     const dataToSetDataSource = allOrders.map((order) => {
@@ -121,7 +110,7 @@ const AllOrders: React.FC = () => {
       key: 'action',
       render: (text: string, record: IDataSource) => (
         <Space size="middle">
-          <AntButton type="link" onClick={() => handleRemoveOrder(record.key)}>
+          <AntButton type="link" onClick={() => removeOrder(record.key)}>
             Deletar
           </AntButton>
           <AntButton type="link" onClick={() => generatePDF(record.key)}>

@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 
 import { useAuth } from './Auth';
+import { useToast } from './Toast';
 
 import api from '../services/api';
 
@@ -14,12 +15,14 @@ import IOrder from '../types/IOrder';
 
 interface IOrderContext {
   allOrders: IOrder[];
+  removeOrder(id: string): Promise<void>;
 }
 
 const OrderContext = createContext<IOrderContext>({} as IOrderContext);
 
 export const OrderProvider: React.FC = ({ children }) => {
   const { token } = useAuth();
+  const { addToast } = useToast();
 
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
 
@@ -37,8 +40,23 @@ export const OrderProvider: React.FC = ({ children }) => {
     loadOrders();
   }, []);
 
+  const removeOrder = useCallback(
+    async (id: string) => {
+      await api.delete(`/orders/${id}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      });
+
+      await loadOrders();
+
+      addToast({ type: 'success', title: 'Pedido removido com sucesso' });
+    },
+    [allOrders],
+  );
+
   return (
-    <OrderContext.Provider value={{ allOrders }}>
+    <OrderContext.Provider value={{ allOrders, removeOrder }}>
       {children}
     </OrderContext.Provider>
   );
