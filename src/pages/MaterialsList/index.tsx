@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { List } from 'antd';
+import { Table, Space, Typography } from 'antd';
 
 import { useMaterial } from '../../hooks/Material';
 
@@ -9,24 +9,32 @@ import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
 import AntButton from '../../components/AntButton';
 
-interface IMaterialsOptionsProps {
+interface IMaterialsTableProps {
+  key: string;
   name: string;
+  width: number;
+  height: number;
   price: number;
-  id: string;
 }
 
 const MaterialsList: React.FC = () => {
   const { allMaterials, removeMaterial } = useMaterial();
 
-  const [materialsListOptions, setMaterialsListOptions] = useState<
-    IMaterialsOptionsProps[]
+  const [materialsDataSource, setMaterialsDataSource] = useState<
+    IMaterialsTableProps[]
   >([]);
 
   useEffect(() => {
     allMaterials.forEach((material) => {
-      setMaterialsListOptions((prevValue) => [
+      setMaterialsDataSource((prevValue) => [
         ...prevValue,
-        { id: material.id, name: material.name, price: material.price },
+        {
+          key: material.id,
+          name: material.name,
+          width: material.width,
+          height: material.height,
+          price: material.price,
+        },
       ]);
     });
   }, []);
@@ -35,44 +43,63 @@ const MaterialsList: React.FC = () => {
     async (id: string) => {
       await removeMaterial(id);
 
-      const filteredMaterialsList = materialsListOptions.filter(
-        (material) => material.id !== id,
+      const filteredMaterialsDataSource = materialsDataSource.filter(
+        (material) => material.key !== id,
       );
 
-      setMaterialsListOptions([...filteredMaterialsList]);
+      setMaterialsDataSource([...filteredMaterialsDataSource]);
     },
-    [materialsListOptions],
+    [materialsDataSource],
   );
+
+  const tableColumns = [
+    {
+      title: 'Material',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Largura',
+      dataIndex: 'width',
+      key: 'width',
+    },
+    {
+      title: 'Altura',
+      dataIndex: 'height',
+      key: 'height',
+    },
+    {
+      title: 'Preço',
+      dataIndex: 'price',
+      key: 'price',
+    },
+    {
+      title: '',
+      key: 'actions',
+      render: (record: IMaterialsTableProps) => (
+        <Space size="small">
+          <AntButton
+            type="link"
+            onClick={() => handleRemoveMaterial(record.key)}
+          >
+            Remover
+          </AntButton>
+          <a href="/">Editar</a>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <AntDashboard>
       <AntContent>
         <Container>
-          {materialsListOptions && (
-            <List
-              style={{ maxWidth: '600px', margin: '0 auto' }}
-              itemLayout="horizontal"
-              dataSource={materialsListOptions}
-              renderItem={(material) => (
-                <List.Item
-                  actions={[
-                    <AntButton
-                      block
-                      type="link"
-                      onClick={() => handleRemoveMaterial(material.id)}
-                    >
-                      Excluir
-                    </AntButton>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={material.name}
-                    description={`R$ ${material.price}`}
-                  />
-                </List.Item>
-              )}
-            />
-          )}
+          <Typography.Title level={2}>Lista de materiais</Typography.Title>
+          <Table
+            columns={tableColumns}
+            dataSource={materialsDataSource}
+            style={{ margin: '32px 128px' }}
+          />
         </Container>
       </AntContent>
     </AntDashboard>
