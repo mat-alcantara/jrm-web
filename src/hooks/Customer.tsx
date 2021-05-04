@@ -37,11 +37,11 @@ export const CustomerProvider: React.FC = ({ children }) => {
         },
       });
 
-      return [...allCustomersFromApi.data];
+      setAllCustomers([...allCustomersFromApi.data]);
     }
 
     loadCustomers();
-  });
+  }, []);
 
   const createCustomer = useCallback(
     async (dataToCreateCustomer: Optional<ICustomer, 'id' | 'email'>) => {
@@ -57,7 +57,7 @@ export const CustomerProvider: React.FC = ({ children }) => {
 
       setAllCustomers((prevValue) => [...prevValue, ...customerCreated.data]);
     },
-    [allCustomers],
+    [],
   );
 
   const removeCustomer = useCallback(async (id: string) => {
@@ -70,7 +70,11 @@ export const CustomerProvider: React.FC = ({ children }) => {
       },
     });
 
-    setAllCustomers((prevValue) => prevValue.filter((val) => val.id !== id));
+    const customersWithoutDeleted = allCustomers.filter(
+      (customer) => customer.id !== id,
+    );
+
+    setAllCustomers([...customersWithoutDeleted]);
   }, []);
 
   return (
