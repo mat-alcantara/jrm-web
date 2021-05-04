@@ -18,6 +18,7 @@ interface ICustomerContext {
   createCustomer(
     dataToCreateCustomer: Optional<ICustomer, 'id' | 'email'>,
   ): Promise<void>;
+  removeCustomer(id: string): Promise<void>;
 }
 
 // Creation of the context
@@ -59,8 +60,23 @@ export const CustomerProvider: React.FC = ({ children }) => {
     [allCustomers],
   );
 
+  const removeCustomer = useCallback(async (id: string) => {
+    await api.delete('/customers', {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+      data: {
+        id,
+      },
+    });
+
+    setAllCustomers((prevValue) => prevValue.filter((val) => val.id !== id));
+  }, []);
+
   return (
-    <CustomerContext.Provider value={{ allCustomers, createCustomer }}>
+    <CustomerContext.Provider
+      value={{ allCustomers, createCustomer, removeCustomer }}
+    >
       {children}
     </CustomerContext.Provider>
   );
