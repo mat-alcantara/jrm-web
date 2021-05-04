@@ -33,8 +33,8 @@ const NewMaterial: React.FC = () => {
       const schema = Yup.object().shape({
         name: Yup.string().required('Nome obrigatório'),
         price: Yup.number().required('Preço obrigatório'),
-        width: Yup.number().required('Largura obrigatória'),
-        height: Yup.number().required('Altura obrigatória'),
+        width: Yup.number().required('Largura obrigatória').max(2750),
+        height: Yup.number().required('Altura obrigatória').max(1850),
       });
 
       const isPropsValid = await schema.validate(
