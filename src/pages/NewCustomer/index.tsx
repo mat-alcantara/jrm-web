@@ -87,7 +87,7 @@ const CreateCustomer: React.FC = () => {
           city,
         });
 
-        createCustomer({
+        await createCustomer({
           name,
           email: emailHandled,
           telephone: [telephone],

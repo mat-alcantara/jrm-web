@@ -16,8 +16,6 @@ import AntContent from '../../components/AntContent';
 import {
   Container,
   StepsContainer,
-  DataPageContainer,
-  DataPageNextAndBackButton,
   CutlistPageContainer,
   InputCutlistContainer,
 } from './styles';
@@ -27,17 +25,10 @@ import AntSelect from '../../components/ReactSelect';
 import AntButton from '../../components/AntButton';
 
 import CustomerSelection from './CustomerSelection';
+import DataPage from './DataPage';
 
 import ICustomer from '../../types/ICustomer';
-
-interface IOrderDataProps {
-  seller: string;
-  orderStore: string;
-  paymentStatus: string;
-  orderStatus: string;
-  ps?: string;
-  pricePercent: number;
-}
+import IOrderData from '../../types/IOrderData';
 
 interface IMaterialsProps {
   id: string;
@@ -85,11 +76,16 @@ const NewCutlist: React.FC = () => {
 
   const { Step } = Steps;
 
+  const [page, setPage] = useState<number>(1);
+
+  // CustomerSelection states
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
 
+  // DataPage states
+  const [orderData, setOrderData] = useState<IOrderData>();
+
+  // CutlistPage states
   const [allMaterials, setAllMaterials] = useState<IMaterialsProps[]>([]);
-  const [orderData, setOrderData] = useState<IOrderDataProps | null>();
-  const [page, setPage] = useState<number>(1);
   const [cutlist, setCutlist] = useState<ICutlistStateProps[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [cutlistDataSource, setCutlistDataSource] = useState<
@@ -152,189 +148,6 @@ const NewCutlist: React.FC = () => {
 
     history.push('/allorders');
   }, [selectedCustomer, orderData, cutlist]);
-
-  const DataPage: React.FC = () => {
-    const formRef = useRef<FormHandles>(null);
-
-    const options = {
-      orderStore: [
-        { value: 'Japuiba', label: 'Japuíba' },
-        { value: 'Frade', label: 'Frade' },
-        { value: 'São João de Meriti', label: 'São João de Meriti' },
-      ],
-
-      paymentType: [
-        { value: 'Pago', label: 'Pago' },
-        { value: 'Parcialmente Pago', label: 'Parcialmente Pago' },
-        { value: 'Receber na Entrega', label: 'Receber na Entrega' },
-      ],
-
-      orderStatus: [
-        { value: 'Em Produção', label: 'Produção' },
-        { value: 'Orçamento', label: 'Orçamento' },
-      ],
-    };
-
-    const validateDataPageProps = useCallback(
-      async ({
-        seller,
-        orderStore,
-        orderStatus,
-        paymentStatus,
-        ps,
-        pricePercent,
-      }: IOrderDataProps) => {
-        const schema = Yup.object().shape({
-          seller: Yup.string().required('Vendedor obrigatório'),
-          orderStore: Yup.string().required('Loja obrigatória'),
-          paymentStatus: Yup.string().required(
-            'Método de pagamento obrigatório',
-          ),
-          ps: Yup.string().nullable(),
-          orderStatus: Yup.string(),
-          pricePercent: Yup.number()
-            .min(0, 'Valor deve ser maior que 0')
-            .max(100, 'Valor deve ser menor do que 100')
-            .required('Porcentagem necessária para calculo do preço'),
-        });
-
-        const isPropsValid = await schema.validate(
-          { seller, orderStore, paymentStatus, ps, orderStatus, pricePercent },
-          {
-            // Faz com que todos os erros sejam pegos pelo catch
-            abortEarly: false,
-          },
-        );
-
-        return isPropsValid;
-      },
-      [],
-    );
-
-    const handleSubmitDataPage = useCallback(
-      async ({
-        seller,
-        orderStore,
-        paymentStatus,
-        orderStatus,
-        ps,
-        pricePercent,
-      }: IOrderDataProps) => {
-        try {
-          await validateDataPageProps({
-            seller,
-            orderStore,
-            paymentStatus,
-            ps,
-            orderStatus,
-            pricePercent,
-          });
-
-          setOrderData({
-            seller,
-            orderStore,
-            paymentStatus,
-            ps,
-            orderStatus,
-            pricePercent,
-          });
-        } catch (err) {
-          if (err instanceof Yup.ValidationError) {
-            const errors = getValidationErrors(err);
-
-            formRef.current?.setErrors(errors);
-          }
-        }
-      },
-      [],
-    );
-
-    return (
-      <DataPageContainer>
-        <Typography.Title level={2}>Dados do pedido</Typography.Title>
-        <Form
-          onSubmit={handleSubmitDataPage}
-          ref={formRef}
-          initialData={{
-            seller: orderData?.seller,
-            ps: orderData?.ps,
-            pricePercent: orderData?.pricePercent,
-          }}
-        >
-          <AntSelect
-            name="orderStatus"
-            placeholder="Tipo do pedido"
-            options={options.orderStatus}
-            defaultInputValue={orderData?.orderStatus}
-            isClearable
-          />
-          <AntInput
-            name="seller"
-            placeholder="Vendedor"
-            size="large"
-            defaultValue={orderData?.seller}
-          />
-          <AntSelect
-            name="orderStore"
-            placeholder="Loja do pedido"
-            options={options.orderStore}
-            defaultInputValue={orderData?.orderStore}
-            isClearable
-          />
-          <AntSelect
-            name="paymentStatus"
-            placeholder="Status de pagamento"
-            options={options.paymentType}
-            defaultInputValue={orderData?.paymentStatus}
-            isClearable
-          />
-          <AntInput
-            name="pricePercent"
-            placeholder="Porcentagem do preço"
-            size="large"
-            defaultValue={orderData?.pricePercent}
-          />
-          <AntInput
-            name="ps"
-            placeholder="Observações"
-            size="large"
-            defaultValue={orderData?.ps}
-          />
-          <AntButton
-            block
-            htmlType="submit"
-            type="primary"
-            disabled={!!orderData}
-          >
-            Confirmar
-          </AntButton>
-        </Form>
-        {orderData && (
-          <DataPageNextAndBackButton>
-            <AntButton onClick={() => setPage(page - 1)} type="default">
-              Voltar
-            </AntButton>
-            <AntButton
-              block
-              htmlType="button"
-              type="default"
-              style={{ color: '#cc0000' }}
-              onClick={() => setOrderData(null)}
-            >
-              Limpar
-            </AntButton>
-            <AntButton
-              onClick={() => setPage(page + 1)}
-              type="default"
-              disabled={!orderData}
-            >
-              Avançar
-            </AntButton>
-          </DataPageNextAndBackButton>
-        )}
-      </DataPageContainer>
-    );
-  };
 
   const CutlistPage: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
@@ -620,7 +433,14 @@ const NewCutlist: React.FC = () => {
               selectedCustomer={selectedCustomer}
             />
           )}
-          {page === 2 && <DataPage />}
+          {page === 2 && (
+            <DataPage
+              orderData={orderData}
+              page={page}
+              setOrderData={setOrderData}
+              setPage={setPage}
+            />
+          )}
           {page === 3 && (
             <>
               <CutlistPage />
