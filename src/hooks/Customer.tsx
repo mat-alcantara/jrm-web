@@ -57,25 +57,28 @@ export const CustomerProvider: React.FC = ({ children }) => {
 
       setAllCustomers((prevValue) => [...prevValue, ...customerCreated.data]);
     },
-    [],
+    [allCustomers],
   );
 
-  const removeCustomer = useCallback(async (id: string) => {
-    await api.delete('/customers', {
-      headers: {
-        Authorization: `bearer ${token}`,
-      },
-      data: {
-        id,
-      },
-    });
+  const removeCustomer = useCallback(
+    async (id: string) => {
+      await api.delete('/customers', {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+        data: {
+          id,
+        },
+      });
 
-    const customersWithoutDeleted = allCustomers.filter(
-      (customer) => customer.id !== id,
-    );
+      const customersWithoutDeleted = allCustomers.filter(
+        (customer) => customer.id !== id,
+      );
 
-    setAllCustomers([...customersWithoutDeleted]);
-  }, []);
+      setAllCustomers([...customersWithoutDeleted]);
+    },
+    [allCustomers],
+  );
 
   return (
     <CustomerContext.Provider

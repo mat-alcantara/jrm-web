@@ -9,7 +9,7 @@ import AntButton from '../../components/AntButton';
 
 import { Container } from './styles';
 
-interface ICustomersData {
+interface ICustomersDataSource {
   id: string;
   title: string;
   description: string;
@@ -18,32 +18,30 @@ interface ICustomersData {
 const CustomersList: React.FC = () => {
   const { allCustomers, removeCustomer } = useCustomer();
 
-  const [customersData, setCustomersData] = useState<ICustomersData[]>([]);
+  const [customersData, setCustomersData] = useState<ICustomersDataSource[]>(
+    [],
+  );
 
+  // Load allCustomers from hook and set customersData
   useEffect(() => {
-    async function loadCustomersData() {
-      allCustomers.forEach((customer) => {
-        setCustomersData((prevValue) => [
-          ...prevValue,
-          {
-            id: customer.id,
-            title: customer.name,
-            description: `${
-              customer.street.charAt(0).toUpperCase() + customer.street.slice(1)
-            }, ${
-              customer.area.charAt(0).toUpperCase() + customer.area.slice(1)
-            } - ${
-              customer.city.charAt(0).toUpperCase() + customer.city.slice(1)
-            }
+    allCustomers.forEach((customer) => {
+      setCustomersData((prevValue) => [
+        ...prevValue,
+        {
+          id: customer.id,
+          title: customer.name,
+          description: `${
+            customer.street.charAt(0).toUpperCase() + customer.street.slice(1)
+          }, ${
+            customer.area.charAt(0).toUpperCase() + customer.area.slice(1)
+          } - ${customer.city.charAt(0).toUpperCase() + customer.city.slice(1)}
             `,
-          },
-        ]);
-      });
-    }
-
-    loadCustomersData();
+        },
+      ]);
+    });
   }, []);
 
+  // Use the hook to remove the data from database and remove from customerdData
   const handleRemoveCustomer = useCallback(
     (id: string) => {
       removeCustomer(id);
