@@ -3,12 +3,12 @@
 import React, { useRef, useState, useCallback } from 'react';
 import { FormHandles } from '@unform/core'; // List of props for form reference
 import * as Yup from 'yup';
-import { useHistory } from 'react-router-dom';
 
 import { Form } from '@unform/web';
+import { useCustomer } from '../../hooks/Customer';
+
 import { Container } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
-import { useToast } from '../../hooks/Toast';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
@@ -17,7 +17,6 @@ import AntInput from '../../components/AntInput';
 import AntButton from '../../components/AntButton';
 import ReactSelect from '../../components/ReactSelect';
 
-import api from '../../services/api';
 import normalizeTelephoneInput from '../../utils/normalizeTelephoneInput';
 import { areas } from '../../utils/listOfAreas';
 
@@ -45,16 +44,14 @@ interface ISubmitData {
 }
 
 const CreateCustomer: React.FC = () => {
+  const { createCustomer } = useCustomer();
+
   const formRef = useRef<FormHandles>(null);
-  const { addToast } = useToast();
 
   const [phone, setPhone] = useState('');
 
-  const history = useHistory();
-  const token = localStorage.getItem('@JRMCompensados:token');
-
   const validateCustomerProps = useCallback(
-    async ({ name, email, tel, street, area, city, state }: ISubmitData) => {
+    async (validationData: ISubmitData) => {
       const schema = Yup.object().shape({
         name: Yup.string().required('Nome obrigatório'),
         email: Yup.string().email('Digite um e-mail válido'),
@@ -67,24 +64,14 @@ const CreateCustomer: React.FC = () => {
         state: Yup.string().required('UF obrigatório'),
       });
 
-      const isPropsValid = await schema.validate(
-        { name, email, tel, street, area, city, state },
-        {
-          // Faz com que todos os erros sejam pegos pelo catch
-          abortEarly: false,
-        },
-      );
+      const isPropsValid = await schema.validate(validationData, {
+        abortEarly: false,
+      });
 
       return isPropsValid;
     },
     [],
   );
-
-  const handleChange = (value: string) => {
-    setPhone((prevValue: string): string =>
-      normalizeTelephoneInput(value, prevValue),
-    );
-  };
 
   const handleSubmit = useCallback(
     async ({ name, email, tel, area, street, city }: ISubmitData) => {
@@ -102,30 +89,15 @@ const CreateCustomer: React.FC = () => {
           city,
         });
 
-        await api.post(
-          '/customers',
-          {
-            name,
-            email,
-            telephone: [telephone],
-            area,
-            street,
-            state,
-            city,
-          },
-          {
-            headers: {
-              Authorization: `bearer ${token}`,
-            },
-          },
-        );
-
-        addToast({
-          type: 'success',
-          title: 'Cliente cadastrado com sucesso',
+        createCustomer({
+          name,
+          email,
+          telephone: [telephone],
+          area,
+          street,
+          state,
+          city,
         });
-
-        history.push('/dashboard');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -150,9 +122,13 @@ const CreateCustomer: React.FC = () => {
               name="tel"
               placeholder="Telefone"
               value={phone}
-              onChange={(e) => handleChange(e.target.value)}
+              onChange={(e) =>
+                setPhone((prevValue: string): string =>
+                  normalizeTelephoneInput(e.target.value, prevValue),
+                )
+              }
             />
-            <AntInput size="large" name="street" placeholder="Endereço*" />
+            <AntInput size="large" name="street" placeholder="Endereço" />
             <ReactSelect
               placeholder="Bairro"
               name="area"

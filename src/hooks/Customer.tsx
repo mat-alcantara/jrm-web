@@ -5,9 +5,11 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import api from '../services/api';
 import { useAuth } from './Auth';
+import { useToast } from './Toast';
 
 import ICustomer from '../types/ICustomer';
 
@@ -26,8 +28,11 @@ const CustomerContext = createContext<ICustomerContext>({} as ICustomerContext);
 
 export const CustomerProvider: React.FC = ({ children }) => {
   const { token } = useAuth();
+  const { addToast } = useToast();
 
   const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
+
+  const history = useHistory();
 
   useEffect(() => {
     async function loadCustomers() {
@@ -56,6 +61,10 @@ export const CustomerProvider: React.FC = ({ children }) => {
       );
 
       setAllCustomers((prevValue) => [...prevValue, ...customerCreated.data]);
+
+      addToast({ type: 'success', title: 'Usuário criado com sucesso' });
+
+      history.push('/allcustomers');
     },
     [allCustomers],
   );
@@ -76,6 +85,8 @@ export const CustomerProvider: React.FC = ({ children }) => {
       );
 
       setAllCustomers([...customersWithoutDeleted]);
+
+      addToast({ type: 'success', title: 'Usuário removido com sucesso' });
     },
     [allCustomers],
   );
