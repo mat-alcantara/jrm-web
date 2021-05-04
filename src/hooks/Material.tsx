@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 
 import { useAuth } from './Auth';
+import { useToast } from './Toast';
 
 import api from '../services/api';
 
@@ -14,12 +15,14 @@ import IMaterial from '../types/IMaterial';
 
 interface IMaterialContext {
   allMaterials: IMaterial[];
+  removeMaterial(id: string): Promise<void>;
 }
 
 const MaterialContext = createContext<IMaterialContext>({} as IMaterialContext);
 
 export const MaterialProvider: React.FC = ({ children }) => {
   const { token } = useAuth();
+  const { addToast } = useToast();
 
   const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
 
@@ -37,8 +40,23 @@ export const MaterialProvider: React.FC = ({ children }) => {
     loadMaterials();
   }, []);
 
+  const removeMaterial = useCallback(
+    async (id: string) => {
+      await api.delete(`/materials/${id}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      });
+
+      loadMaterials();
+
+      addToast({ type: 'success', title: 'Material removido com sucesso' });
+    },
+    [allMaterials],
+  );
+
   return (
-    <MaterialContext.Provider value={{ allMaterials }}>
+    <MaterialContext.Provider value={{ allMaterials, removeMaterial }}>
       {children}
     </MaterialContext.Provider>
   );
