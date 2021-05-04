@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Table, Space } from 'antd';
 
 import api from '../../services/api';
+import generatePDF from '../../services/generatePDF';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
@@ -71,27 +72,6 @@ const AllOrders: React.FC = () => {
     });
 
     setAllOrders((prevVal) => prevVal.filter((val) => val.id !== id));
-  }, []);
-
-  const openPDF = useCallback(async (id) => {
-    const PDFCreatedInBlob = await api.post(
-      `/orderpdf/${id}`,
-      {},
-      {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-        responseType: 'blob',
-      },
-    );
-
-    const file = new Blob([PDFCreatedInBlob.data], {
-      type: 'application/pdf',
-    });
-
-    const fileURL = URL.createObjectURL(file);
-
-    window.open(fileURL);
   }, []);
 
   useEffect(() => {
@@ -211,7 +191,7 @@ const AllOrders: React.FC = () => {
           <AntButton type="link" onClick={() => handleRemoveOrder(record.key)}>
             Deletar
           </AntButton>
-          <AntButton type="link" onClick={() => openPDF(record.key)}>
+          <AntButton type="link" onClick={() => generatePDF(record.key)}>
             Gerar PDF
           </AntButton>
         </Space>

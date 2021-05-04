@@ -1,8 +1,7 @@
 import api from './api';
-import { useAuth } from '../hooks/Auth';
 
 export default async function generatePDF(id: string): Promise<void> {
-  const { token } = useAuth();
+  const token = localStorage.getItem('@JRMCompensados:token');
 
   const PDFCreatedInBlob = await api.post(
     `/orderpdf/${id}`,
