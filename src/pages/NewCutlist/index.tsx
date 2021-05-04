@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AutoComplete, Divider, Steps, Typography, Table, Space } from 'antd';
-import { CheckCircleOutlined } from '@ant-design/icons';
+import { Divider, Steps, Typography, Table, Space } from 'antd';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core'; // List of props for form reference
@@ -16,10 +15,7 @@ import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
 import {
   Container,
-  CustomerPageContainer,
   StepsContainer,
-  CustomerPageData,
-  CustomerAutocompleteAndButton,
   DataPageContainer,
   DataPageNextAndBackButton,
   CutlistPageContainer,
@@ -33,17 +29,6 @@ import AntButton from '../../components/AntButton';
 import CustomerSelection from './CustomerSelection';
 
 import ICustomer from '../../types/ICustomer';
-
-interface ICustomersProps {
-  id: string;
-  name: string;
-  telephone: string;
-  email: string;
-  street: string;
-  area: string;
-  city: string;
-  state: string;
-}
 
 interface IOrderDataProps {
   seller: string;
@@ -100,13 +85,9 @@ const NewCutlist: React.FC = () => {
 
   const { Step } = Steps;
 
-  const [autoCompleteOptions, setAutoCompleteOptions] = useState<
-    { value: string; id: string }[]
-  >([]);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
 
   const [allMaterials, setAllMaterials] = useState<IMaterialsProps[]>([]);
-  const [allCustomers, setAllCustomers] = useState<ICustomersProps[]>([]);
   const [orderData, setOrderData] = useState<IOrderDataProps | null>();
   const [page, setPage] = useState<number>(1);
   const [cutlist, setCutlist] = useState<ICutlistStateProps[]>([]);
@@ -116,28 +97,6 @@ const NewCutlist: React.FC = () => {
   >([]);
 
   useEffect(() => {
-    async function loadCustomersFromApi() {
-      // Load Customers
-      const allCustomersFromApi = await api.get<ICustomersProps[]>(
-        '/customers',
-        {
-          headers: {
-            Authorization: `bearer ${token}`,
-          },
-        },
-      );
-
-      setAutoCompleteOptions((prevVal) => {
-        const allOptions = allCustomersFromApi.data.map((customer) => {
-          return { value: customer.name, id: customer.id };
-        });
-
-        return [...prevVal, ...allOptions];
-      });
-
-      setAllCustomers([...allCustomersFromApi.data]);
-    }
-
     async function loadMaterialsFromApi() {
       // Load materials
       const allMaterialsFromApi = await api.get<IMaterialsProps[]>(
@@ -152,7 +111,6 @@ const NewCutlist: React.FC = () => {
       setAllMaterials([...allMaterialsFromApi.data]);
     }
 
-    loadCustomersFromApi();
     loadMaterialsFromApi();
   }, []);
 
@@ -194,50 +152,6 @@ const NewCutlist: React.FC = () => {
 
     history.push('/allorders');
   }, [selectedCustomer, orderData, cutlist]);
-
-  const CustomerPage: React.FC = () => {
-    const handleSelectedCustomer = useCallback(
-      (value: string, option) => {
-        const customerSelectedByAutocomplete = allCustomers.find(
-          (customer) => customer.id === option.id,
-        );
-
-        setSelectedCustomer(customerSelectedByAutocomplete);
-      },
-      [allCustomers, selectedCustomer],
-    );
-
-    return (
-      <CustomerPageContainer>
-        <Typography.Title level={2}>Selecione um cliente</Typography.Title>
-        <CustomerAutocompleteAndButton>
-          <AutoComplete
-            placeholder="Digite o nome de um cliente"
-            options={autoCompleteOptions}
-            onSelect={handleSelectedCustomer}
-          />
-          <AntButton
-            type="default"
-            disabled={!selectedCustomer}
-            onClick={() => setPage(2)}
-          >
-            Próximo
-          </AntButton>
-        </CustomerAutocompleteAndButton>
-        {selectedCustomer && (
-          <CustomerPageData>
-            <CheckCircleOutlined style={{ color: 'green' }} />
-            <Typography.Title level={4}>
-              {selectedCustomer.name}
-            </Typography.Title>
-            <Typography>
-              {`${selectedCustomer.street}, ${selectedCustomer.area} - ${selectedCustomer.city}`}
-            </Typography>
-          </CustomerPageData>
-        )}
-      </CustomerPageContainer>
-    );
-  };
 
   const DataPage: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
