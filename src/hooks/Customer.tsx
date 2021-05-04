@@ -34,37 +34,33 @@ export const CustomerProvider: React.FC = ({ children }) => {
 
   const history = useHistory();
 
+  const loadCustomers = useCallback(async () => {
+    const allCustomersFromApi = await api.get<ICustomer[]>('/customers', {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    });
+
+    setAllCustomers([...allCustomersFromApi.data]);
+  }, [allCustomers]);
+
   useEffect(() => {
-    async function loadCustomers() {
-      const allCustomersFromApi = await api.get<ICustomer[]>('/customers', {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
-
-      setAllCustomers([...allCustomersFromApi.data]);
-    }
-
     loadCustomers();
   }, []);
 
   const createCustomer = useCallback(
     async (dataToCreateCustomer: Optional<ICustomer, 'id' | 'email'>) => {
-      const customerCreated = await api.post(
-        '/customers',
-        dataToCreateCustomer,
-        {
-          headers: {
-            Authorization: `bearer ${token}`,
-          },
+      await api.post<ICustomer>('/customers', dataToCreateCustomer, {
+        headers: {
+          Authorization: `bearer ${token}`,
         },
-      );
+      });
 
-      setAllCustomers((prevValue) => [...prevValue, ...customerCreated.data]);
+      await loadCustomers();
 
       addToast({ type: 'success', title: 'Usuário criado com sucesso' });
 
-      history.push('/allcustomers');
+      history.push('/customerslist');
     },
     [allCustomers],
   );
@@ -80,11 +76,7 @@ export const CustomerProvider: React.FC = ({ children }) => {
         },
       });
 
-      const customersWithoutDeleted = allCustomers.filter(
-        (customer) => customer.id !== id,
-      );
-
-      setAllCustomers([...customersWithoutDeleted]);
+      await loadCustomers();
 
       addToast({ type: 'success', title: 'Usuário removido com sucesso' });
     },

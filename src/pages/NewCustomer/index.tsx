@@ -77,11 +77,12 @@ const CreateCustomer: React.FC = () => {
     async ({ name, email, tel, area, street, city }: ISubmitData) => {
       const telephone = tel.replace(/[^A-Z0-9]/gi, '');
       const state = 'Rio de Janeiro';
+      const emailHandled = email || undefined; // Empty email returns undefined
 
       try {
         await validateCustomerProps({
           name,
-          email,
+          email: emailHandled,
           tel: telephone,
           area,
           street,
@@ -91,7 +92,7 @@ const CreateCustomer: React.FC = () => {
 
         createCustomer({
           name,
-          email,
+          email: emailHandled,
           telephone: [telephone],
           area,
           street,
