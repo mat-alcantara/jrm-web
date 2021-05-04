@@ -1,5 +1,8 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Table, Space } from 'antd';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Table, Space, Typography } from 'antd';
+
+import { useOrder } from '../../hooks/Order';
+import { useCustomer } from '../../hooks/Customer';
 
 import api from '../../services/api';
 import generatePDF from '../../services/generatePDF';
@@ -10,21 +13,6 @@ import AntContent from '../../components/AntContent';
 import AntButton from '../../components/AntButton';
 
 import { Container } from './styles';
-
-interface IOrdersProps {
-  id: string;
-  customerId: string;
-  orderStore: string;
-  orderStatus: string;
-  order_code: number;
-  price: number;
-  deliveryDate: string;
-}
-
-interface ICustomersProps {
-  id: string;
-  name: string;
-}
 
 interface IDataSource {
   key: string;
@@ -37,32 +25,10 @@ interface IDataSource {
 }
 
 const AllOrders: React.FC = () => {
-  const token = localStorage.getItem('@JRMCompensados:token');
+  const { allOrders } = useOrder();
+  const { allCustomers } = useCustomer();
 
-  const [allOrders, setAllOrders] = useState<IOrdersProps[]>([]);
-  const [allCustomers, setAllCustomers] = useState<ICustomersProps[]>([]);
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
-  const firstUpdate = useRef(false);
-
-  const loadDataSource = useCallback(() => {
-    const dataToSetDataSource = allOrders.map((order) => {
-      const customerFound = allCustomers.find(
-        (customer) => customer.id === order.customerId,
-      );
-
-      return {
-        key: order.id,
-        order_code: order.order_code,
-        orderStore: order.orderStore,
-        orderStatus: order.orderStatus,
-        deliveryDate: order.deliveryDate,
-        price: order.price,
-        customerName: customerFound?.name || 'Cliente removido',
-      };
-    });
-
-    setDataSource((prevVal) => [...prevVal, ...dataToSetDataSource]);
-  }, []);
 
   const handleRemoveOrder = useCallback(async (id) => {
     await api.delete(`/orders/${id}`, {
@@ -75,56 +41,23 @@ const AllOrders: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      firstUpdate.current &&
-      allCustomers.length > 0 &&
-      allOrders.length > 0
-    ) {
-      const dataToSetDataSource = allOrders.map((order) => {
-        const customerFound = allCustomers.find(
-          (customer) => customer.id === order.customerId,
-        );
-
-        return {
-          key: order.id,
-          order_code: order.order_code,
-          orderStore: order.orderStore,
-          orderStatus: order.orderStatus,
-          deliveryDate: order.deliveryDate,
-          price: order.price,
-          customerName: customerFound?.name || 'Cliente removido',
-        };
-      });
-
-      setDataSource([...dataToSetDataSource]);
-    } else {
-      firstUpdate.current = true;
-    }
-  }, [allCustomers, allOrders]);
-
-  useEffect(() => {
-    async function loadOrders() {
-      const allOrdersReturnedByAPI = await api.get<IOrdersProps[]>('/orders', {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
-
-      const allCustomersReturnedByAPI = await api.get<ICustomersProps[]>(
-        '/customers',
-        {
-          headers: {
-            Authorization: `bearer ${token}`,
-          },
-        },
+    const dataToSetDataSource = allOrders.map((order) => {
+      const customerFound = allCustomers.find(
+        (customer) => customer.id === order.customerId,
       );
 
-      setAllOrders([...allOrdersReturnedByAPI.data]);
-      setAllCustomers([...allCustomersReturnedByAPI.data]);
-    }
+      return {
+        key: order.id,
+        order_code: order.order_code,
+        orderStore: order.orderStore,
+        orderStatus: order.orderStatus,
+        deliveryDate: order.deliveryDate,
+        price: order.price,
+        customerName: customerFound?.name || 'Cliente desconhecido',
+      };
+    });
 
-    loadOrders();
-    loadDataSource();
+    setDataSource([...dataToSetDataSource]);
   }, []);
 
   const columns = [
@@ -203,7 +136,7 @@ const AllOrders: React.FC = () => {
     <AntDashboard>
       <AntContent>
         <Container>
-          <h1>Lista de Pedidos</h1>
+          <Typography.Title level={2}>Lista de Pedidos</Typography.Title>
           <Table columns={columns} dataSource={dataSource} />
         </Container>
       </AntContent>
