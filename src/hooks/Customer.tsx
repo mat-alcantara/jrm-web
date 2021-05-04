@@ -97,7 +97,7 @@ export function useCustomer(): ICustomerContext {
   const context = useContext(CustomerContext);
 
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useCustomer must be used within an AuthProvider');
   }
 
   return context;
