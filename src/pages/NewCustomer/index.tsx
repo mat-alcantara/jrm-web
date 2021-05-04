@@ -1,37 +1,20 @@
-/* eslint-disable no-console */
-/* eslint-disable react/jsx-curly-newline */
 import React, { useRef, useState, useCallback } from 'react';
-import { FormHandles } from '@unform/core'; // List of props for form reference
+import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-
 import { Form } from '@unform/web';
+
 import { useCustomer } from '../../hooks/Customer';
-
-import { Container } from './styles';
 import getValidationErrors from '../../utils/getValidationErrors';
-
-import AntDashboard from '../../components/AntDashboard';
-import AntContent from '../../components/AntContent';
-
-import AntInput from '../../components/AntInput';
-import AntButton from '../../components/AntButton';
-import ReactSelect from '../../components/ReactSelect';
-
 import normalizeTelephoneInput from '../../utils/normalizeTelephoneInput';
 import { areas } from '../../utils/listOfAreas';
 
-const areaOptions = areas.sort().map((area: string) => {
-  return {
-    value: area,
-    label: area,
-  };
-});
+import { Container } from './styles';
 
-const cityOptions = [
-  { value: 'Angra dos Reis', label: 'Angra dos Reis' },
-  { value: 'Paraty', label: 'Paraty' },
-  { value: 'Rio de Janeiro', label: 'Rio de Janeiro' },
-];
+import AntDashboard from '../../components/AntDashboard';
+import AntContent from '../../components/AntContent';
+import AntInput from '../../components/AntInput';
+import AntButton from '../../components/AntButton';
+import ReactSelect from '../../components/ReactSelect';
 
 interface ISubmitData {
   name: string;
@@ -45,6 +28,20 @@ interface ISubmitData {
 
 const CreateCustomer: React.FC = () => {
   const { createCustomer } = useCustomer();
+
+  const options = {
+    areaOptions: areas.sort().map((area: string) => {
+      return {
+        value: area,
+        label: area,
+      };
+    }),
+    cityOptions: [
+      { value: 'Angra dos Reis', label: 'Angra dos Reis' },
+      { value: 'Paraty', label: 'Paraty' },
+      { value: 'Rio de Janeiro', label: 'Rio de Janeiro' },
+    ],
+  };
 
   const formRef = useRef<FormHandles>(null);
 
@@ -133,12 +130,12 @@ const CreateCustomer: React.FC = () => {
             <ReactSelect
               placeholder="Bairro"
               name="area"
-              options={areaOptions}
+              options={options.areaOptions}
             />
             <ReactSelect
               placeholder="Cidade"
               name="city"
-              options={cityOptions}
+              options={options.cityOptions}
             />
 
             <AntButton block type="primary" htmlType="submit">
