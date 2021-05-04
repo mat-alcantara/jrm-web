@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { useAuth } from './Auth';
 import { useToast } from './Toast';
@@ -16,13 +17,18 @@ import IMaterial from '../types/IMaterial';
 interface IMaterialContext {
   allMaterials: IMaterial[];
   removeMaterial(id: string): Promise<void>;
+  createMaterial(data: Optional<IMaterial, 'id'>): Promise<void>;
 }
+
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 const MaterialContext = createContext<IMaterialContext>({} as IMaterialContext);
 
 export const MaterialProvider: React.FC = ({ children }) => {
   const { token } = useAuth();
   const { addToast } = useToast();
+
+  const history = useHistory();
 
   const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
 
@@ -40,6 +46,26 @@ export const MaterialProvider: React.FC = ({ children }) => {
     loadMaterials();
   }, []);
 
+  const createMaterial = useCallback(
+    async (submitData: Optional<IMaterial, 'id'>) => {
+      await api.post('/materials', submitData, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      });
+
+      await loadMaterials();
+
+      addToast({
+        type: 'success',
+        title: 'Material cadastrado com sucesso',
+      });
+
+      history.push('/materialslist');
+    },
+    [allMaterials],
+  );
+
   const removeMaterial = useCallback(
     async (id: string) => {
       await api.delete(`/materials/${id}`, {
@@ -48,7 +74,7 @@ export const MaterialProvider: React.FC = ({ children }) => {
         },
       });
 
-      loadMaterials();
+      await loadMaterials();
 
       addToast({ type: 'success', title: 'Material removido com sucesso' });
     },
@@ -56,7 +82,9 @@ export const MaterialProvider: React.FC = ({ children }) => {
   );
 
   return (
-    <MaterialContext.Provider value={{ allMaterials, removeMaterial }}>
+    <MaterialContext.Provider
+      value={{ allMaterials, removeMaterial, createMaterial }}
+    >
       {children}
     </MaterialContext.Provider>
   );

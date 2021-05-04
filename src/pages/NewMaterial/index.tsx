@@ -2,11 +2,10 @@ import React, { useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
-import { useHistory } from 'react-router-dom';
+
+import { useMaterial } from '../../hooks/Material';
 
 import getValidationErrors from '../../utils/getValidationErrors';
-import api from '../../services/api';
-import { useToast } from '../../hooks/Toast';
 
 import { Container } from './styles';
 
@@ -25,10 +24,9 @@ interface IFormData {
 }
 
 const NewMaterial: React.FC = () => {
+  const { createMaterial } = useMaterial();
+
   const formRef = useRef<FormHandles>(null);
-  const token = localStorage.getItem('@JRMCompensados:token');
-  const { addToast } = useToast();
-  const history = useHistory();
 
   const validateCustomerProps = useCallback(
     async ({ name, price, width, height }: IFormData) => {
@@ -57,27 +55,12 @@ const NewMaterial: React.FC = () => {
       try {
         await validateCustomerProps({ name, price, width, height });
 
-        await api.post(
-          '/materials',
-          {
-            name,
-            price,
-            width,
-            height,
-          },
-          {
-            headers: {
-              Authorization: `bearer ${token}`,
-            },
-          },
-        );
-
-        addToast({
-          type: 'success',
-          title: 'Material cadastrado com sucesso',
+        await createMaterial({
+          name,
+          price,
+          width,
+          height,
         });
-
-        history.push('/dashboard');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
