@@ -1,11 +1,14 @@
 import ICutlist from './ICutlist';
+import IOrderStatus from './OrderStatusEnumDTO';
+import IOrderStore from './OrderStoreEnumDTO';
+import IPaymentStatus from './PaymentStatusEnumDTO';
 
 export default interface IOrder {
   id: string;
   customerId: string;
-  orderStore: string;
-  paymentStatus: string;
-  orderStatus: string;
+  orderStore: IOrderStore;
+  paymentStatus: IPaymentStatus;
+  orderStatus: IOrderStatus;
   seller: string;
   order_code: number;
   ps?: string;

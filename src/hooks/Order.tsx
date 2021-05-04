@@ -24,7 +24,7 @@ export const OrderProvider: React.FC = ({ children }) => {
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
 
   const loadOrders = useCallback(async () => {
-    const allOrdersData = await api.get('/orders', {
+    const allOrdersData = await api.get<IOrder[]>('/orders', {
       headers: {
         Authorization: `bearer ${token}`,
       },
