@@ -16,7 +16,7 @@ import IMaterial from '../types/IMaterial';
 interface IMaterialContext {
   allMaterials: IMaterial[];
   removeMaterial(id: string): Promise<void>;
-  createMaterial(data: Optional<IMaterial, 'id'>): Promise<void>;
+  createMaterial(data: Optional<IMaterial, 'id'>): Promise<IMaterial>;
 }
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
@@ -45,11 +45,15 @@ export const MaterialProvider: React.FC = ({ children }) => {
 
   const createMaterial = useCallback(
     async (submitData: Optional<IMaterial, 'id'>) => {
-      await api.post('/materials', submitData, {
-        headers: {
-          Authorization: `bearer ${token}`,
+      const materialCreated = await api.post<IMaterial>(
+        '/materials',
+        submitData,
+        {
+          headers: {
+            Authorization: `bearer ${token}`,
+          },
         },
-      });
+      );
 
       await loadMaterials();
 
@@ -57,6 +61,8 @@ export const MaterialProvider: React.FC = ({ children }) => {
         type: 'success',
         title: 'Material cadastrado com sucesso',
       });
+
+      return materialCreated.data;
     },
     [allMaterials],
   );

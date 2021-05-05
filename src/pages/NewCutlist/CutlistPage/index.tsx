@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { Typography, Divider, Table, Space } from 'antd';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -47,6 +47,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [],
   );
   const [newMaterialForm, setNewMaterialForm] = useState(false);
+  const [materialOptions, setMaterialOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
@@ -67,18 +70,27 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [cutlist, cutlistDataSource],
   );
 
+  const loadMaterials = useCallback(() => {
+    const allMaterialOptions = allMaterials.map((material) => {
+      return {
+        value: material.id,
+        label: material.name,
+      };
+    });
+
+    setMaterialOptions([...allMaterialOptions]);
+  }, []);
+
+  useEffect(() => {
+    loadMaterials();
+  }, []);
+
   const options = {
     sideOptions: [
       { value: '0', label: '0' },
       { value: '1', label: '1' },
       { value: '2', label: '2' },
     ],
-    materialsOptions: allMaterials.map((material) => {
-      return {
-        value: material.id,
-        label: material.name,
-      };
-    }),
     columns: [
       {
         title: 'Material',
@@ -268,7 +280,14 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
       try {
         await validateMaterialProps(materialData);
 
-        await createMaterial(materialData);
+        const materialCreated = await createMaterial(materialData);
+
+        await setMaterialOptions([
+          ...materialOptions,
+          { value: materialCreated.id, label: materialCreated.name },
+        ]);
+
+        loadMaterials();
 
         setNewMaterialForm(false);
       } catch (err) {
@@ -279,7 +298,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         }
       }
     },
-    [allMaterials],
+    [],
   );
 
   return (
@@ -291,7 +310,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             name="material"
             placeholder="Material"
             className="materialSelect"
-            options={options.materialsOptions}
+            options={materialOptions}
           />
           <AntInput name="quantidade" placeholder="Qtd" size="large" />
           <AntInput name="side_a_size" placeholder="Lado A" size="large" />
