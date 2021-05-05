@@ -38,7 +38,8 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   setCutlist,
   cutlist,
 }) => {
-  const { allMaterials, createMaterial } = useMaterial();
+  const { createMaterial } = useMaterial();
+  const { allMaterials } = useMaterial();
   const formRef = useRef<FormHandles>(null);
   const materialFormRef = useRef<FormHandles>(null);
 
@@ -282,12 +283,10 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         const materialCreated = await createMaterial(materialData);
 
-        await setMaterialOptions([
-          ...materialOptions,
+        setMaterialOptions((prevValue) => [
+          ...prevValue,
           { value: materialCreated.id, label: materialCreated.name },
         ]);
-
-        loadMaterials();
 
         setNewMaterialForm(false);
       } catch (err) {
