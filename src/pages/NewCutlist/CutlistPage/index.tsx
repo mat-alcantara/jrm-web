@@ -39,17 +39,24 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [],
   );
 
-  const handleRemoveCutlist = useCallback((id: string) => {
-    const newCutlistDataSourceState = cutlistDataSource.filter(
-      (cut) => cut.key !== id,
-    );
+  const handleRemoveCutlist = useCallback(
+    (id: string) => {
+      const newCutlistDataSourceState = cutlistDataSource.filter(
+        (cut) => cut.key !== id,
+      );
+      const newCutlistState = cutlist.filter((cut) => cut.id !== id);
+      const priceToRemove = cutlistDataSource.find((cut) => cut.key === id)
+        ?.price;
 
-    setCutlistDataSource([...newCutlistDataSourceState]);
+      if (priceToRemove) {
+        setTotalPrice((prevValue) => prevValue - priceToRemove);
+      }
 
-    const newCutlistState = cutlist.filter((cut) => cut.id !== id);
-
-    setCutlist([...newCutlistState]);
-  }, []);
+      setCutlistDataSource([...newCutlistDataSourceState]);
+      setCutlist([...newCutlistState]);
+    },
+    [cutlist, cutlistDataSource],
+  );
 
   const options = {
     sideOptions: [
