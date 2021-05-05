@@ -11,7 +11,7 @@ export const InputCutlistContainer = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1150px;
 
     .materialSelect div .react-select__value-container {
       width: 275px;

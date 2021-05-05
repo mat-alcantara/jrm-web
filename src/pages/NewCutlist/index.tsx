@@ -75,7 +75,7 @@ const NewCutlist: React.FC = () => {
               </AntButton>
             </>
           )}
-          <StepsContainer>
+          <StepsContainer style={{ marginTop: '32px' }}>
             <Steps current={page - 1}>
               <Step title="Cliente" description="Selecione um cliente" />
               <Step title="Dados" description="Forneça os dados do pedido" />

@@ -26,18 +26,27 @@ interface ICutlistPageProps {
   cutlist: ICutlist[];
 }
 
+interface IMaterialForm {
+  name: string;
+  width: number;
+  height: number;
+  price: number;
+}
+
 const CutlistPage: React.FC<ICutlistPageProps> = ({
   orderData,
   setCutlist,
   cutlist,
 }) => {
-  const { allMaterials } = useMaterial();
+  const { allMaterials, createMaterial } = useMaterial();
   const formRef = useRef<FormHandles>(null);
+  const materialFormRef = useRef<FormHandles>(null);
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [cutlistDataSource, setCutlistDataSource] = useState<ICutlistData[]>(
     [],
   );
+  const [newMaterial, setNewMaterial] = useState(false);
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
@@ -151,6 +160,25 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [],
   );
 
+  const validateMaterialProps = useCallback(
+    async (materialData: IMaterialForm) => {
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        price: Yup.number().required('Preço obrigatório'),
+        width: Yup.number().required('Largura obrigatória').max(2750),
+        height: Yup.number().required('Altura obrigatória').max(1850),
+      });
+
+      const isPropsValid = await schema.validate(materialData, {
+        // Faz com que todos os erros sejam pegos pelo catch
+        abortEarly: false,
+      });
+
+      return isPropsValid;
+    },
+    [],
+  );
+
   const handleSubmit = useCallback(
     async ({
       material,
@@ -235,6 +263,25 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [cutlistDataSource],
   );
 
+  const handleSubmitMaterial = useCallback(
+    async (materialData: IMaterialForm) => {
+      try {
+        await validateMaterialProps(materialData);
+
+        await createMaterial(materialData);
+
+        setNewMaterial(false);
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          materialFormRef.current?.setErrors(errors);
+        }
+      }
+    },
+    [allMaterials],
+  );
+
   return (
     <CutlistPageContainer>
       <Typography.Title level={2}>Peças do pedido</Typography.Title>
@@ -262,7 +309,25 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           <AntButton htmlType="submit" type="link">
             Adicionar
           </AntButton>
+          <AntButton
+            htmlType="button"
+            type="link"
+            onClick={() => setNewMaterial(true)}
+          >
+            Novo material
+          </AntButton>
         </Form>
+        {newMaterial && (
+          <Form onSubmit={handleSubmitMaterial} ref={materialFormRef}>
+            <AntInput name="material" placeholder="Mterial" size="large" />
+            <AntInput name="price" placeholder="Price" size="large" />
+            <AntInput name="width" placeholder="Largura" size="large" />
+            <AntInput name="height" placeholder="Altura" size="large" />
+            <AntButton htmlType="submit" type="link">
+              Adicionar material
+            </AntButton>
+          </Form>
+        )}
       </InputCutlistContainer>
       <Divider />
       <Table
