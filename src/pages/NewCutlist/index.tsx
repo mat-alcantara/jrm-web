@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { Steps } from 'antd';
 
-import api from '../../services/api';
+import { useOrder } from '../../hooks/Order';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
@@ -19,8 +18,7 @@ import IOrderData from '../../types/IOrderData';
 import ICutlist from '../../types/ICutlist';
 
 const NewCutlist: React.FC = () => {
-  const token = localStorage.getItem('@JRMCompensados:token');
-  const history = useHistory();
+  const { createOrder } = useOrder();
 
   const { Step } = Steps;
 
@@ -36,42 +34,7 @@ const NewCutlist: React.FC = () => {
   const [cutlist, setCutlist] = useState<ICutlist[]>([]);
 
   const handleSubmitData = useCallback(async () => {
-    const orderPostData = {
-      customerId: selectedCustomer?.id,
-      cutlist,
-      orderStore: orderData?.orderStore,
-      orderStatus: orderData?.orderStatus,
-      paymentStatus: orderData?.paymentStatus,
-      ps: orderData?.ps,
-      seller: orderData?.seller,
-    };
-
-    const orderCreated = await api.post('/orders', orderPostData, {
-      headers: {
-        Authorization: `bearer ${token}`,
-      },
-    });
-
-    const PDFCreatedInBlob = await api.post(
-      `/orderpdf/${orderCreated.data.id}`,
-      {},
-      {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-        responseType: 'blob',
-      },
-    );
-
-    const file = new Blob([PDFCreatedInBlob.data], {
-      type: 'application/pdf',
-    });
-
-    const fileURL = URL.createObjectURL(file);
-
-    window.open(fileURL);
-
-    history.push('/allorders');
+    await createOrder(selectedCustomer, orderData, cutlist);
   }, [selectedCustomer, orderData, cutlist]);
 
   return (
