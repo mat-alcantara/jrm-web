@@ -95,7 +95,7 @@ export function useMaterial(): IMaterialContext {
   const context = useContext(MaterialContext);
 
   if (!context) {
-    throw new Error('useCustomer must be used within an AuthProvider');
+    throw new Error('useMaterial must be used within an AuthProvider');
   }
 
   return context;

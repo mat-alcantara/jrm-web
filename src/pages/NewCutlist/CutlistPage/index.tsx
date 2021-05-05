@@ -47,6 +47,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const [cutlistDataSource, setCutlistDataSource] = useState<ICutlistData[]>(
     [],
   );
+  const [newCutlistForm, setNewCutlistForm] = useState(true);
   const [newMaterialForm, setNewMaterialForm] = useState(false);
   const [materialOptions, setMaterialOptions] = useState<
     { value: string; label: string }[]
@@ -265,6 +266,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             side_b_size,
           },
         ]);
+
+        setNewCutlistForm(false);
+        setNewCutlistForm(true);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -288,6 +292,8 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           { value: materialCreated.id, label: materialCreated.name },
         ]);
 
+        allMaterials.push(materialCreated);
+
         setNewMaterialForm(false);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -304,37 +310,39 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     <CutlistPageContainer>
       <Typography.Title level={2}>Peças do pedido</Typography.Title>
       <InputCutlistContainer>
-        <Form onSubmit={handleSubmit} ref={formRef}>
-          <AntSelect
-            name="material"
-            placeholder="Material"
-            className="materialSelect"
-            options={materialOptions}
-          />
-          <AntInput name="quantidade" placeholder="Qtd" size="large" />
-          <AntInput name="side_a_size" placeholder="Lado A" size="large" />
-          <AntSelect
-            name="side_a_border"
-            options={options.sideOptions}
-            placeholder="Fita A"
-          />
-          <AntInput name="side_b_size" placeholder="Lado B" size="large" />
-          <AntSelect
-            name="side_b_border"
-            options={options.sideOptions}
-            placeholder="Fita B"
-          />
-          <AntButton htmlType="submit" type="link">
-            Adicionar
-          </AntButton>
-          <AntButton
-            htmlType="button"
-            type="link"
-            onClick={() => setNewMaterialForm(true)}
-          >
-            Novo material
-          </AntButton>
-        </Form>
+        {newCutlistForm && (
+          <Form onSubmit={handleSubmit} ref={formRef}>
+            <AntSelect
+              name="material"
+              placeholder="Material"
+              className="materialSelect"
+              options={materialOptions}
+            />
+            <AntInput name="quantidade" placeholder="Qtd" size="large" />
+            <AntInput name="side_a_size" placeholder="Lado A" size="large" />
+            <AntSelect
+              name="side_a_border"
+              options={options.sideOptions}
+              placeholder="Fita A"
+            />
+            <AntInput name="side_b_size" placeholder="Lado B" size="large" />
+            <AntSelect
+              name="side_b_border"
+              options={options.sideOptions}
+              placeholder="Fita B"
+            />
+            <AntButton htmlType="submit" type="link">
+              Adicionar
+            </AntButton>
+            <AntButton
+              htmlType="button"
+              type="link"
+              onClick={() => setNewMaterialForm(true)}
+            >
+              Novo material
+            </AntButton>
+          </Form>
+        )}
         {newMaterialForm && (
           <Form onSubmit={handleSubmitMaterial} ref={materialFormRef}>
             <AntInput name="name" placeholder="Mterial" size="large" />
@@ -343,6 +351,13 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             <AntInput name="height" placeholder="Altura" size="large" />
             <AntButton htmlType="submit" type="link">
               Adicionar material
+            </AntButton>
+            <AntButton
+              htmlType="button"
+              type="link"
+              onClick={() => setNewMaterialForm(false)}
+            >
+              Fechar
             </AntButton>
           </Form>
         )}
