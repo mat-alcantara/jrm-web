@@ -1,74 +1,22 @@
-/* eslint-disable react/jsx-one-expression-per-line */
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Divider, Steps, Typography, Table, Space } from 'antd';
-import { Form } from '@unform/web';
-import * as Yup from 'yup';
-import { FormHandles } from '@unform/core'; // List of props for form reference
-import { v4 } from 'uuid';
-
-import getValidationErrors from '../../utils/getValidationErrors';
+import { Steps } from 'antd';
 
 import api from '../../services/api';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
-import {
-  Container,
-  StepsContainer,
-  CutlistPageContainer,
-  InputCutlistContainer,
-} from './styles';
+import { Container, StepsContainer } from './styles';
 
-import AntInput from '../../components/AntInput';
-import AntSelect from '../../components/ReactSelect';
 import AntButton from '../../components/AntButton';
 
 import CustomerSelection from './CustomerSelection';
 import DataPage from './DataPage';
+import CutlistPage from './CutlistPage';
 
 import ICustomer from '../../types/ICustomer';
 import IOrderData from '../../types/IOrderData';
-
-interface IMaterialsProps {
-  id: string;
-  name: string;
-  width: number;
-  height: number;
-  price: number;
-}
-
-interface ICutlistProps {
-  material: string;
-  quantidade: number;
-  side_a_size: number;
-  side_b_size: number;
-  side_a_border: number;
-  side_b_border: number;
-  price?: number;
-}
-
-interface ICutlistStateProps {
-  id: string;
-  material_id: string;
-  quantidade: number;
-  side_a_size: number;
-  side_b_size: number;
-  side_a_border: number;
-  side_b_border: number;
-  price?: number;
-}
-
-interface ICutlistDataSource {
-  key: string;
-  material: string;
-  quantidade: number;
-  side_a_size: number;
-  side_b_size: number;
-  side_a_border: number;
-  side_b_border: number;
-  price: number | undefined;
-}
+import ICutlist from '../../types/ICutlist';
 
 const NewCutlist: React.FC = () => {
   const token = localStorage.getItem('@JRMCompensados:token');
@@ -85,30 +33,7 @@ const NewCutlist: React.FC = () => {
   const [orderData, setOrderData] = useState<IOrderData>();
 
   // CutlistPage states
-  const [allMaterials, setAllMaterials] = useState<IMaterialsProps[]>([]);
-  const [cutlist, setCutlist] = useState<ICutlistStateProps[]>([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [cutlistDataSource, setCutlistDataSource] = useState<
-    ICutlistDataSource[]
-  >([]);
-
-  useEffect(() => {
-    async function loadMaterialsFromApi() {
-      // Load materials
-      const allMaterialsFromApi = await api.get<IMaterialsProps[]>(
-        '/materials',
-        {
-          headers: {
-            Authorization: `bearer ${token}`,
-          },
-        },
-      );
-
-      setAllMaterials([...allMaterialsFromApi.data]);
-    }
-
-    loadMaterialsFromApi();
-  }, []);
+  const [cutlist, setCutlist] = useState<ICutlist[]>([]);
 
   const handleSubmitData = useCallback(async () => {
     const orderPostData = {
@@ -149,279 +74,6 @@ const NewCutlist: React.FC = () => {
     history.push('/allorders');
   }, [selectedCustomer, orderData, cutlist]);
 
-  const CutlistPage: React.FC = () => {
-    const formRef = useRef<FormHandles>(null);
-
-    const handleRemoveCutlist = useCallback((id: string) => {
-      const newCutlistDataSourceState = cutlistDataSource.filter(
-        (cut) => cut.key !== id,
-      );
-      const newCutlistState = cutlist.filter((cut) => cut.id !== id);
-
-      setCutlistDataSource([...newCutlistDataSourceState]);
-      setCutlist([...newCutlistState]);
-    }, []);
-
-    const allMaterialsOptions = allMaterials.map((material) => {
-      return {
-        value: material.id,
-        label: material.name,
-      };
-    });
-
-    const options = {
-      sideOptions: [
-        { value: '0', label: '0' },
-        { value: '1', label: '1' },
-        { value: '2', label: '2' },
-      ],
-      materialsOptions: [...allMaterialsOptions],
-    };
-
-    const columns = [
-      {
-        title: 'Material',
-        dataIndex: 'material',
-        key: 'material',
-      },
-      {
-        title: 'Quantidade',
-        dataIndex: 'quantidade',
-        key: 'quantidade',
-      },
-      {
-        title: 'Tamanho A',
-        dataIndex: 'side_a_size',
-        key: 'side_a_size',
-      },
-      {
-        title: 'Fita A',
-        dataIndex: 'side_a_border',
-        key: 'side_b_border',
-      },
-      {
-        title: 'Tamanho B',
-        dataIndex: 'side_b_size',
-        key: 'side_b_size',
-      },
-      {
-        title: 'Fita B',
-        dataIndex: 'side_b_border',
-        key: 'side_b_border',
-      },
-      {
-        title: 'Preço',
-        dataIndex: 'price',
-        key: 'price',
-      },
-      {
-        title: '',
-        key: 'action',
-        render: (text: string, record: ICutlistDataSource) => (
-          <Space size="middle">
-            <AntButton
-              onClick={() => handleRemoveCutlist(record.key)}
-              type="link"
-            >
-              Remover
-            </AntButton>
-          </Space>
-        ),
-      },
-    ];
-
-    const calculateCutlistPrice = useCallback(
-      (material: IMaterialsProps, cutlistData: ICutlistProps) => {
-        const qtd = cutlistData.quantidade;
-        const At = material.width * material.height;
-        const Ap = cutlistData.side_a_size * cutlistData.side_b_size;
-        const preço = material.price;
-        const LFp = cutlistData.side_a_size * cutlistData.side_a_border;
-        const AFp = cutlistData.side_b_size * cutlistData.side_b_border;
-        let porc: number;
-
-        if (orderData?.pricePercent) {
-          porc = orderData?.pricePercent;
-        } else {
-          porc = 75;
-        }
-
-        const calculatedMaterial = (Ap * preço * (1 + porc / 100)) / At;
-
-        const calculatedBorder = (3 * (LFp + AFp)) / 1000;
-
-        const calculatedPrice = calculatedMaterial + calculatedBorder;
-
-        return qtd * Math.ceil(calculatedPrice);
-      },
-      [orderData, cutlist],
-    );
-
-    const validateCutlistPageProps = useCallback(
-      async ({
-        material,
-        quantidade,
-        price,
-        side_a_border,
-        side_a_size,
-        side_b_border,
-        side_b_size,
-      }: ICutlistProps) => {
-        const schema = Yup.object().shape({
-          material: Yup.string().required(),
-          quantidade: Yup.number().required('Quantidade necessária'),
-          price: Yup.number().required(),
-          side_a_size: Yup.number()
-            .min(60, 'Deve ter pelo menos 6mm')
-            .max(2750, 'Não deve ultrapassar 2750mm')
-            .required('Tamanho necessário'),
-          side_b_size: Yup.number()
-            .min(60, 'Deve ter pelo menos 6mm')
-            .max(2750, 'Não deve ultrapassar 2750mm')
-            .required('Tamanho necessário'),
-          side_a_border: Yup.number().min(0).max(2).required(),
-          side_b_border: Yup.number().min(0).max(2).required(),
-        });
-
-        const isPropsValid = await schema.validate(
-          {
-            material,
-            quantidade,
-            price,
-            side_a_border,
-            side_a_size,
-            side_b_border,
-            side_b_size,
-          },
-          {
-            // Faz com que todos os erros sejam pegos pelo catch
-            abortEarly: false,
-          },
-        );
-
-        return isPropsValid;
-      },
-      [],
-    );
-
-    const handleSubmit = useCallback(
-      async ({
-        material,
-        quantidade,
-        side_a_size,
-        side_a_border,
-        side_b_border,
-        side_b_size,
-      }: ICutlistProps) => {
-        try {
-          const materialUsed = allMaterials.find(
-            (materialFound) => materialFound.id === material,
-          );
-
-          if (!materialUsed) {
-            throw new Error('Material does not exist');
-          }
-
-          const price = calculateCutlistPrice(materialUsed, {
-            material,
-            quantidade,
-            side_a_size,
-            side_a_border,
-            side_b_border,
-            side_b_size,
-          });
-
-          await validateCutlistPageProps({
-            material: materialUsed.name,
-            quantidade,
-            price,
-            side_a_size,
-            side_a_border,
-            side_b_border,
-            side_b_size,
-          });
-
-          const cutlistId = v4();
-
-          await setCutlist((prevVal) => [
-            ...prevVal,
-            {
-              id: cutlistId,
-              material_id: material,
-              quantidade,
-              price,
-              side_a_size,
-              side_a_border,
-              side_b_border,
-              side_b_size,
-            },
-          ]);
-
-          await setTotalPrice((prev) => prev + price);
-
-          await setCutlistDataSource((prevVal) => [
-            ...prevVal,
-            {
-              key: cutlistId,
-              material: materialUsed.name,
-              quantidade,
-              price,
-              side_a_size,
-              side_a_border,
-              side_b_border,
-              side_b_size,
-            },
-          ]);
-        } catch (err) {
-          if (err instanceof Yup.ValidationError) {
-            const errors = getValidationErrors(err);
-
-            formRef.current?.setErrors(errors);
-          }
-        }
-      },
-      [cutlist, cutlistDataSource],
-    );
-
-    return (
-      <CutlistPageContainer>
-        <Typography.Title level={2}>Peças do pedido</Typography.Title>
-        <InputCutlistContainer>
-          <Form onSubmit={handleSubmit} ref={formRef}>
-            <AntSelect
-              name="material"
-              placeholder="Material"
-              className="materialSelect"
-              options={options.materialsOptions}
-            />
-            <AntInput name="quantidade" placeholder="Qtd" size="large" />
-            <AntInput name="side_a_size" placeholder="Lado A" size="large" />
-            <AntSelect
-              name="side_a_border"
-              options={options.sideOptions}
-              placeholder="Fita A"
-            />
-            <AntInput name="side_b_size" placeholder="Lado B" size="large" />
-            <AntSelect
-              name="side_b_border"
-              options={options.sideOptions}
-              placeholder="Fita B"
-            />
-            <AntButton htmlType="submit" type="link">
-              Adicionar
-            </AntButton>
-          </Form>
-        </InputCutlistContainer>
-        <Divider />
-        <Table
-          columns={columns}
-          dataSource={cutlistDataSource}
-          footer={() => `Total: ${totalPrice}`}
-        />
-      </CutlistPageContainer>
-    );
-  };
-
   return (
     <AntDashboard>
       <AntContent>
@@ -443,7 +95,11 @@ const NewCutlist: React.FC = () => {
           )}
           {page === 3 && (
             <>
-              <CutlistPage />
+              <CutlistPage
+                cutlist={cutlist}
+                orderData={orderData}
+                setCutlist={setCutlist}
+              />
               <AntButton
                 block
                 type="primary"
