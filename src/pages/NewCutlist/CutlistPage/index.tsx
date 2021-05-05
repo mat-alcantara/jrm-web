@@ -46,7 +46,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const [cutlistDataSource, setCutlistDataSource] = useState<ICutlistData[]>(
     [],
   );
-  const [newMaterial, setNewMaterial] = useState(false);
+  const [newMaterialForm, setNewMaterialForm] = useState(false);
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
@@ -270,7 +270,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         await createMaterial(materialData);
 
-        setNewMaterial(false);
+        setNewMaterialForm(false);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -312,14 +312,14 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           <AntButton
             htmlType="button"
             type="link"
-            onClick={() => setNewMaterial(true)}
+            onClick={() => setNewMaterialForm(true)}
           >
             Novo material
           </AntButton>
         </Form>
-        {newMaterial && (
+        {newMaterialForm && (
           <Form onSubmit={handleSubmitMaterial} ref={materialFormRef}>
-            <AntInput name="material" placeholder="Mterial" size="large" />
+            <AntInput name="name" placeholder="Mterial" size="large" />
             <AntInput name="price" placeholder="Price" size="large" />
             <AntInput name="width" placeholder="Largura" size="large" />
             <AntInput name="height" placeholder="Altura" size="large" />
