@@ -5,7 +5,6 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { useAuth } from './Auth';
 import { useToast } from './Toast';
@@ -27,8 +26,6 @@ const MaterialContext = createContext<IMaterialContext>({} as IMaterialContext);
 export const MaterialProvider: React.FC = ({ children }) => {
   const { token } = useAuth();
   const { addToast } = useToast();
-
-  const history = useHistory();
 
   const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
 
@@ -60,8 +57,6 @@ export const MaterialProvider: React.FC = ({ children }) => {
         type: 'success',
         title: 'Material cadastrado com sucesso',
       });
-
-      history.push('/materialslist');
     },
     [allMaterials],
   );

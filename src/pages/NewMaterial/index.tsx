@@ -1,4 +1,6 @@
 import React, { useCallback, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
@@ -27,6 +29,7 @@ const NewMaterial: React.FC = () => {
   const { createMaterial } = useMaterial();
 
   const formRef = useRef<FormHandles>(null);
+  const history = useHistory();
 
   const validateCustomerProps = useCallback(
     async ({ name, price, width, height }: IFormData) => {
@@ -61,6 +64,8 @@ const NewMaterial: React.FC = () => {
           width,
           height,
         });
+
+        history.push('/materialslist');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
