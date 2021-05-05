@@ -79,9 +79,21 @@ export const OrderProvider: React.FC = ({ children }) => {
       orderData: IOrderData,
       cutlist: ICutlist[],
     ) => {
+      const cutlistWithoutId = cutlist.map((cut) => {
+        return {
+          material_id: cut.material_id,
+          price: cut.price,
+          quantidade: cut.quantidade,
+          side_a_border: cut.side_a_border,
+          side_a_size: cut.side_a_size,
+          side_b_border: cut.side_b_border,
+          side_b_size: cut.side_b_size,
+        };
+      });
+
       const orderPostData = {
         customerId: selectedCustomer?.id,
-        cutlist,
+        cutlist: cutlistWithoutId,
         orderStore: orderData?.orderStore,
         orderStatus: orderData?.orderStatus,
         paymentStatus: orderData?.paymentStatus,
