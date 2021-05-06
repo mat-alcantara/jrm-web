@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch } from 'react-router-dom';
+import { Switch, Route as RRDRoute } from 'react-router-dom';
 
 import Route from './Route';
 
@@ -12,10 +12,12 @@ import NewMaterial from '../pages/NewMaterial';
 import MaterialsList from '../pages/MaterialsList';
 import AllOrders from '../pages/AllOrders';
 import Dashboard from '../pages/Dashboard';
+import MainWebsite from '../pages/MainWebsite';
 
 const routes: React.FC = () => (
   <Switch>
-    <Route path="/" exact component={SignIn} />
+    <RRDRoute path="/" exact component={MainWebsite} />
+    <Route path="/signin" exact component={SignIn} />
     <Route path="/dashboard" exact component={Dashboard} isPrivate />
     <Route path="/newcustomer" exact component={NewCustomer} isPrivate />
     <Route path="/newcutlist" exact component={NewCutlist} isPrivate />
