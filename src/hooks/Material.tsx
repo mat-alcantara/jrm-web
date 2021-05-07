@@ -45,6 +45,9 @@ export const MaterialProvider: React.FC = ({ children }) => {
 
   const createMaterial = useCallback(
     async (submitData: Optional<IMaterial, 'id'>) => {
+      // eslint-disable-next-line no-console
+      console.log(token);
+
       const materialCreated = await api.post<IMaterial>(
         '/materials',
         submitData,
@@ -69,6 +72,9 @@ export const MaterialProvider: React.FC = ({ children }) => {
 
   const removeMaterial = useCallback(
     async (id: string) => {
+      // eslint-disable-next-line no-console
+      console.log(token);
+
       await api.delete(`/materials/${id}`, {
         headers: {
           Authorization: `bearer ${token}`,

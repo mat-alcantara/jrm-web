@@ -50,6 +50,9 @@ export const CustomerProvider: React.FC = ({ children }) => {
 
   const createCustomer = useCallback(
     async (dataToCreateCustomer: Optional<ICustomer, 'id' | 'email'>) => {
+      // eslint-disable-next-line no-console
+      console.log(token);
+
       await api.post<ICustomer>('/customers', dataToCreateCustomer, {
         headers: {
           Authorization: `bearer ${token}`,
