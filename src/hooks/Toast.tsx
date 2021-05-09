@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { createContext, useContext, useCallback, useState } from 'react';
-import { uuid } from 'uuidv4';
+import { v4 } from 'uuid';
 import ToastContainer from '../components/ToastContainer';
 
 export interface IToastMessage {
@@ -20,7 +20,7 @@ export const ToastProvider: React.FC = ({ children }) => {
 
   const addToast = useCallback(
     ({ title, description, type }: Omit<IToastMessage, 'id'>) => {
-      const id = uuid();
+      const id = v4();
 
       const toast = {
         id,

@@ -30,9 +30,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     const token = localStorage.getItem('@JRMCompensados:token');
     const user = localStorage.getItem('@JRMCompensados:user');
 
-    // eslint-disable-next-line no-console
-    console.log(token);
-
     if (token && user) {
       return { token, user: JSON.parse(user) };
     }
