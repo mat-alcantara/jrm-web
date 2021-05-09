@@ -7,6 +7,8 @@ import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
 import AntButton from '../../components/AntButton';
 
+import ICustomer from '../../types/ICustomer';
+
 import { Container } from './styles';
 
 interface ICustomersTableProps {
@@ -21,29 +23,41 @@ interface ICustomersTableProps {
 }
 
 const CustomersList: React.FC = () => {
-  const { allCustomers, removeCustomer } = useCustomer();
+  const { loadCustomers, removeCustomer } = useCustomer();
 
+  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
   const [customersDataSource, setCustomersDataSource] = useState<
     ICustomersTableProps[]
   >([]);
 
   // Load allCustomers from hook and set customersData
   useEffect(() => {
-    allCustomers.forEach((customer) => {
-      setCustomersDataSource((prevValue) => [
-        ...prevValue,
-        {
-          key: customer.id,
-          name: customer.name,
-          email: customer.email,
-          street: customer.street,
-          area: customer.area,
-          city: customer.city,
-          state: customer.state,
-          telephone: customer.telephone[0],
-        },
-      ]);
-    });
+    async function loadAllCustomersFromHook() {
+      const customersFromHook = await loadCustomers();
+
+      setAllCustomers([...customersFromHook]);
+    }
+
+    function setDataSource() {
+      allCustomers.forEach((customer) => {
+        setCustomersDataSource((prevValue) => [
+          ...prevValue,
+          {
+            key: customer.id,
+            name: customer.name,
+            email: customer.email,
+            street: customer.street,
+            area: customer.area,
+            city: customer.city,
+            state: customer.state,
+            telephone: customer.telephone[0],
+          },
+        ]);
+      });
+    }
+
+    loadAllCustomersFromHook();
+    setDataSource();
   }, []);
 
   // Use the hook to remove the data from database and remove from customerdData
