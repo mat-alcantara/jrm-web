@@ -21,8 +21,10 @@ interface ICustomerContext {
 const CustomerContext = createContext<ICustomerContext>({} as ICustomerContext);
 
 export const CustomerProvider: React.FC = ({ children }) => {
-  const { token } = useAuth();
+  const { getToken } = useAuth();
   const { addToast } = useToast();
+
+  const token = getToken();
 
   const history = useHistory();
 

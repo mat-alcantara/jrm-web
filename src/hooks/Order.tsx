@@ -25,8 +25,10 @@ interface IOrderContext {
 const OrderContext = createContext<IOrderContext>({} as IOrderContext);
 
 export const OrderProvider: React.FC = ({ children }) => {
-  const { token } = useAuth();
+  const { getToken } = useAuth();
   const { addToast } = useToast();
+
+  const token = getToken();
 
   const history = useHistory();
 

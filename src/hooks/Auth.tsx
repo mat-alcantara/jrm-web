@@ -15,9 +15,9 @@ interface ISignInCredentials {
 
 interface IAuthContext {
   user: object;
-  token: string;
   signIn(credentials: ISignInCredentials): Promise<void>;
   signOut(): void;
+  getToken(): string | null;
 }
 
 // {} as IAuthContext allows to init object empty
@@ -58,9 +58,15 @@ export const AuthProvider: React.FC = ({ children }) => {
     setData({} as IAuthState);
   }, []);
 
+  const getToken = useCallback(() => {
+    const token = localStorage.getItem('@JRMCompensados:token');
+
+    return token;
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ user: data.user, token: data.token, signIn, signOut }}
+      value={{ user: data.user, signIn, signOut, getToken }}
     >
       {children}
     </AuthContext.Provider>

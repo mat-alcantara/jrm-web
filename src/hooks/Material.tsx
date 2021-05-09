@@ -18,8 +18,10 @@ type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 const MaterialContext = createContext<IMaterialContext>({} as IMaterialContext);
 
 export const MaterialProvider: React.FC = ({ children }) => {
-  const { token } = useAuth();
+  const { getToken } = useAuth();
   const { addToast } = useToast();
+
+  const token = getToken();
 
   const loadMaterials = useCallback(async () => {
     const materialsDataFromRequest = await api.get('/materials', {
