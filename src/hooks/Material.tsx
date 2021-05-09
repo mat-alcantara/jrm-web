@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useCallback,
-  useEffect,
-} from 'react';
+import React, { createContext, useContext, useCallback } from 'react';
 
 import { useAuth } from './Auth';
 import { useToast } from './Toast';
@@ -14,9 +8,9 @@ import api from '../services/api';
 import IMaterial from '../types/IMaterial';
 
 interface IMaterialContext {
-  allMaterials: IMaterial[];
   removeMaterial(id: string): Promise<void>;
   createMaterial(data: Optional<IMaterial, 'id'>): Promise<IMaterial>;
+  loadMaterials(): Promise<IMaterial[]>;
 }
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
@@ -27,8 +21,6 @@ export const MaterialProvider: React.FC = ({ children }) => {
   const { token } = useAuth();
   const { addToast } = useToast();
 
-  const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
-
   const loadMaterials = useCallback(async () => {
     const materialsDataFromRequest = await api.get('/materials', {
       headers: {
@@ -36,18 +28,11 @@ export const MaterialProvider: React.FC = ({ children }) => {
       },
     });
 
-    setAllMaterials([...materialsDataFromRequest.data]);
-  }, [allMaterials]);
-
-  useEffect(() => {
-    loadMaterials();
+    return materialsDataFromRequest.data;
   }, []);
 
   const createMaterial = useCallback(
     async (submitData: Optional<IMaterial, 'id'>) => {
-      // eslint-disable-next-line no-console
-      console.log(token);
-
       const materialCreated = await api.post<IMaterial>(
         '/materials',
         submitData,
@@ -58,8 +43,6 @@ export const MaterialProvider: React.FC = ({ children }) => {
         },
       );
 
-      await loadMaterials();
-
       addToast({
         type: 'success',
         title: 'Material cadastrado com sucesso',
@@ -67,30 +50,22 @@ export const MaterialProvider: React.FC = ({ children }) => {
 
       return materialCreated.data;
     },
-    [allMaterials],
+    [],
   );
 
-  const removeMaterial = useCallback(
-    async (id: string) => {
-      // eslint-disable-next-line no-console
-      console.log(token);
+  const removeMaterial = useCallback(async (id: string) => {
+    await api.delete(`/materials/${id}`, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    });
 
-      await api.delete(`/materials/${id}`, {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
-
-      await loadMaterials();
-
-      addToast({ type: 'success', title: 'Material removido com sucesso' });
-    },
-    [allMaterials],
-  );
+    addToast({ type: 'success', title: 'Material removido com sucesso' });
+  }, []);
 
   return (
     <MaterialContext.Provider
-      value={{ allMaterials, removeMaterial, createMaterial }}
+      value={{ removeMaterial, createMaterial, loadMaterials }}
     >
       {children}
     </MaterialContext.Provider>
