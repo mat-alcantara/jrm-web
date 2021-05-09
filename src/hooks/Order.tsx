@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useState,
-  useContext,
-} from 'react';
+import React, { createContext, useCallback, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { useAuth } from './Auth';
@@ -18,7 +12,6 @@ import ICustomer from '../types/ICustomer';
 import IOrderData from '../types/IOrderData';
 
 interface IOrderContext {
-  allOrders: IOrder[];
   createOrder(
     selectedCustomer: ICustomer | undefined,
     orderData: IOrderData | undefined,
@@ -26,6 +19,7 @@ interface IOrderContext {
   ): Promise<void>;
   removeOrder(id: string): Promise<void>;
   generatePDF(id: string): Promise<void>;
+  loadOrders(): Promise<IOrder[]>;
 }
 
 const OrderContext = createContext<IOrderContext>({} as IOrderContext);
@@ -36,8 +30,6 @@ export const OrderProvider: React.FC = ({ children }) => {
 
   const history = useHistory();
 
-  const [allOrders, setAllOrders] = useState<IOrder[]>([]);
-
   const loadOrders = useCallback(async () => {
     const allOrdersData = await api.get<IOrder[]>('/orders', {
       headers: {
@@ -45,11 +37,7 @@ export const OrderProvider: React.FC = ({ children }) => {
       },
     });
 
-    setAllOrders([...allOrdersData.data]);
-  }, [allOrders]);
-
-  useEffect(() => {
-    loadOrders();
+    return allOrdersData.data;
   }, []);
 
   const generatePDF = useCallback(async (id: string) => {
@@ -109,33 +97,26 @@ export const OrderProvider: React.FC = ({ children }) => {
 
       await generatePDF(orderCreated.data.id);
 
-      await loadOrders();
-
       addToast({ type: 'success', title: 'Pedido criado com sucesso' });
 
       history.push('/allorders');
     },
-    [allOrders],
+    [],
   );
 
-  const removeOrder = useCallback(
-    async (id: string) => {
-      await api.delete(`/orders/${id}`, {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
+  const removeOrder = useCallback(async (id: string) => {
+    await api.delete(`/orders/${id}`, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    });
 
-      await loadOrders();
-
-      addToast({ type: 'success', title: 'Pedido removido com sucesso' });
-    },
-    [allOrders],
-  );
+    addToast({ type: 'success', title: 'Pedido removido com sucesso' });
+  }, []);
 
   return (
     <OrderContext.Provider
-      value={{ allOrders, removeOrder, generatePDF, createOrder }}
+      value={{ loadOrders, removeOrder, generatePDF, createOrder }}
     >
       {children}
     </OrderContext.Provider>
