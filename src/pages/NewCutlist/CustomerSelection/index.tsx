@@ -25,18 +25,30 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
   setPage,
   setSelectedCustomer,
 }) => {
-  const { allCustomers } = useCustomer();
+  const { loadCustomers } = useCustomer();
 
+  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<
     { value: string; id: string }[]
   >([]);
 
   useEffect(() => {
-    const allOptions = allCustomers.map((customer) => {
-      return { value: customer.name, id: customer.id };
-    });
+    async function loadCustomersFromHook() {
+      const customersFromHook = await loadCustomers();
 
-    setAutoCompleteOptions([...allOptions]);
+      setAllCustomers([...customersFromHook]);
+    }
+
+    function setAutoCompleteFromHook() {
+      const allOptions = allCustomers.map((customer) => {
+        return { value: customer.name, id: customer.id };
+      });
+
+      setAutoCompleteOptions([...allOptions]);
+    }
+
+    loadCustomersFromHook();
+    setAutoCompleteFromHook();
   }, []);
 
   const handleSelectedCustomer = useCallback(
