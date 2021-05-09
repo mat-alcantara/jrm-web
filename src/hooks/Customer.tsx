@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useState,
-  useContext,
-  useEffect,
-} from 'react';
+import React, { createContext, useCallback, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import api from '../services/api';
@@ -16,11 +10,11 @@ import ICustomer from '../types/ICustomer';
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 interface ICustomerContext {
-  allCustomers: ICustomer[];
   createCustomer(
     dataToCreateCustomer: Optional<ICustomer, 'id' | 'email'>,
   ): Promise<void>;
   removeCustomer(id: string): Promise<void>;
+  loadCustomers(): Promise<ICustomer[]>;
 }
 
 // Creation of the context
@@ -29,8 +23,6 @@ const CustomerContext = createContext<ICustomerContext>({} as ICustomerContext);
 export const CustomerProvider: React.FC = ({ children }) => {
   const { token } = useAuth();
   const { addToast } = useToast();
-
-  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
 
   const history = useHistory();
 
@@ -41,11 +33,7 @@ export const CustomerProvider: React.FC = ({ children }) => {
       },
     });
 
-    setAllCustomers([...allCustomersFromApi.data]);
-  }, [allCustomers]);
-
-  useEffect(() => {
-    loadCustomers();
+    return allCustomersFromApi.data;
   }, []);
 
   const createCustomer = useCallback(
@@ -59,44 +47,37 @@ export const CustomerProvider: React.FC = ({ children }) => {
         },
       });
 
-      await loadCustomers();
-
       addToast({ type: 'success', title: 'Usuário criado com sucesso' });
 
       history.push('/customerslist');
     },
-    [allCustomers],
+    [],
   );
 
-  const removeCustomer = useCallback(
-    async (id: string) => {
-      try {
-        await api.delete('/customers', {
-          headers: {
-            Authorization: `bearer ${token}`,
-          },
-          data: {
-            id,
-          },
-        });
+  const removeCustomer = useCallback(async (id: string) => {
+    try {
+      await api.delete('/customers', {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+        data: {
+          id,
+        },
+      });
 
-        await loadCustomers();
-
-        addToast({ type: 'success', title: 'Cliente removido com sucesso' });
-      } catch {
-        addToast({
-          type: 'error',
-          title: 'Erro na remoção do cliente',
-          description: 'Cliente pode estar atribuído a algum pedido',
-        });
-      }
-    },
-    [allCustomers],
-  );
+      addToast({ type: 'success', title: 'Cliente removido com sucesso' });
+    } catch {
+      addToast({
+        type: 'error',
+        title: 'Erro na remoção do cliente',
+        description: 'Cliente pode estar atribuído a algum pedido',
+      });
+    }
+  }, []);
 
   return (
     <CustomerContext.Provider
-      value={{ allCustomers, createCustomer, removeCustomer }}
+      value={{ createCustomer, removeCustomer, loadCustomers }}
     >
       {children}
     </CustomerContext.Provider>

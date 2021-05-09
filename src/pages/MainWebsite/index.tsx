@@ -239,7 +239,7 @@ const MainWebsite: React.FC = () => {
           </Col>
         </Row>
       </Content>
-      <Footer style={{ textAlign: 'center', background: '#f1f1f1' }}>
+      <Footer style={{ textAlign: 'left', background: '#f1f1f1' }}>
         <Typography>
           Aqui estarão todas as informações da loja: Telefones, emails, redes
           sociais, links de contato...
