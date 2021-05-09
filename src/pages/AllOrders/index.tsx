@@ -9,6 +9,9 @@ import AntContent from '../../components/AntContent';
 
 import AntButton from '../../components/AntButton';
 
+import ICustomer from '../../types/ICustomer';
+import IOrder from '../../types/IOrder';
+
 import { Container } from './styles';
 
 interface IDataSource {
@@ -22,29 +25,49 @@ interface IDataSource {
 }
 
 const AllOrders: React.FC = () => {
-  const { allOrders, removeOrder, generatePDF } = useOrder();
-  const { allCustomers } = useCustomer();
+  const { loadOrders, removeOrder, generatePDF } = useOrder();
+  const { loadCustomers } = useCustomer();
 
+  const [allOrders, setAllOrders] = useState<IOrder[]>([]);
+  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
 
   useEffect(() => {
-    const dataToSetDataSource = allOrders.map((order) => {
-      const customerFound = allCustomers.find(
-        (customer) => customer.id === order.customerId,
-      );
+    async function loadCustomersFromHook() {
+      const allCustomersFromHook = await loadCustomers();
 
-      return {
-        key: order.id,
-        order_code: order.order_code,
-        orderStore: order.orderStore,
-        orderStatus: order.orderStatus,
-        deliveryDate: order.deliveryDate,
-        price: order.price,
-        customerName: customerFound?.name || 'Cliente desconhecido',
-      };
-    });
+      setAllCustomers([...allCustomersFromHook]);
+    }
 
-    setDataSource([...dataToSetDataSource]);
+    async function loadOrdersFromHook() {
+      const allOrdersFromHook = await loadOrders();
+
+      setAllOrders([...allOrdersFromHook]);
+    }
+
+    function setDataSourceFromHook() {
+      const dataToSetDataSource = allOrders.map((order) => {
+        const customerFound = allCustomers.find(
+          (customer) => customer.id === order.customerId,
+        );
+
+        return {
+          key: order.id,
+          order_code: order.order_code,
+          orderStore: order.orderStore,
+          orderStatus: order.orderStatus,
+          deliveryDate: order.deliveryDate,
+          price: order.price,
+          customerName: customerFound?.name || 'Cliente desconhecido',
+        };
+      });
+
+      setDataSource([...dataToSetDataSource]);
+    }
+
+    loadCustomersFromHook();
+    loadOrdersFromHook();
+    setDataSourceFromHook();
   }, []);
 
   const handleRemoveOrder = useCallback(
