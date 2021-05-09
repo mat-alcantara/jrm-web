@@ -19,6 +19,7 @@ import getValidationErrors from '../../../utils/getValidationErrors';
 import ICutlistData from '../../../types/ICutlistData';
 import ICutlist from '../../../types/ICutlist';
 import IOrderData from '../../../types/IOrderData';
+import IMaterial from '../../../types/IMaterial';
 
 interface ICutlistPageProps {
   orderData: IOrderData | undefined;
@@ -38,11 +39,11 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   setCutlist,
   cutlist,
 }) => {
-  const { createMaterial } = useMaterial();
-  const { allMaterials } = useMaterial();
+  const { createMaterial, loadMaterials } = useMaterial();
   const formRef = useRef<FormHandles>(null);
   const materialFormRef = useRef<FormHandles>(null);
 
+  const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [cutlistDataSource, setCutlistDataSource] = useState<ICutlistData[]>(
     [],
@@ -72,7 +73,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [cutlist, cutlistDataSource],
   );
 
-  const loadMaterials = useCallback(() => {
+  const refreshMaterials = useCallback(() => {
     const allMaterialOptions = allMaterials.map((material) => {
       return {
         value: material.id,
@@ -84,7 +85,14 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   }, []);
 
   useEffect(() => {
-    loadMaterials();
+    async function loadMaterialsFromHook() {
+      const allMaterialsFromHook = await loadMaterials();
+
+      setAllMaterials([...allMaterialsFromHook]);
+    }
+
+    loadMaterialsFromHook();
+    refreshMaterials();
   }, []);
 
   const options = {
@@ -287,12 +295,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         const materialCreated = await createMaterial(materialData);
 
-        setMaterialOptions((prevValue) => [
-          ...prevValue,
-          { value: materialCreated.id, label: materialCreated.name },
-        ]);
-
         allMaterials.push(materialCreated);
+
+        refreshMaterials();
 
         setNewMaterialForm(false);
       } catch (err) {
