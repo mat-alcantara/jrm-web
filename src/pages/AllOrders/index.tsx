@@ -9,9 +9,6 @@ import AntContent from '../../components/AntContent';
 
 import AntButton from '../../components/AntButton';
 
-import ICustomer from '../../types/ICustomer';
-import IOrder from '../../types/IOrder';
-
 import { Container } from './styles';
 
 interface IDataSource {
@@ -28,28 +25,16 @@ const AllOrders: React.FC = () => {
   const { loadOrders, removeOrder, generatePDF } = useOrder();
   const { loadCustomers } = useCustomer();
 
-  const [allOrders, setAllOrders] = useState<IOrder[]>([]);
-  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
 
   useEffect(() => {
-    async function loadCustomersFromHook() {
+    async function loadDataFromHook() {
       const allCustomersFromHook = await loadCustomers();
 
-      setAllCustomers((prevState) => {
-        return [...prevState, ...allCustomersFromHook];
-      });
-    }
-
-    async function loadOrdersFromHook() {
       const allOrdersFromHook = await loadOrders();
 
-      setAllOrders([...allOrdersFromHook]);
-    }
-
-    function setDataSourceFromHook() {
-      const dataToSetDataSource = allOrders.map((order) => {
-        const customerFound = allCustomers.find(
+      const dataToSetDataSource = allOrdersFromHook.map((order) => {
+        const customerFound = allCustomersFromHook.find(
           (customer) => customer.id === order.customerId,
         );
 
@@ -67,9 +52,7 @@ const AllOrders: React.FC = () => {
       setDataSource([...dataToSetDataSource]);
     }
 
-    loadCustomersFromHook();
-    loadOrdersFromHook();
-    setDataSourceFromHook();
+    loadDataFromHook();
   }, []);
 
   const handleRemoveOrder = useCallback(
