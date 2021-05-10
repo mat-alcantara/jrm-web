@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Layout,
   Row,
@@ -8,30 +8,66 @@ import {
   Menu,
   Carousel,
   Divider,
+  Grid,
 } from 'antd';
 import { Link } from 'react-router-dom';
 
 import AntButton from '../../components/AntButton';
 
-import { CarouselItem } from './styles';
+import { CarouselItem, StyledMenu } from './styles';
+import allData from '../../products';
+import allWoorworkers from '../../woodworkers';
+
+import Carr1 from '../../assets/carr1.png';
+import Carr2 from '../../assets/carr2.png';
 
 const { Header, Content, Footer } = Layout;
 
+interface IProducts {
+  name: string;
+  product_code: number;
+  image: string;
+  description: string;
+  brand: string;
+  isTop: boolean;
+  department: string;
+  material: string[];
+  technical_information: Object;
+}
+
 const MainWebsite: React.FC = () => {
+  const [allProducts, setAllProducts] = useState<IProducts[]>([]);
+  const { useBreakpoint } = Grid;
+  const sizes = useBreakpoint();
+
+  useEffect(() => {
+    setAllProducts([...allData]);
+  }, []);
+
   return (
     <Layout>
       <Header style={{ background: '#fff', width: '100vm' }}>
         <Row justify="center" align="middle">
-          <Col span={3} />
-          <Col span={6}>
+          <Col
+            xl={6}
+            md={7}
+            xs={15}
+            xxl={3}
+            sm={15}
+            style={{ marginTop: '8px' }}
+          >
             <Typography.Title
-              level={2}
-              style={{ color: '#8C4F19', marginBottom: '0px' }}
+              level={4}
+              style={{
+                color: '#8C4F19',
+                marginBottom: '0px',
+                textAlign: 'center',
+              }}
             >
               JRM Compensados
             </Typography.Title>
           </Col>
-          <Col span={9}>
+          <Col md={9} sm={24} xs={24} xxl={15}>
             <Input.Search
               allowClear
               enterButton="Search"
@@ -40,26 +76,20 @@ const MainWebsite: React.FC = () => {
               style={{ verticalAlign: 'middle' }}
             />
           </Col>
-          <Col span={3}>
-            <AntButton
-              size="large"
-              shape="round"
-              type="primary"
-              style={{ float: 'right' }}
-            >
-              <Link to="/signin">Login</Link>
-            </AntButton>
-          </Col>
-          <Col span={3} />
         </Row>
       </Header>
       <Content style={{ background: '#fff', width: '100vm' }}>
         {/* Menu */}
         <Row align="middle" justify="center">
-          <Col span={24}>
-            <Menu
+          <Col xl={24} md={16} sm={1} xs={1}>
+            <StyledMenu
               mode="horizontal"
-              style={{ textAlign: 'center', width: '100%', fontSize: '16px' }}
+              style={{
+                textAlign: 'center',
+                width: '100%',
+                fontSize: '16px',
+              }}
+              sizes={sizes}
             >
               <Menu.Item>MDF e Fitas</Menu.Item>
               <Menu.Item>Ferragens</Menu.Item>
@@ -67,19 +97,30 @@ const MainWebsite: React.FC = () => {
               <Menu.Item>Serviço de Corte</Menu.Item>
               <Menu.Item>Contato</Menu.Item>
               <Menu.Item>Encontre um Marceneiro</Menu.Item>
-            </Menu>
+              <Menu.Item>
+                <Link to="/signin">
+                  <AntButton type="link" size="large">
+                    Login
+                  </AntButton>
+                </Link>
+              </Menu.Item>
+            </StyledMenu>
           </Col>
         </Row>
 
         {/* Carousel */}
-        <Row>
-          <Col span={24}>
-            <Carousel>
+        <Row align="middle" justify="center">
+          <Col xl={17} lg={24} md={24} sm={0} xs={0}>
+            <Carousel style={{ height: '300px' }}>
               <div>
-                <CarouselItem>Imagem com promoções</CarouselItem>
+                <CarouselItem>
+                  <img src={Carr1} alt="Carrousel 1" />
+                </CarouselItem>
               </div>
               <div>
-                <CarouselItem>Imagem com Promoções</CarouselItem>
+                <CarouselItem>
+                  <img src={Carr2} alt="Carrousel 2" />
+                </CarouselItem>
               </div>
             </Carousel>
           </Col>
@@ -87,101 +128,48 @@ const MainWebsite: React.FC = () => {
 
         <Divider orientation="center">
           <Typography.Title
-            level={3}
-            style={{ color: '#8C4F19', marginTop: '32px' }}
+            level={1}
+            style={{ color: '#8C4F19', marginTop: '64px' }}
           >
             Produtos em destaque
           </Typography.Title>
         </Divider>
 
         {/* Lista com produtos mais vendidos */}
-
-        <Row gutter={[24, 24]} align="middle" justify="center">
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                width: '150px',
-                height: '150px',
-                background: '#c1c1c1',
-                margin: '0 auto',
-              }}
-            />
-            <h3 style={{ marginTop: '16px' }}>Nome do Produto</h3>
-            <p>Descrição do produto</p>
-          </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                width: '150px',
-                height: '150px',
-                background: '#c1c1c1',
-                margin: '0 auto',
-              }}
-            />
-            <h3 style={{ marginTop: '16px' }}>Nome do Produto</h3>
-            <p>Descrição do produto</p>
-          </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                width: '150px',
-                height: '150px',
-                background: '#c1c1c1',
-                margin: '0 auto',
-              }}
-            />
-            <h3 style={{ marginTop: '16px' }}>Nome do Produto</h3>
-            <p>Descrição do produto</p>
-          </Col>
-        </Row>
         <Row
-          gutter={[24, 24]}
-          align="middle"
+          gutter={[24, 64]}
+          align="top"
           justify="center"
           style={{ marginTop: '32px' }}
         >
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                width: '150px',
-                height: '150px',
-                background: '#c1c1c1',
-                margin: '0 auto',
-              }}
-            />
-            <h3 style={{ marginTop: '16px' }}>Nome do Produto</h3>
-            <p>Descrição do produto</p>
-          </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                width: '150px',
-                height: '150px',
-                background: '#c1c1c1',
-                margin: '0 auto',
-              }}
-            />
-            <h3 style={{ marginTop: '16px' }}>Nome do Produto</h3>
-            <p>Descrição do produto</p>
-          </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                width: '150px',
-                height: '150px',
-                background: '#c1c1c1',
-                margin: '0 auto',
-              }}
-            />
-            <h3 style={{ marginTop: '16px' }}>Nome do Produto</h3>
-            <p>Descrição do produto</p>
-          </Col>
+          {allProducts.map((product) => (
+            <Col lg={7} sm={24} md={11} style={{ textAlign: 'center' }}>
+              <img
+                src={product.image}
+                alt="Ok"
+                style={{
+                  width: '150px',
+                  height: '150px',
+                  background: '#c1c1c1',
+                  margin: '0 auto',
+                }}
+              />
+
+              <a href="/">
+                <h3 style={{ marginTop: '16px' }}>{product.name}</h3>
+              </a>
+              <p>
+                {product.description.substring(0, 40)}
+                ...
+              </p>
+            </Col>
+          ))}
         </Row>
 
         <Divider>
           <Typography.Title
-            level={3}
-            style={{ color: '#8C4F19', marginTop: '32px' }}
+            level={1}
+            style={{ color: '#8C4F19', marginTop: '64px' }}
           >
             Marceneiros parceiros
           </Typography.Title>
@@ -191,59 +179,25 @@ const MainWebsite: React.FC = () => {
         <Row
           align="middle"
           justify="center"
-          gutter={[24, 24]}
-          style={{ marginBottom: '32px' }}
+          gutter={[24, 64]}
+          style={{ marginBottom: '32px', marginTop: '32px' }}
         >
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <Typography.Title level={4}>Cliente de testes</Typography.Title>
-            <Typography>Frade, Angra dos Reis - RJ</Typography>
-            <Typography>(24) 99999 - 9999 | (24) 99999 - 9999</Typography>
-            <a href="/signin">Entre em contato</a>
-          </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <Typography.Title level={4}>Cliente de testes</Typography.Title>
-            <Typography>Frade, Angra dos Reis - RJ</Typography>
-            <Typography>(24) 99999 - 9999 | (24) 99999 - 9999</Typography>
-            <a href="/signin">Entre em contato</a>
-          </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <Typography.Title level={4}>Cliente de testes</Typography.Title>
-            <Typography>Frade, Angra dos Reis - RJ</Typography>
-            <Typography>(24) 99999 - 9999 | (24) 99999 - 9999</Typography>
-            <a href="/signin">Entre em contato</a>
-          </Col>
-        </Row>
-        <Row
-          align="middle"
-          justify="center"
-          gutter={[24, 24]}
-          style={{ marginBottom: '32px' }}
-        >
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <Typography.Title level={4}>Cliente de testes</Typography.Title>
-            <Typography>Frade, Angra dos Reis - RJ</Typography>
-            <Typography>(24) 99999 - 9999 | (24) 99999 - 9999</Typography>
-            <a href="/signin">Entre em contato</a>
-          </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <Typography.Title level={4}>Cliente de testes</Typography.Title>
-            <Typography>Frade, Angra dos Reis - RJ</Typography>
-            <Typography>(24) 99999 - 9999 | (24) 99999 - 9999</Typography>
-            <a href="/signin">Entre em contato</a>
-          </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <Typography.Title level={4}>Cliente de testes</Typography.Title>
-            <Typography>Frade, Angra dos Reis - RJ</Typography>
-            <Typography>(24) 99999 - 9999 | (24) 99999 - 9999</Typography>
-            <a href="/signin">Entre em contato</a>
-          </Col>
+          {allWoorworkers.map((woodworker) => (
+            <Col lg={7} sm={24} md={11} style={{ textAlign: 'center' }}>
+              <Typography.Title level={4}>{woodworker.name}</Typography.Title>
+              <Typography>{woodworker.address}</Typography>
+              <Typography>{woodworker.telephone}</Typography>
+              <a href="/signin">Entre em contato</a>
+            </Col>
+          ))}
         </Row>
       </Content>
-      <Footer style={{ textAlign: 'left', background: '#f1f1f1' }}>
+      <Footer style={{ textAlign: 'center', background: '#f1f1f1' }}>
         <Typography>
-          Aqui estarão todas as informações da loja: Telefones, emails, redes
-          sociais, links de contato...
+          Frade: (24) 99964-4953 | Japuíba: (24) 99969-4543
         </Typography>
+        <Typography>Email: jrmcompensados@hotmail.com</Typography>
+
         <Typography style={{ marginTop: '32px' }}>
           JRM Compensados ©2021 Created by Mateus Alcantara
         </Typography>

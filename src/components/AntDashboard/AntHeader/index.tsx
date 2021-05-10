@@ -18,7 +18,7 @@ const AntHeader: React.FC = () => {
 
   return (
     <StyledHeader>
-      <Link to="/dashboard">
+      <Link to="/">
         <h1>JRM Compensados</h1>
       </Link>
       <StyledMenu mode="horizontal" overflowedIndicator={<FiMenu size={20} />}>
