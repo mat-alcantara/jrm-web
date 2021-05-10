@@ -21,9 +21,9 @@ export const MaterialProvider: React.FC = ({ children }) => {
   const { getToken } = useAuth();
   const { addToast } = useToast();
 
-  const token = getToken();
-
   const loadMaterials = useCallback(async () => {
+    const token = getToken();
+
     const materialsDataFromRequest = await api.get('/materials', {
       headers: {
         Authorization: `bearer ${token}`,
@@ -35,6 +35,8 @@ export const MaterialProvider: React.FC = ({ children }) => {
 
   const createMaterial = useCallback(
     async (submitData: Optional<IMaterial, 'id'>) => {
+      const token = getToken();
+
       const materialCreated = await api.post<IMaterial>(
         '/materials',
         submitData,
@@ -56,6 +58,8 @@ export const MaterialProvider: React.FC = ({ children }) => {
   );
 
   const removeMaterial = useCallback(async (id: string) => {
+    const token = getToken();
+
     await api.delete(`/materials/${id}`, {
       headers: {
         Authorization: `bearer ${token}`,

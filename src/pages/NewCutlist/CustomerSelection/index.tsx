@@ -36,19 +36,15 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
     async function loadCustomersFromHook() {
       const customersFromHook = await loadCustomers();
 
-      setAllCustomers([...customersFromHook]);
-    }
-
-    function setAutoCompleteFromHook() {
-      const allOptions = allCustomers.map((customer) => {
+      const allOptions = customersFromHook.map((customer) => {
         return { value: customer.name, id: customer.id };
       });
 
+      setAllCustomers((prevValue) => [...prevValue, ...customersFromHook]);
       setAutoCompleteOptions([...allOptions]);
     }
 
     loadCustomersFromHook();
-    setAutoCompleteFromHook();
   }, []);
 
   const handleSelectedCustomer = useCallback(
@@ -61,7 +57,7 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
         setSelectedCustomer(customerSelectedByAutocomplete);
       }
     },
-    [selectedCustomer],
+    [selectedCustomer, allCustomers],
   );
 
   return (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Table, Space, Typography } from 'antd';
 
-import IMaterial from 'types/IMaterial';
 import { useMaterial } from '../../hooks/Material';
 
 import { Container } from './styles';
@@ -21,7 +20,6 @@ interface IMaterialsTableProps {
 const MaterialsList: React.FC = () => {
   const { loadMaterials, removeMaterial } = useMaterial();
 
-  const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
   const [materialsDataSource, setMaterialsDataSource] = useState<
     IMaterialsTableProps[]
   >([]);
@@ -30,11 +28,7 @@ const MaterialsList: React.FC = () => {
     async function loadAllMaterialsFromHook() {
       const materialsFromHook = await loadMaterials();
 
-      setAllMaterials([...materialsFromHook]);
-    }
-
-    function setDataSource() {
-      allMaterials.forEach((material) => {
+      materialsFromHook.forEach((material) => {
         setMaterialsDataSource((prevValue) => [
           ...prevValue,
           {
@@ -49,7 +43,6 @@ const MaterialsList: React.FC = () => {
     }
 
     loadAllMaterialsFromHook();
-    setDataSource();
   }, []);
 
   const handleRemoveMaterial = useCallback(

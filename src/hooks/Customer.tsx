@@ -24,11 +24,11 @@ export const CustomerProvider: React.FC = ({ children }) => {
   const { getToken } = useAuth();
   const { addToast } = useToast();
 
-  const token = getToken();
-
   const history = useHistory();
 
   const loadCustomers = useCallback(async () => {
+    const token = getToken();
+
     const allCustomersFromApi = await api.get<ICustomer[]>('/customers', {
       headers: {
         Authorization: `bearer ${token}`,
@@ -40,8 +40,7 @@ export const CustomerProvider: React.FC = ({ children }) => {
 
   const createCustomer = useCallback(
     async (dataToCreateCustomer: Optional<ICustomer, 'id' | 'email'>) => {
-      // eslint-disable-next-line no-console
-      console.log(token);
+      const token = getToken();
 
       await api.post<ICustomer>('/customers', dataToCreateCustomer, {
         headers: {
@@ -58,6 +57,8 @@ export const CustomerProvider: React.FC = ({ children }) => {
 
   const removeCustomer = useCallback(async (id: string) => {
     try {
+      const token = getToken();
+
       await api.delete('/customers', {
         headers: {
           Authorization: `bearer ${token}`,

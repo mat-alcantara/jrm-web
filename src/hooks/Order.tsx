@@ -28,11 +28,11 @@ export const OrderProvider: React.FC = ({ children }) => {
   const { getToken } = useAuth();
   const { addToast } = useToast();
 
-  const token = getToken();
-
   const history = useHistory();
 
   const loadOrders = useCallback(async () => {
+    const token = getToken();
+
     const allOrdersData = await api.get<IOrder[]>('/orders', {
       headers: {
         Authorization: `bearer ${token}`,
@@ -43,6 +43,8 @@ export const OrderProvider: React.FC = ({ children }) => {
   }, []);
 
   const generatePDF = useCallback(async (id: string) => {
+    const token = getToken();
+
     const PDFCreatedInBlob = await api.post(
       `/orderpdf/${id}`,
       {},
@@ -69,6 +71,8 @@ export const OrderProvider: React.FC = ({ children }) => {
       orderData: IOrderData,
       cutlist: ICutlist[],
     ) => {
+      const token = getToken();
+
       const cutlistWithoutId = cutlist.map((cut) => {
         return {
           material_id: cut.material_id,
@@ -107,6 +111,8 @@ export const OrderProvider: React.FC = ({ children }) => {
   );
 
   const removeOrder = useCallback(async (id: string) => {
+    const token = getToken();
+
     await api.delete(`/orders/${id}`, {
       headers: {
         Authorization: `bearer ${token}`,

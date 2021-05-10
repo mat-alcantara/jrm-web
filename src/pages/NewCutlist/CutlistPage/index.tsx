@@ -73,26 +73,23 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [cutlist, cutlistDataSource],
   );
 
-  const refreshMaterials = useCallback(() => {
-    const allMaterialOptions = allMaterials.map((material) => {
-      return {
-        value: material.id,
-        label: material.name,
-      };
-    });
-
-    setMaterialOptions([...allMaterialOptions]);
-  }, []);
-
   useEffect(() => {
     async function loadMaterialsFromHook() {
       const allMaterialsFromHook = await loadMaterials();
 
       setAllMaterials([...allMaterialsFromHook]);
+
+      const allMaterialOptions = allMaterialsFromHook.map((material) => {
+        return {
+          value: material.id,
+          label: material.name,
+        };
+      });
+
+      setMaterialOptions([...allMaterialOptions]);
     }
 
     loadMaterialsFromHook();
-    refreshMaterials();
   }, []);
 
   const options = {
@@ -285,7 +282,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         }
       }
     },
-    [cutlistDataSource],
+    [cutlistDataSource, allMaterials],
   );
 
   const handleSubmitMaterial = useCallback(
@@ -295,9 +292,12 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         const materialCreated = await createMaterial(materialData);
 
-        allMaterials.push(materialCreated);
+        setAllMaterials((prevValue) => [...prevValue, materialCreated]);
 
-        refreshMaterials();
+        setMaterialOptions((prevValue) => [
+          ...prevValue,
+          { value: materialCreated.id, label: materialCreated.name },
+        ]);
 
         setNewMaterialForm(false);
       } catch (err) {
@@ -308,7 +308,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         }
       }
     },
-    [],
+    [allMaterials],
   );
 
   return (

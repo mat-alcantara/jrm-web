@@ -36,7 +36,9 @@ const AllOrders: React.FC = () => {
     async function loadCustomersFromHook() {
       const allCustomersFromHook = await loadCustomers();
 
-      setAllCustomers([...allCustomersFromHook]);
+      setAllCustomers((prevState) => {
+        return [...prevState, ...allCustomersFromHook];
+      });
     }
 
     async function loadOrdersFromHook() {
