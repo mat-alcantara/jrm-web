@@ -20,7 +20,7 @@ export const StyledMenu = styled(Menu)<MenuProps>`
   width: 100%;
   font-size: 16px;
   ${(props) =>
-    (props.sizes.sm || props.sizes.xs) &&
+    !props.sizes.md &&
     css`
       margin-top: 32px;
     `}
