@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { Steps } from 'antd';
+import { Steps, Popconfirm } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import { useOrder } from '../../hooks/Order';
 
@@ -63,16 +64,23 @@ const NewCutlist: React.FC = () => {
                 orderData={orderData}
                 setCutlist={setCutlist}
               />
-              <AntButton
-                block
-                type="primary"
-                size="large"
-                onClick={() => handleSubmitData()}
-                style={{ maxWidth: '1000px' }}
-                disabled={cutlist.length === 0}
+              <Popconfirm
+                title="Tem certeza de que deseja concluir o pedido?"
+                onConfirm={() => handleSubmitData()}
+                okText="Sim"
+                cancelText="Não"
+                icon={<ExclamationCircleOutlined style={{ color: 'green' }} />}
               >
-                Confirmar pedido
-              </AntButton>
+                <AntButton
+                  block
+                  type="primary"
+                  size="large"
+                  style={{ maxWidth: '1000px' }}
+                  disabled={cutlist.length === 0}
+                >
+                  Confirmar pedido
+                </AntButton>
+              </Popconfirm>
             </>
           )}
           <StepsContainer style={{ marginTop: '32px' }}>

@@ -129,7 +129,7 @@ const AllOrders: React.FC = () => {
       render: (text: string, record: IDataSource) => (
         <Space size="middle">
           <Popconfirm
-            title="Tem certeza de que deseja excluir esse material?"
+            title="Tem certeza de que deseja excluir esse pedido?"
             onConfirm={() => handleRemoveOrder(record.key)}
             okText="Sim"
             cancelText="Não"

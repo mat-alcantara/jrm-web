@@ -1,9 +1,10 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { Typography, Divider, Table, Space } from 'antd';
+import { Typography, Divider, Table, Space, Popconfirm } from 'antd';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { v4 } from 'uuid';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import { useMaterial } from '../../../hooks/Material';
 
@@ -139,12 +140,15 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         key: 'action',
         render: (text: string, record: ICutlistData) => (
           <Space size="middle">
-            <AntButton
-              onClick={() => handleRemoveCutlist(record.key)}
-              type="link"
+            <Popconfirm
+              title="Tem certeza de que deseja excluir essa peça?"
+              onConfirm={() => handleRemoveCutlist(record.key)}
+              okText="Sim"
+              cancelText="Não"
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
             >
-              Remover
-            </AntButton>
+              <AntButton type="link">Remover</AntButton>
+            </Popconfirm>
           </Space>
         ),
       },
