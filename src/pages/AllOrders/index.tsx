@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Table, Space, Typography } from 'antd';
+import { Table, Space, Typography, Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
@@ -127,9 +128,16 @@ const AllOrders: React.FC = () => {
       key: 'action',
       render: (text: string, record: IDataSource) => (
         <Space size="middle">
-          <AntButton type="link" onClick={() => handleRemoveOrder(record.key)}>
-            Deletar
-          </AntButton>
+          <Popconfirm
+            title="Tem certeza de que deseja excluir esse material?"
+            onConfirm={() => handleRemoveOrder(record.key)}
+            okText="Sim"
+            cancelText="Não"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+          >
+            <AntButton type="link">Deletar</AntButton>
+          </Popconfirm>
+
           <AntButton type="link" onClick={() => generatePDF(record.key)}>
             Gerar PDF
           </AntButton>
