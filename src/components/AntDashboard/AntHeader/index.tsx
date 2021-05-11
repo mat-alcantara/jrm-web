@@ -23,6 +23,9 @@ const AntHeader: React.FC = () => {
       </Link>
       <StyledMenu mode="horizontal" overflowedIndicator={<FiMenu size={20} />}>
         <Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Item>
+        <Item>
           <Link to="/newcutlist">Novo serviço</Link>
         </Item>
         <Item>

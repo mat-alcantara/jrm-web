@@ -32,9 +32,11 @@ const Dashboard: React.FC = () => {
 
       setDeliveryAllowed(pedidosLiberadosParaTransporte.length);
 
-      allOrdersFromHook.forEach((order) =>
-        setTotalValue((prevVal) => prevVal + order.price),
-      );
+      allOrdersFromHook.forEach((order) => {
+        if (order.orderStatus !== 'Orçamento') {
+          setTotalValue((prevVal) => prevVal + order.price);
+        }
+      });
     }
 
     async function loadCustomersFromHook() {
