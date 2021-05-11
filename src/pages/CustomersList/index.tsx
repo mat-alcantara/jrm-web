@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Table, Space, Typography } from 'antd';
+import { Table, Space, Typography, Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import { useCustomer } from '../../hooks/Customer';
 
@@ -107,12 +108,16 @@ const CustomersList: React.FC = () => {
       key: 'actions',
       render: (record: ICustomersTableProps) => (
         <Space size="small">
-          <AntButton
-            type="link"
-            onClick={() => handleRemoveCustomer(record.key)}
+          <Popconfirm
+            title="Tem certeza de que deseja excluir esse usuário?"
+            onConfirm={() => handleRemoveCustomer(record.key)}
+            okText="Sim"
+            cancelText="Não"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
           >
-            Remover
-          </AntButton>
+            <AntButton type="link">Remover</AntButton>
+          </Popconfirm>
+
           <a href="/">Editar</a>
         </Space>
       ),
