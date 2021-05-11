@@ -118,7 +118,7 @@ const MainWebsite: React.FC = () => {
 
         {/* Carousel */}
         <Row align="middle" justify="center">
-          <Col xl={17} lg={24} md={0} sm={0} xs={0}>
+          <Col xxl={17} xl={24} lg={24} md={0} sm={0} xs={0}>
             <Carousel style={{ height: '300px' }}>
               <div>
                 <CarouselItem>
