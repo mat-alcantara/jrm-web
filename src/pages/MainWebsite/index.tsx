@@ -62,12 +62,13 @@ const MainWebsite: React.FC = () => {
                 color: '#8C4F19',
                 marginBottom: '0px',
                 textAlign: 'center',
+                verticalAlign: 'middle',
               }}
             >
               JRM Compensados
             </Typography.Title>
           </Col>
-          <Col md={9} sm={24} xs={24} xxl={15}>
+          <Col md={9} sm={17} xs={17} xxl={10}>
             <Input.Search
               allowClear
               enterButton="Search"
@@ -75,6 +76,20 @@ const MainWebsite: React.FC = () => {
               placeholder="Digite o código ou nome do produto"
               style={{ verticalAlign: 'middle' }}
             />
+          </Col>
+          <Col sm={5} xs={5} xl={3} offset={2}>
+            <Link to="/signin">
+              <AntButton
+                type="primary"
+                size="large"
+                style={{
+                  verticalAlign: 'middle',
+                  width: '100%',
+                }}
+              >
+                Login
+              </AntButton>
+            </Link>
           </Col>
         </Row>
       </Header>
@@ -97,20 +112,13 @@ const MainWebsite: React.FC = () => {
               <Menu.Item>Serviço de Corte</Menu.Item>
               <Menu.Item>Contato</Menu.Item>
               <Menu.Item>Encontre um Marceneiro</Menu.Item>
-              <Menu.Item>
-                <Link to="/signin">
-                  <AntButton type="link" size="large">
-                    Login
-                  </AntButton>
-                </Link>
-              </Menu.Item>
             </StyledMenu>
           </Col>
         </Row>
 
         {/* Carousel */}
         <Row align="middle" justify="center">
-          <Col xl={17} lg={24} md={24} sm={0} xs={0}>
+          <Col xl={17} lg={24} md={0} sm={0} xs={0}>
             <Carousel style={{ height: '300px' }}>
               <div>
                 <CarouselItem>
@@ -129,7 +137,7 @@ const MainWebsite: React.FC = () => {
         <Divider orientation="center">
           <Typography.Title
             level={1}
-            style={{ color: '#8C4F19', marginTop: '64px' }}
+            style={{ color: '#8C4F19', marginTop: '16px' }}
           >
             Produtos em destaque
           </Typography.Title>
