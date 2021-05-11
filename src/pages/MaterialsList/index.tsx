@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Table, Space, Typography } from 'antd';
+import { Table, Space, Typography, Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import { useMaterial } from '../../hooks/Material';
 
@@ -84,12 +85,16 @@ const MaterialsList: React.FC = () => {
       key: 'actions',
       render: (record: IMaterialsTableProps) => (
         <Space size="small">
-          <AntButton
-            type="link"
-            onClick={() => handleRemoveMaterial(record.key)}
+          <Popconfirm
+            title="Tem certeza de que deseja excluir esse material?"
+            onConfirm={() => handleRemoveMaterial(record.key)}
+            okText="Sim"
+            cancelText="Não"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
           >
-            Remover
-          </AntButton>
+            <AntButton type="link">Remover</AntButton>
+          </Popconfirm>
+
           <a href="/">Editar</a>
         </Space>
       ),
