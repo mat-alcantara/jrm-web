@@ -46,6 +46,10 @@ const DataPage: React.FC<IDataPageProps> = ({
       { value: 'Em Produção', label: 'Produção' },
       { value: 'Orçamento', label: 'Orçamento' },
     ],
+    deliveryType: [
+      { value: 'Entrega', label: 'Entrega' },
+      { value: 'Retirar na Loja', label: 'Retirar na Loja' },
+    ],
   };
 
   const validateDataPageProps = useCallback(
@@ -123,6 +127,13 @@ const DataPage: React.FC<IDataPageProps> = ({
           placeholder="Status de pagamento"
           options={options.paymentType}
           defaultInputValue={orderData?.paymentStatus}
+          isClearable
+        />
+        <AntSelect
+          name="deliveryType"
+          placeholder="Tipo de Entrega"
+          options={options.deliveryType}
+          defaultInputValue={orderData?.delivery_type}
           isClearable
         />
         <AntInput

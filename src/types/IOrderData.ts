@@ -5,4 +5,5 @@ export default interface IOrderData {
   orderStatus: string;
   ps?: string;
   pricePercent: number;
+  delivery_type: string;
 }

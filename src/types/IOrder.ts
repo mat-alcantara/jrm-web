@@ -2,6 +2,7 @@ import ICutlist from './ICutlist';
 import IOrderStatus from './OrderStatusEnumDTO';
 import IOrderStore from './OrderStoreEnumDTO';
 import IPaymentStatus from './PaymentStatusEnumDTO';
+import DeliveryTypeEnumDTO from './DeliveryTypeEnumDTO';
 
 export default interface IOrder {
   id: string;
@@ -16,5 +17,6 @@ export default interface IOrder {
   conclusionDate?: string;
   deliveryDate: string;
   price: number;
+  delivery_type: DeliveryTypeEnumDTO;
   cutlist: ICutlist[];
 }
