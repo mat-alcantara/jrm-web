@@ -60,6 +60,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         paymentStatus: Yup.string().required('Método de pagamento obrigatório'),
         ps: Yup.string().nullable(),
         orderStatus: Yup.string(),
+        delivery_type: Yup.string().required('Tipo de entrega obrigatório'),
         pricePercent: Yup.number()
           .min(0, 'Valor deve ser maior que 0')
           .max(100, 'Valor deve ser menor do que 100')
@@ -130,7 +131,7 @@ const DataPage: React.FC<IDataPageProps> = ({
           isClearable
         />
         <AntSelect
-          name="deliveryType"
+          name="delivery_type"
           placeholder="Tipo de Entrega"
           options={options.deliveryType}
           defaultInputValue={orderData?.delivery_type}
