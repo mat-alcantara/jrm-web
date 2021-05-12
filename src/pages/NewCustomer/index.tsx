@@ -55,8 +55,8 @@ const CreateCustomer: React.FC = () => {
         tel: Yup.string()
           .required('Telefone obrigatório')
           .min(10, 'Numero de telefone deve conter entre 10 e 11 números'),
-        area: Yup.string().required('Bairro obrigatório'),
-        street: Yup.string().required('Endereço obrigatório'),
+        area: Yup.string(),
+        street: Yup.string(),
         city: Yup.string().required('Cidade obrigatória'),
         state: Yup.string().required('UF obrigatório'),
       });
@@ -75,6 +75,13 @@ const CreateCustomer: React.FC = () => {
       const telephone = tel.replace(/[^A-Z0-9]/gi, '');
       const state = 'Rio de Janeiro';
       const emailHandled = email || undefined; // Empty email returns undefined
+      let handledStreet;
+
+      if (!street) {
+        handledStreet = 'Endereço não informado';
+      } else {
+        handledStreet = street;
+      }
 
       try {
         await validateCustomerProps({
@@ -92,7 +99,7 @@ const CreateCustomer: React.FC = () => {
           email: emailHandled,
           telephone: [telephone],
           area,
-          street,
+          street: handledStreet,
           state,
           city,
         });

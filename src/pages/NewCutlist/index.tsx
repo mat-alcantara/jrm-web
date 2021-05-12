@@ -55,6 +55,7 @@ const NewCutlist: React.FC = () => {
               page={page}
               setOrderData={setOrderData}
               setPage={setPage}
+              selectedCustomer={selectedCustomer}
             />
           )}
           {page === 3 && (

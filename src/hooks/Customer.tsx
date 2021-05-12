@@ -6,6 +6,7 @@ import { useAuth } from './Auth';
 import { useToast } from './Toast';
 
 import ICustomer from '../types/ICustomer';
+import IAddressData from '../types/IAddressData';
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
@@ -15,6 +16,7 @@ interface ICustomerContext {
   ): Promise<void>;
   removeCustomer(id: string): Promise<void>;
   loadCustomers(): Promise<ICustomer[]>;
+  updateCustomerAddress(addressData: IAddressData, id: string): Promise<void>;
 }
 
 // Creation of the context
@@ -78,9 +80,29 @@ export const CustomerProvider: React.FC = ({ children }) => {
     }
   }, []);
 
+  const updateCustomerAddress = useCallback(
+    async (customerData: IAddressData, id: string) => {
+      const token = getToken();
+
+      await api.put(`customers/${id}`, customerData, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      });
+
+      addToast({ type: 'success', title: 'Endereço atualizado' });
+    },
+    [],
+  );
+
   return (
     <CustomerContext.Provider
-      value={{ createCustomer, removeCustomer, loadCustomers }}
+      value={{
+        createCustomer,
+        removeCustomer,
+        loadCustomers,
+        updateCustomerAddress,
+      }}
     >
       {children}
     </CustomerContext.Provider>
