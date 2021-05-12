@@ -93,6 +93,7 @@ export const OrderProvider: React.FC = ({ children }) => {
         paymentStatus: orderData?.paymentStatus,
         ps: orderData?.ps,
         seller: orderData?.seller,
+        delivery_type: orderData.delivery_type,
       };
 
       const orderCreated = await api.post('/orders', orderPostData, {
