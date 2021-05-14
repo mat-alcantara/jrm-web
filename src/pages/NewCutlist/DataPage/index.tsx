@@ -5,6 +5,7 @@ import { Typography } from 'antd';
 import * as Yup from 'yup';
 
 import { useCustomer } from '../../../hooks/Customer';
+import { useAuth } from '../../../hooks/Auth';
 
 import getValidationErrors from '../../../utils/getValidationErrors';
 import { areas } from '../../../utils/listOfAreas';
@@ -38,6 +39,7 @@ const DataPage: React.FC<IDataPageProps> = ({
   const formRef = useRef<FormHandles>(null);
   const formAddressRef = useRef<FormHandles>(null);
   const { updateCustomerAddress } = useCustomer();
+  const { user } = useAuth();
 
   const options = {
     orderStore: [
@@ -74,9 +76,8 @@ const DataPage: React.FC<IDataPageProps> = ({
   };
 
   const validateDataPageProps = useCallback(
-    async (allOrderData: IOrderData) => {
+    async (allOrderData: Omit<IOrderData, 'seller'>) => {
       const schema = Yup.object().shape({
-        seller: Yup.string().required('Vendedor obrigatório'),
         orderStore: Yup.string().required('Loja obrigatória'),
         paymentStatus: Yup.string().required('Método de pagamento obrigatório'),
         ps: Yup.string().nullable(),
@@ -116,28 +117,33 @@ const DataPage: React.FC<IDataPageProps> = ({
     [],
   );
 
-  const handleSubmitDataPage = useCallback(async (allOrderData: IOrderData) => {
-    try {
-      await validateDataPageProps(allOrderData);
+  const handleSubmitDataPage = useCallback(
+    async (allOrderData: Omit<IOrderData, 'seller'>) => {
+      try {
+        await validateDataPageProps(allOrderData);
 
-      if (
-        allOrderData.delivery_type === 'Entrega' &&
-        selectedCustomer?.street === 'Endereço não informado'
-      ) {
-        setAddressUpdate(true);
-      } else {
-        setAddressUpdate(false);
+        if (
+          allOrderData.delivery_type === 'Entrega' &&
+          selectedCustomer?.street === 'Endereço não informado'
+        ) {
+          setAddressUpdate(true);
+        } else {
+          setAddressUpdate(false);
+        }
+
+        const seller = user.name;
+
+        setOrderData({ ...allOrderData, seller });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+        }
       }
-
-      setOrderData(allOrderData);
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-
-        formRef.current?.setErrors(errors);
-      }
-    }
-  }, []);
+    },
+    [],
+  );
 
   const handleSubmitCustomerAddress = useCallback(
     async (addressData: IAddressData) => {
@@ -167,7 +173,6 @@ const DataPage: React.FC<IDataPageProps> = ({
         onSubmit={handleSubmitDataPage}
         ref={formRef}
         initialData={{
-          seller: orderData?.seller,
           ps: orderData?.ps,
           pricePercent: orderData?.pricePercent,
         }}
@@ -178,12 +183,6 @@ const DataPage: React.FC<IDataPageProps> = ({
           options={options.orderStatus}
           defaultInputValue={orderData?.orderStatus}
           isClearable
-        />
-        <AntInput
-          name="seller"
-          placeholder="Vendedor"
-          size="large"
-          defaultValue={orderData?.seller}
         />
         <AntSelect
           name="orderStore"
