@@ -106,10 +106,6 @@ const Login: React.FC = () => {
               Entrar
             </AntButton>
           </Form>
-          <Link to="/signup">
-            <FiLogIn />
-            Criar conta
-          </Link>
         </AnimationContainer>
       </Content>
       <Background />
