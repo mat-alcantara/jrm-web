@@ -2,8 +2,8 @@ import React, { useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core'; // List of props for form reference
 import * as Yup from 'yup';
-import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
-import { Link, useHistory } from 'react-router-dom';
+import { FiMail, FiLock } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 
 import AntButton from 'components/AntButton';
 import Logo from '../../assets/logo.svg';
