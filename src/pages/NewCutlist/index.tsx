@@ -1,14 +1,18 @@
-import React, { useCallback, useState } from 'react';
-import { Steps, Popconfirm } from 'antd';
+import React, { useCallback, useState, useRef } from 'react';
+import { Steps, Popconfirm, Typography } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
 
 import { useOrder } from '../../hooks/Order';
+import { useAuth } from '../../hooks/Auth';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
 import { Container, StepsContainer } from './styles';
 
 import AntButton from '../../components/AntButton';
+import AntInput from '../../components/AntInput';
 
 import CustomerSelection from './CustomerSelection';
 import DataPage from './DataPage';
@@ -19,11 +23,16 @@ import IOrderData from '../../types/IOrderData';
 import ICutlist from '../../types/ICutlist';
 
 const NewCutlist: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
+
   const { createOrder } = useOrder();
+  const { user, checkAuth } = useAuth();
 
   const { Step } = Steps;
 
   const [page, setPage] = useState<number>(1);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthErrored, setIsAuthErrored] = useState<boolean>(false);
 
   // CustomerSelection states
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
@@ -37,6 +46,73 @@ const NewCutlist: React.FC = () => {
   const handleSubmitData = useCallback(async () => {
     await createOrder(selectedCustomer, orderData, cutlist);
   }, [selectedCustomer, orderData, cutlist]);
+
+  const handleSubmitAuth = useCallback(
+    async (formData) => {
+      setIsAuthErrored(false);
+
+      const checkIfAuthIsCorrect = await checkAuth({
+        email: user.email,
+        password: formData.password,
+      });
+
+      if (checkIfAuthIsCorrect) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthErrored(true);
+      }
+    },
+    [isAuthenticated],
+  );
+
+  if (!isAuthenticated) {
+    return (
+      <AntDashboard>
+        <AntContent>
+          <Container>
+            <div>
+              <Typography.Title level={1} style={{ marginTop: '64px' }}>
+                {`Olá, ${user.name}`}
+              </Typography.Title>
+              <Typography style={{ fontSize: '24px', marginBottom: '16px' }}>
+                Digite a sua senha para continuar
+              </Typography>
+              <Form
+                onSubmit={handleSubmitAuth}
+                ref={formRef}
+                style={{
+                  maxWidth: '400px',
+                  margin: '0 auto',
+                }}
+              >
+                <AntInput
+                  name="password"
+                  placeholder="Senha"
+                  type="password"
+                  style={{ textAlign: 'center' }}
+                  size="large"
+                />
+                <AntButton htmlType="submit" type="primary" size="middle" block>
+                  Confirmar
+                </AntButton>
+              </Form>
+              {isAuthErrored && (
+                <Typography
+                  style={{
+                    color: 'red',
+                    marginTop: '16px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  SENHA INVÁLIDA
+                </Typography>
+              )}
+            </div>
+          </Container>
+        </AntContent>
+      </AntDashboard>
+    );
+  }
 
   return (
     <AntDashboard>
