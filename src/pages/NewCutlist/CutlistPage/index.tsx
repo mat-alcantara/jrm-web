@@ -169,8 +169,8 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           .min(60, 'Deve ter pelo menos 6mm')
           .max(2750, 'Não deve ultrapassar 2750mm')
           .required('Tamanho necessário'),
-        side_a_border: Yup.number().min(0).max(2).required(),
-        side_b_border: Yup.number().min(0).max(2).required(),
+        side_a_border: Yup.number().min(0).max(2),
+        side_b_border: Yup.number().min(0).max(2),
       });
 
       const isPropsValid = await schema.validate(cutlistData, {
@@ -218,6 +218,16 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         if (!materialUsed) {
           throw new Error('Material does not exist');
+        }
+
+        if (!side_a_border) {
+          // eslint-disable-next-line no-param-reassign
+          side_a_border = 0;
+        }
+
+        if (!side_b_border) {
+          // eslint-disable-next-line no-param-reassign
+          side_b_border = 0;
         }
 
         let price: number;
