@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Table, Space, Typography, Popconfirm } from 'antd';
+import { Table, Space, Typography, Popconfirm, Button } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import { useOrder } from '../../hooks/Order';
@@ -26,6 +26,7 @@ const AllOrders: React.FC = () => {
   const { loadOrders, removeOrder, generatePDF } = useOrder();
   const { loadCustomers } = useCustomer();
 
+  const [orderSort, setOrderSort] = useState('');
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
 
   useEffect(() => {
@@ -109,6 +110,7 @@ const AllOrders: React.FC = () => {
           value: 'Orçamento',
         },
       ],
+      filteredValue: [orderSort],
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onFilter: (value: any, record: IDataSource) =>
         record.orderStatus.indexOf(value) === 0,
@@ -151,6 +153,22 @@ const AllOrders: React.FC = () => {
       <AntContent>
         <Container>
           <Typography.Title level={2}>Lista de Pedidos</Typography.Title>
+          <Space style={{ marginBottom: 16, marginTop: 16 }}>
+            <Button onClick={() => setOrderSort('')}>Todos os pedidos</Button>
+            <Button onClick={() => setOrderSort('Em Produção')}>
+              Em produção
+            </Button>
+            <Button onClick={() => setOrderSort('Liberado para Transporte')}>
+              Liberados para transporte
+            </Button>
+            <Button onClick={() => setOrderSort('Transportado')}>
+              Transportados
+            </Button>
+            <Button onClick={() => setOrderSort('Entregue')}>Entregues</Button>
+            <Button onClick={() => setOrderSort('Orçamento')}>
+              Orçamentos
+            </Button>
+          </Space>
           <Table columns={columns} dataSource={dataSource} />
         </Container>
       </AntContent>
