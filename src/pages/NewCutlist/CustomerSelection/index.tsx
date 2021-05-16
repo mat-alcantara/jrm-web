@@ -68,7 +68,7 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
           placeholder="Digite o nome de um cliente"
           options={autoCompleteOptions}
           onSelect={handleSelectedCustomer}
-          size="large"
+          size="middle"
         />
         <AntButton
           type="default"
