@@ -175,14 +175,17 @@ const AllOrders: React.FC = () => {
               Gerar PDF
             </AntButton>
             {buttonMessage && (
-              <AntButton
-                type="primary"
-                onClick={() =>
+              <Popconfirm
+                title="Atualizar o status do pedido?"
+                onConfirm={() =>
                   handleUpdateOrderStatus(record.key, record.orderStatus)
                 }
+                okText="Sim"
+                cancelText="Não"
+                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               >
-                {buttonMessage}
-              </AntButton>
+                <AntButton type="primary">{buttonMessage}</AntButton>
+              </Popconfirm>
             )}
           </Space>
         );
