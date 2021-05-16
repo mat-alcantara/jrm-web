@@ -20,6 +20,7 @@ interface IOrderContext {
   removeOrder(id: string): Promise<void>;
   generatePDF(id: string): Promise<void>;
   loadOrders(): Promise<IOrder[]>;
+  updateOrderStatus(id: string, orderStatus: string): Promise<void>;
 }
 
 const OrderContext = createContext<IOrderContext>({} as IOrderContext);
@@ -123,9 +124,44 @@ export const OrderProvider: React.FC = ({ children }) => {
     addToast({ type: 'success', title: 'Pedido removido com sucesso' });
   }, []);
 
+  const updateOrderStatus = useCallback(
+    async (id: string, orderStatus: string) => {
+      try {
+        const token = getToken();
+
+        await api.put(
+          `/orders/${id}`,
+          { orderStatus },
+          {
+            headers: {
+              Authorization: `bearer ${token}`,
+            },
+          },
+        );
+
+        addToast({
+          type: 'success',
+          title: 'Status do pedido atualizado com sucesso',
+        });
+      } catch {
+        addToast({
+          type: 'error',
+          title: 'Ocorreu um erro na atualização do status do pedido',
+        });
+      }
+    },
+    [],
+  );
+
   return (
     <OrderContext.Provider
-      value={{ loadOrders, removeOrder, generatePDF, createOrder }}
+      value={{
+        loadOrders,
+        removeOrder,
+        generatePDF,
+        createOrder,
+        updateOrderStatus,
+      }}
     >
       {children}
     </OrderContext.Provider>

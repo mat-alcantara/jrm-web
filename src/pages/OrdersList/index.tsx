@@ -23,7 +23,12 @@ interface IDataSource {
 }
 
 const AllOrders: React.FC = () => {
-  const { loadOrders, removeOrder, generatePDF } = useOrder();
+  const {
+    loadOrders,
+    removeOrder,
+    generatePDF,
+    updateOrderStatus,
+  } = useOrder();
   const { loadCustomers } = useCustomer();
 
   const [orderSort, setOrderSort] = useState('');
@@ -68,6 +73,32 @@ const AllOrders: React.FC = () => {
     [dataSource],
   );
 
+  const handleUpdateOrderStatus = useCallback(
+    async (id: string, orderStatus: string) => {
+      let orderUpdated;
+
+      switch (orderStatus) {
+        case 'Orçamento':
+          orderUpdated = 'Em Produção';
+          break;
+        case 'Em Produção':
+          orderUpdated = 'Liberado para Transporte';
+          break;
+        case 'Liberado para Transporte':
+          orderUpdated = 'Transportado';
+          break;
+        case 'Transportado':
+          orderUpdated = 'Entregue';
+          break;
+        default:
+          orderUpdated = 'Em Produção';
+      }
+
+      await updateOrderStatus(id, orderUpdated);
+    },
+    [],
+  );
+
   const columns = [
     {
       title: 'Codigo',
@@ -88,28 +119,6 @@ const AllOrders: React.FC = () => {
       title: 'Status do Pedido',
       dataIndex: 'orderStatus',
       key: 'orderStatus',
-      filters: [
-        {
-          text: 'Em Produção',
-          value: 'Em Produção',
-        },
-        {
-          text: 'Liberado para Transporte',
-          value: 'Liberado para Transporte',
-        },
-        {
-          text: 'Transportado',
-          value: 'Transportado',
-        },
-        {
-          text: 'Entregue',
-          value: 'Entregue',
-        },
-        {
-          text: 'Orçamento',
-          value: 'Orçamento',
-        },
-      ],
       filteredValue: [orderSort],
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onFilter: (value: any, record: IDataSource) =>
@@ -128,23 +137,56 @@ const AllOrders: React.FC = () => {
     {
       title: '',
       key: 'action',
-      render: (text: string, record: IDataSource) => (
-        <Space size="middle">
-          <Popconfirm
-            title="Tem certeza de que deseja excluir esse pedido?"
-            onConfirm={() => handleRemoveOrder(record.key)}
-            okText="Sim"
-            cancelText="Não"
-            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-          >
-            <AntButton type="link">Deletar</AntButton>
-          </Popconfirm>
+      render: (text: string, record: IDataSource) => {
+        let buttonMessage;
 
-          <AntButton type="link" onClick={() => generatePDF(record.key)}>
-            Gerar PDF
-          </AntButton>
-        </Space>
-      ),
+        switch (record.orderStatus) {
+          case 'Orçamento':
+            buttonMessage = 'Aprovar para produção';
+            break;
+          case 'Em Produção':
+            buttonMessage = 'Liberar para transporte';
+            break;
+          case 'Liberado para Transporte':
+            buttonMessage = 'Definir como Transportado';
+            break;
+          case 'Transportado':
+            buttonMessage = 'Definir como Entregue';
+            break;
+          case 'Entregue':
+            buttonMessage = null;
+            break;
+          default:
+            buttonMessage = null;
+        }
+
+        return (
+          <Space size="middle">
+            <Popconfirm
+              title="Tem certeza de que deseja excluir esse pedido?"
+              onConfirm={() => handleRemoveOrder(record.key)}
+              okText="Sim"
+              cancelText="Não"
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+            >
+              <AntButton type="link">Deletar</AntButton>
+            </Popconfirm>
+            <AntButton type="link" onClick={() => generatePDF(record.key)}>
+              Gerar PDF
+            </AntButton>
+            {buttonMessage && (
+              <AntButton
+                type="primary"
+                onClick={() =>
+                  handleUpdateOrderStatus(record.key, record.orderStatus)
+                }
+              >
+                {buttonMessage}
+              </AntButton>
+            )}
+          </Space>
+        );
+      },
     },
   ];
 
