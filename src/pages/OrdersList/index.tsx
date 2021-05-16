@@ -75,7 +75,7 @@ const AllOrders: React.FC = () => {
 
   const handleUpdateOrderStatus = useCallback(
     async (id: string, orderStatus: string) => {
-      let orderUpdated;
+      let orderUpdated: string;
 
       switch (orderStatus) {
         case 'Orçamento':
@@ -90,13 +90,18 @@ const AllOrders: React.FC = () => {
         case 'Transportado':
           orderUpdated = 'Entregue';
           break;
+        case 'Entregue':
+          orderUpdated = 'Em Produção';
+          break;
         default:
           orderUpdated = 'Em Produção';
       }
 
       await updateOrderStatus(id, orderUpdated);
+
+      window.location.reload();
     },
-    [],
+    [dataSource],
   );
 
   const columns = [
@@ -142,19 +147,19 @@ const AllOrders: React.FC = () => {
 
         switch (record.orderStatus) {
           case 'Orçamento':
-            buttonMessage = 'Aprovar para produção';
+            buttonMessage = 'Produzir';
             break;
           case 'Em Produção':
-            buttonMessage = 'Liberar para transporte';
+            buttonMessage = 'Liberar para Transporte';
             break;
           case 'Liberado para Transporte':
-            buttonMessage = 'Definir como Transportado';
+            buttonMessage = 'Transportado';
             break;
           case 'Transportado':
-            buttonMessage = 'Definir como Entregue';
+            buttonMessage = 'Entregue';
             break;
           case 'Entregue':
-            buttonMessage = null;
+            buttonMessage = 'Retornar para Produção';
             break;
           default:
             buttonMessage = null;
@@ -184,7 +189,9 @@ const AllOrders: React.FC = () => {
                 cancelText="Não"
                 icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               >
-                <AntButton type="primary">{buttonMessage}</AntButton>
+                <AntButton type="primary" style={{ width: '200px' }}>
+                  {buttonMessage}
+                </AntButton>
               </Popconfirm>
             )}
           </Space>
