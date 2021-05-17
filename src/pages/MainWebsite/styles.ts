@@ -7,6 +7,10 @@ interface MenuProps {
 
 export const Container = styled.div``;
 
+export const HeaderContainer = styled.div`
+  margin: 0 auto;
+`;
+
 export const CarouselItem = styled.h3`
   height: 300px;
   color: #fff;
@@ -17,11 +21,11 @@ export const CarouselItem = styled.h3`
 
 export const StyledMenu = styled(Menu)<MenuProps>`
   text-align: center;
-  width: 100%;
-  font-size: 16px;
+  min-width: 600px;
+  margin-left: 8px;
   ${(props) =>
     !props.sizes.md &&
     css`
-      margin-top: 32px;
+      min-width: 0;
     `}
 `;

@@ -5,12 +5,13 @@ import {
   Col,
   Typography,
   Input,
-  Menu,
   Carousel,
   Divider,
+  Menu,
   Grid,
 } from 'antd';
 import { Link } from 'react-router-dom';
+import { MenuOutlined } from '@ant-design/icons';
 
 import AntButton from '../../components/AntButton';
 
@@ -46,76 +47,89 @@ const MainWebsite: React.FC = () => {
 
   return (
     <Layout>
-      <Header style={{ background: '#fff', width: '100vm' }}>
-        <Row justify="center" align="middle">
+      <Header
+        style={{
+          background: '#fff',
+          boxShadow: '0 2px 8px #f0f1f2',
+          maxWidth: '100%',
+          height: '100%',
+        }}
+      >
+        <Row>
           <Col
-            xl={6}
-            md={7}
-            xs={15}
-            xxl={3}
-            sm={15}
-            style={{ marginTop: '8px' }}
+            xxl={4}
+            xl={5}
+            lg={6}
+            md={6}
+            sm={24}
+            xs={24}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
             <Typography.Title
-              level={4}
+              level={3}
               style={{
                 color: '#8C4F19',
-                marginBottom: '0px',
-                textAlign: 'center',
-                verticalAlign: 'middle',
+                textAlign: 'left',
+                margin: '0',
+                marginTop: sizes.xs ? '8px' : '0px',
               }}
             >
               JRM Compensados
             </Typography.Title>
           </Col>
-          <Col md={9} sm={17} xs={17} xxl={10}>
+          <Col
+            xxl={20}
+            xl={19}
+            lg={18}
+            md={18}
+            sm={0}
+            xs={0}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+            }}
+          >
             <Input.Search
               allowClear
-              enterButton="Search"
-              size="large"
+              enterButton
+              size="middle"
               placeholder="Digite o código ou nome do produto"
-              style={{ verticalAlign: 'middle' }}
+              style={{
+                verticalAlign: 'middle',
+                marginLeft: '8px',
+              }}
             />
-          </Col>
-          <Col sm={5} xs={5} xl={3} offset={2}>
-            <Link to="/signin">
-              <AntButton
-                type="primary"
-                size="large"
-                style={{
-                  verticalAlign: 'middle',
-                  width: '100%',
-                }}
+            <StyledMenu mode="horizontal" sizes={sizes}>
+              <Menu.SubMenu
+                title="Compre por Departamento"
+                icon={<MenuOutlined />}
               >
-                Login
-              </AntButton>
-            </Link>
+                <Menu.Item>MDF e Fitas</Menu.Item>
+                <Menu.Item>Ferragens</Menu.Item>
+                <Menu.Item>Químicos</Menu.Item>
+              </Menu.SubMenu>
+              <Menu.Item>Serviço de Corte</Menu.Item>
+              <Menu.Item>Contato</Menu.Item>
+              <Menu.Item style={{ margin: '0 auto', textAlign: 'center' }}>
+                <Link to="/signin">
+                  <AntButton type="link" size="middle" block>
+                    Login
+                  </AntButton>
+                </Link>
+              </Menu.Item>
+            </StyledMenu>
           </Col>
         </Row>
       </Header>
       <Content style={{ background: '#fff', width: '100vm' }}>
-        {/* Menu */}
-        <Row align="middle" justify="center">
-          <Col xl={24} md={16} sm={1} xs={1}>
-            <StyledMenu
-              mode="horizontal"
-              style={{
-                textAlign: 'center',
-                width: '100%',
-                fontSize: '16px',
-              }}
-              sizes={sizes}
-            >
-              <Menu.Item>MDF e Fitas</Menu.Item>
-              <Menu.Item>Ferragens</Menu.Item>
-              <Menu.Item>Químicos</Menu.Item>
-              <Menu.Item>Serviço de Corte</Menu.Item>
-              <Menu.Item>Contato</Menu.Item>
-              <Menu.Item>Encontre um Marceneiro</Menu.Item>
-            </StyledMenu>
-          </Col>
-        </Row>
-
         {/* Carousel */}
         <Row align="middle" justify="center">
           <Col xxl={17} xl={24} lg={24} md={0} sm={0} xs={0}>
