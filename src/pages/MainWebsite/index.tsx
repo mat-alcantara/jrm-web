@@ -51,11 +51,19 @@ const MainWebsite: React.FC = () => {
         style={{
           background: '#fff',
           boxShadow: '0 2px 8px #f0f1f2',
-          maxWidth: '100%',
+          maxWidth: '100vm',
           height: '100%',
         }}
       >
-        <Row>
+        <Row
+          style={{
+            display: 'flex',
+            flexFlow: 'nowrap',
+            height: '64px',
+            rowGap: '0px',
+            maxWidth: '100vm',
+          }}
+        >
           <Col
             xxl={4}
             xl={5}
@@ -76,7 +84,7 @@ const MainWebsite: React.FC = () => {
                 color: '#8C4F19',
                 textAlign: 'left',
                 margin: '0',
-                marginTop: sizes.xs ? '8px' : '0px',
+                marginTop: !sizes.md ? '8px' : '0px',
               }}
             >
               JRM Compensados
@@ -90,7 +98,7 @@ const MainWebsite: React.FC = () => {
             sm={0}
             xs={0}
             style={{
-              display: 'flex',
+              display: !sizes.md ? 'none' : 'flex',
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
@@ -107,7 +115,7 @@ const MainWebsite: React.FC = () => {
                 marginLeft: '8px',
               }}
             />
-            <StyledMenu mode="horizontal" sizes={sizes}>
+            <StyledMenu mode="horizontal" sizes={sizes} direction="ltr">
               <Menu.SubMenu
                 title="Compre por Departamento"
                 icon={<MenuOutlined />}
