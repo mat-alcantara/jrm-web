@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import 'antd/dist/antd.less'; // CSS files of antd
+import 'antd-mobile/dist/antd-mobile.css'; // CSS files of antd mobile
 import GlobalStyle from './styles/global';
 import Routes from './routes';
 
