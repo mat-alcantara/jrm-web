@@ -53,6 +53,8 @@ const MainWebsite: React.FC = () => {
           boxShadow: '0 2px 8px #f0f1f2',
           maxWidth: '100vm',
           height: '100%',
+          position: 'relative',
+          zIndex: 10,
         }}
       >
         <Row
@@ -69,13 +71,14 @@ const MainWebsite: React.FC = () => {
             xl={5}
             lg={6}
             md={6}
-            sm={24}
-            xs={24}
+            sm={22}
+            xs={22}
             style={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: sizes.md ? 'start' : 'center',
+              textAlign: sizes.md ? 'left' : 'center',
             }}
           >
             <Typography.Title
@@ -135,13 +138,54 @@ const MainWebsite: React.FC = () => {
               </Menu.Item>
             </StyledMenu>
           </Col>
+          <Col sm={2} xs={2} md={0} xl={0} xxl={0}>
+            <StyledMenu
+              mode="horizontal"
+              sizes={sizes}
+              direction="ltr"
+              triggerSubMenuAction="click"
+              overflowedIndicator={<MenuOutlined />}
+            >
+              <Input.Search
+                allowClear
+                enterButton
+                size="middle"
+                placeholder="Código ou nome do produto"
+                style={{
+                  verticalAlign: 'middle',
+                  marginLeft: '8px',
+                }}
+              />
+              <Menu.SubMenu
+                title="Compre por Departamento"
+                icon={<MenuOutlined />}
+              >
+                <Menu.Item>MDF e Fitas</Menu.Item>
+                <Menu.Item>Ferragens</Menu.Item>
+                <Menu.Item>Químicos</Menu.Item>
+              </Menu.SubMenu>
+              <Menu.Item>Serviço de Corte</Menu.Item>
+              <Menu.Item>Contato</Menu.Item>
+              <Menu.Item>
+                <Link to="/signin">
+                  <AntButton
+                    type="link"
+                    size="middle"
+                    style={{ paddingLeft: '0px' }}
+                  >
+                    Login
+                  </AntButton>
+                </Link>
+              </Menu.Item>
+            </StyledMenu>
+          </Col>
         </Row>
       </Header>
       <Content style={{ background: '#fff', width: '100vm' }}>
         {/* Carousel */}
         <Row align="middle" justify="center">
           <Col xxl={17} xl={24} lg={24} md={0} sm={0} xs={0}>
-            <Carousel style={{ height: '300px' }}>
+            <Carousel style={{ height: '300px', marginTop: '16px' }}>
               <div>
                 <CarouselItem>
                   <img src={Carr1} alt="Carrousel 1" />
