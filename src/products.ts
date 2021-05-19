@@ -57,7 +57,7 @@ export default [
     description: 'MDF Canela Chess 18mm 2 Faces',
     brand: 'Diversos',
     isTop: true,
-    department: 'MDF e Fitas',
+    department: 'Ferragens',
     material: ['MDF'],
     technical_information: {
       Altura: '1.8 cm',
@@ -73,7 +73,7 @@ export default [
     description: 'MDF Canelato Chess 18mm 2 Faces',
     brand: 'Diversos',
     isTop: true,
-    department: 'MDF e Fitas',
+    department: 'Químicos',
     material: ['MDF'],
     technical_information: {
       Altura: '1.8 cm',
@@ -90,7 +90,7 @@ export default [
       'Ideal para aquelas pessoas que querem um padrão discreto, mas ao mesmo tempo com personalidade. Connect tem inspiração nas tonalidades fendi e vai ao encontro com a tendência nude. Tonalidade que migrou da moda para a decoração e tem ganhado cada vez mais destaque no design de interiores.',
     brand: 'Diversos',
     isTop: true,
-    department: 'MDF e Fitas',
+    department: 'Químicos',
     material: ['MDF'],
     technical_information: {
       Altura: '1.5 cm',

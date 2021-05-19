@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Layout,
   Row,
@@ -9,6 +9,7 @@ import {
   Divider,
   Menu,
   Grid,
+  AutoComplete,
 } from 'antd';
 import { Link } from 'react-router-dom';
 import { MenuOutlined } from '@ant-design/icons';
@@ -36,13 +37,73 @@ interface IProducts {
   technical_information: Object;
 }
 
+interface optionsProps {
+  value: string;
+  label: JSX.Element;
+}
+
 const MainWebsite: React.FC = () => {
   const [allProducts, setAllProducts] = useState<IProducts[]>([]);
+  const [allOptions, setAllOptions] = useState<optionsProps[]>([]);
+  const [autoCompleteOptions, setAutoCompleteOptions] = useState<
+    optionsProps[]
+  >([]);
+
   const { useBreakpoint } = Grid;
   const sizes = useBreakpoint();
 
+  const formatOption = useCallback(
+    (code: number, name: string, imgURL: string) => {
+      return (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            margin: '0px 32px',
+          }}
+        >
+          <Typography.Title level={4} style={{ fontWeight: 'normal' }}>
+            {`${code} - ${name}`}
+          </Typography.Title>
+          <img style={{ width: '75px', height: '75px' }} src={imgURL} alt="" />
+        </div>
+      );
+    },
+    [],
+  );
+
+  const onSearchProduct = useCallback(
+    (searchValue: string) => {
+      const allAutoCompleteResults = allOptions.filter((option) => {
+        const splittedValue = searchValue.split(' ');
+
+        // Check if string contain all items from array of substrings
+        return splittedValue.every((subs) =>
+          option.value.toLocaleLowerCase().includes(subs.toLocaleLowerCase()),
+        )
+          ? option
+          : '';
+      });
+
+      setAutoCompleteOptions(!searchValue ? [] : [...allAutoCompleteResults]);
+    },
+    [allOptions, autoCompleteOptions],
+  );
+
   useEffect(() => {
     setAllProducts([...allData]);
+
+    allData.forEach((data) => {
+      setAllOptions((prevVal) => [
+        ...prevVal,
+        {
+          value: `${data.product_code} - ${data.name}`,
+          label: formatOption(data.product_code, data.name, data.image),
+        },
+      ]);
+    });
   }, []);
 
   return (
@@ -108,16 +169,23 @@ const MainWebsite: React.FC = () => {
               flex: 1,
             }}
           >
-            <Input.Search
-              allowClear
-              enterButton
-              size="middle"
-              placeholder="Digite o código ou nome do produto"
-              style={{
-                verticalAlign: 'middle',
-                marginLeft: '8px',
-              }}
-            />
+            <AutoComplete
+              dropdownMatchSelectWidth={500}
+              style={{ width: '100%' }}
+              options={autoCompleteOptions}
+              onSearch={onSearchProduct}
+            >
+              <Input.Search
+                allowClear
+                enterButton
+                size="middle"
+                placeholder="Digite o código ou nome do produto"
+                style={{
+                  verticalAlign: 'middle',
+                  marginLeft: '8px',
+                }}
+              />
+            </AutoComplete>
             <StyledMenu mode="horizontal" sizes={sizes} direction="ltr">
               <Menu.SubMenu
                 title="Compre por Departamento"
