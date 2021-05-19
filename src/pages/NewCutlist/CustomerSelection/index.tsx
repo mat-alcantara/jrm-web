@@ -31,6 +31,9 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<
     { value: string; id: string }[]
   >([]);
+  const [searchedOptions, setSearchedOptions] = useState<
+    { value: string; id: string }[]
+  >([]);
 
   useEffect(() => {
     async function loadCustomersFromHook() {
@@ -60,15 +63,34 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
     [selectedCustomer, allCustomers],
   );
 
+  const onSearchProduct = useCallback(
+    (searchValue: string) => {
+      const allAutoCompleteResults = autoCompleteOptions.filter((option) => {
+        const splittedValue = searchValue.split(' ');
+
+        // Check if string contain all items from array of substrings
+        return splittedValue.every((subs) =>
+          option.value.toLocaleLowerCase().includes(subs.toLocaleLowerCase()),
+        )
+          ? option
+          : '';
+      });
+
+      setSearchedOptions(!searchValue ? [] : [...allAutoCompleteResults]);
+    },
+    [autoCompleteOptions, searchedOptions],
+  );
+
   return (
     <CustomerPageContainer>
       <Typography.Title level={2}>Selecione um cliente</Typography.Title>
       <CustomerAutocompleteAndButton>
         <AutoComplete
           placeholder="Digite o nome de um cliente"
-          options={autoCompleteOptions}
+          options={searchedOptions}
           onSelect={handleSelectedCustomer}
           size="middle"
+          onSearch={onSearchProduct}
         />
         <AntButton
           type="default"
