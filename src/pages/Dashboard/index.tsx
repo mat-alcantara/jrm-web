@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Statistic, Row, Col, Typography } from 'antd';
+import { Row, Col, Typography } from 'antd';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
@@ -10,39 +10,26 @@ import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
 
 import IOrder from '../../types/IOrder';
+import ICustomer from '../../types/ICustomer';
 
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
   const { loadCustomers } = useCustomer();
 
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
-  const [deliveryAllowed, setDeliveryAllowed] = useState(0);
-  const [totalValue, setTotalValue] = useState(0);
-  const [allCustomersNumber, setAllCustomersNumber] = useState(0);
+  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
 
   useEffect(() => {
     async function loadOrdersFromHook() {
       const allOrdersFromHook = await loadOrders();
 
       setAllOrders([...allOrdersFromHook]);
-
-      const pedidosLiberadosParaTransporte = allOrdersFromHook.filter(
-        (order) => order.orderStatus === 'Liberado para Transporte',
-      );
-
-      setDeliveryAllowed(pedidosLiberadosParaTransporte.length);
-
-      allOrdersFromHook.forEach((order) => {
-        if (order.orderStatus !== 'Orçamento') {
-          setTotalValue((prevVal) => prevVal + order.price);
-        }
-      });
     }
 
     async function loadCustomersFromHook() {
       const allCustomersFromHook = await loadCustomers();
 
-      setAllCustomersNumber(allCustomersFromHook.length);
+      setAllCustomers([...allCustomersFromHook]);
     }
 
     loadOrdersFromHook();
@@ -53,40 +40,50 @@ const Dashboard: React.FC = () => {
     <AntDashboard>
       <AntContent>
         <Container>
-          <Row align="middle" justify="center" style={{ marginBottom: '32px' }}>
-            <Col span={24}>
-              <Typography.Title level={2}>Estatísticas</Typography.Title>
+          <Row align="middle" justify="center" style={{ marginTop: '32px' }}>
+            <Col xl={12}>
+              <Typography.Title level={4}>Em Produção</Typography.Title>
+              {allOrders.map((order) => {
+                if (order.orderStatus !== 'Em Produção') {
+                  return null;
+                }
+
+                const customerFound = allCustomers.find(
+                  (customer) => customer.id === order.customerId,
+                );
+
+                if (!customerFound) {
+                  return null;
+                }
+
+                return (
+                  <p>{`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}</p>
+                );
+              })}
+            </Col>
+            <Col xl={12}>
+              <Typography.Title level={4}>
+                Liberados para transporte
+              </Typography.Title>
+              {allOrders.map((order) => {
+                if (order.orderStatus !== 'Liberado para Transporte') {
+                  return null;
+                }
+
+                const customerFound = allCustomers.find(
+                  (customer) => customer.id === order.customerId,
+                );
+
+                if (!customerFound) {
+                  return null;
+                }
+
+                return (
+                  <p>{`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}</p>
+                );
+              })}
             </Col>
           </Row>
-          <Row
-            gutter={16}
-            style={{ marginTop: '32px' }}
-            align="middle"
-            justify="center"
-          >
-            <Col span={5}>
-              <Statistic
-                title="Cortes Liberados para transporte"
-                value={deliveryAllowed}
-              />
-            </Col>
-            <Col span={5}>
-              <Statistic title="Cortes totais" value={allOrders.length} />
-            </Col>
-
-            <Col span={5}>
-              <Statistic title="Valor total" value={totalValue} />
-            </Col>
-
-            <Col span={5}>
-              <Statistic
-                title="Clientes cadastrados"
-                value={allCustomersNumber}
-              />
-            </Col>
-          </Row>
-
-          <Row />
         </Container>
       </AntContent>
     </AntDashboard>
