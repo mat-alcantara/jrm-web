@@ -20,9 +20,6 @@ import { CarouselItem, StyledMenu } from './styles';
 import allData from '../../products';
 import allWoorworkers from '../../woodworkers';
 
-import Carr1 from '../../assets/carr1.png';
-import Carr2 from '../../assets/carr2.png';
-
 const { Header, Content, Footer } = Layout;
 
 interface IProducts {
@@ -251,18 +248,17 @@ const MainWebsite: React.FC = () => {
       </Header>
       <Content style={{ background: '#fff', width: '100vm' }}>
         {/* Carousel */}
-        <Row align="middle" justify="center">
+        <Row align="middle" justify="center" style={{ marginTop: '16px' }}>
           <Col xxl={17} xl={24} lg={24} md={0} sm={0} xs={0}>
-            <Carousel style={{ height: '300px', marginTop: '16px' }}>
+            <Carousel style={{ height: '300px', marginTop: '16px' }} arrows>
               <div>
-                <CarouselItem>
-                  <img src={Carr1} alt="Carrousel 1" />
-                </CarouselItem>
+                <CarouselItem />
               </div>
               <div>
-                <CarouselItem>
-                  <img src={Carr2} alt="Carrousel 2" />
-                </CarouselItem>
+                <CarouselItem />
+              </div>
+              <div>
+                <CarouselItem />
               </div>
             </Carousel>
           </Col>
@@ -279,13 +275,13 @@ const MainWebsite: React.FC = () => {
 
         {/* Lista com produtos mais vendidos */}
         <Row
-          gutter={[24, 64]}
+          gutter={[0, 64]}
           align="top"
           justify="center"
           style={{ marginTop: '32px' }}
         >
           {allProducts.map((product) => (
-            <Col lg={7} sm={24} md={11} style={{ textAlign: 'center' }}>
+            <Col lg={8} sm={24} md={11} style={{ textAlign: 'center' }}>
               <img
                 src={product.image}
                 alt="Ok"
@@ -321,7 +317,7 @@ const MainWebsite: React.FC = () => {
         <Row
           align="middle"
           justify="center"
-          gutter={[24, 64]}
+          gutter={[0, 64]}
           style={{ marginBottom: '32px', marginTop: '32px' }}
         >
           {allWoorworkers.map((woodworker) => (
