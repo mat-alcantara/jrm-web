@@ -55,7 +55,7 @@ const CreateCustomer: React.FC = () => {
         tel: Yup.string()
           .required('Telefone obrigatório')
           .min(10, 'Numero de telefone deve conter entre 10 e 11 números'),
-        area: Yup.string(),
+        area: Yup.string().required('Bairro obrigatório'),
         street: Yup.string(),
         city: Yup.string().required('Cidade obrigatória'),
         state: Yup.string().required('UF obrigatório'),
