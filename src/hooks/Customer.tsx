@@ -52,7 +52,7 @@ export const CustomerProvider: React.FC = ({ children }) => {
 
       addToast({ type: 'success', title: 'Usuário criado com sucesso' });
 
-      history.push('/customerslist');
+      history.push('/newcutlist');
     },
     [],
   );
