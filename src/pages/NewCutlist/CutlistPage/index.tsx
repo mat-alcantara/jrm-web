@@ -131,7 +131,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         key: 'side_b_border',
       },
       {
-        title: 'Preço',
+        title: 'Preço (Em R$)',
         dataIndex: 'price',
         key: 'price',
       },
@@ -403,7 +403,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
       <Table
         columns={options.columns}
         dataSource={cutlistDataSource}
-        footer={() => `Total: ${totalPrice}`}
+        footer={() => `Total: R$ ${totalPrice}`}
       />
     </CutlistPageContainer>
   );
