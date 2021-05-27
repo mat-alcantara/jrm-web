@@ -197,9 +197,17 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     async (materialData: IMaterialForm) => {
       const schema = Yup.object().shape({
         name: Yup.string().required('Nome obrigatório'),
-        price: Yup.number().required('Preço obrigatório'),
-        width: Yup.number().required('Largura obrigatória').max(2750),
-        height: Yup.number().required('Altura obrigatória').max(1850),
+        price: Yup.number()
+          .typeError('Valor precisa ser um número')
+          .required('Preço obrigatório'),
+        width: Yup.number()
+          .typeError('Valor precisa ser um número')
+          .required('Largura obrigatória')
+          .max(2750),
+        height: Yup.number()
+          .typeError('Valor precisa ser um número')
+          .required('Altura obrigatória')
+          .max(1850),
       });
 
       const isPropsValid = await schema.validate(materialData, {

@@ -84,6 +84,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         orderStatus: Yup.string(),
         delivery_type: Yup.string().required('Tipo de entrega obrigatório'),
         pricePercent: Yup.number()
+          .typeError('Valor precisa ser um número')
           .min(0, 'Valor deve ser maior que 0')
           .max(100, 'Valor deve ser menor do que 100')
           .required('Porcentagem necessária para calculo do preço'),
