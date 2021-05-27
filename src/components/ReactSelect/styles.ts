@@ -1,11 +1,27 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Select from 'react-select';
 
-export const StyledReactSelect = styled(Select)`
+interface IReactSelectProps {
+  iserrored: number;
+}
+
+export const StyledReactSelect = styled(Select)<IReactSelectProps>`
   width: 100%;
 
   .react-select__control {
     width: 100%;
     margin-bottom: 8px;
   }
+
+  ${(props) =>
+    props.iserrored &&
+    css`
+      .react-select__control {
+        border-color: red;
+
+        &:hover {
+          border-color: red;
+        }
+      }
+    `}
 `;

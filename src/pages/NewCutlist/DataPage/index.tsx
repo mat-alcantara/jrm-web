@@ -81,7 +81,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         orderStore: Yup.string().required('Loja obrigatória'),
         paymentStatus: Yup.string().required('Método de pagamento obrigatório'),
         ps: Yup.string().nullable(),
-        orderStatus: Yup.string(),
+        orderStatus: Yup.string().required('Tipo do pedido obrigatório'),
         delivery_type: Yup.string().required('Tipo de entrega obrigatório'),
         pricePercent: Yup.number()
           .typeError('Valor precisa ser um número')

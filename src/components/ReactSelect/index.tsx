@@ -12,7 +12,7 @@ interface Props extends SelectProps<OptionTypeBase> {
 const Select: React.FC<Props> = ({ name, ...rest }) => {
   const selectRef = useRef(null);
 
-  const { fieldName, defaultValue, registerField } = useField(name);
+  const { fieldName, defaultValue, registerField, error } = useField(name);
 
   // Register field in unform after render
   useEffect(() => {
@@ -43,6 +43,7 @@ const Select: React.FC<Props> = ({ name, ...rest }) => {
       isSearchable
       defaultValue={defaultValue}
       ref={selectRef}
+      iserrored={error ? 1 : 0}
       classNamePrefix="react-select"
       {...rest}
     />
