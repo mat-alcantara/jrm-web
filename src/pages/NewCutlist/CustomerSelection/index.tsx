@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Typography, AutoComplete } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 
+import { Link } from 'react-router-dom';
 import { useCustomer } from '../../../hooks/Customer';
 
 import {
@@ -100,6 +101,10 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
           Próximo
         </AntButton>
       </CustomerAutocompleteAndButton>
+      <AntButton size="large" type="link" style={{ marginTop: '16px' }}>
+        <Link to="/newcustomer">Criar um novo cliente</Link>
+      </AntButton>
+
       {selectedCustomer && (
         <CustomerPageData>
           <CheckCircleOutlined style={{ color: 'green' }} />
