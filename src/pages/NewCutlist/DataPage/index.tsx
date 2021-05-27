@@ -123,6 +123,10 @@ const DataPage: React.FC<IDataPageProps> = ({
       try {
         await validateDataPageProps(allOrderData);
 
+        const seller = user.name;
+
+        setOrderData({ ...allOrderData, seller });
+
         if (
           allOrderData.delivery_type === 'Entrega' &&
           selectedCustomer?.street === 'Endereço não informado'
@@ -130,11 +134,8 @@ const DataPage: React.FC<IDataPageProps> = ({
           setAddressUpdate(true);
         } else {
           setAddressUpdate(false);
+          setPage(3);
         }
-
-        const seller = user.name;
-
-        setOrderData({ ...allOrderData, seller });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -143,7 +144,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         }
       }
     },
-    [],
+    [addressUpdate],
   );
 
   const handleSubmitCustomerAddress = useCallback(
@@ -184,7 +185,6 @@ const DataPage: React.FC<IDataPageProps> = ({
           options={options.orderStatus}
           defaultInputValue={orderData?.orderStatus}
           isClearable
-          defaultValue={options.orderStatus[0]}
         />
         <AntSelect
           name="orderStore"
