@@ -158,11 +158,13 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const validateCutlistPageProps = useCallback(
     async (cutlistData: Omit<ICutlistData, 'key'>) => {
       const schema = Yup.object().shape({
-        material: Yup.string().required(),
+        material: Yup.string().required('Material Obrigatório'),
         quantidade: Yup.number()
           .typeError('Valor precisa ser um número')
           .required('Quantidade necessária'),
-        price: Yup.number().typeError('Valor precisa ser um número').required(),
+        price: Yup.number()
+          .typeError('Valor precisa ser um número')
+          .required('Preço obrigatório'),
         side_a_size: Yup.number()
           .typeError('Valor precisa ser um número')
           .min(60, 'Deve ter pelo menos 6mm')
@@ -176,11 +178,13 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         side_a_border: Yup.number()
           .typeError('Valor precisa ser um número')
           .min(0)
-          .max(2),
+          .max(2)
+          .required('Quantidade de fita obrigatória'),
         side_b_border: Yup.number()
           .typeError('Valor precisa ser um número')
           .min(0)
-          .max(2),
+          .max(2)
+          .required('Quantidade de fita obrigatória'),
       });
 
       const isPropsValid = await schema.validate(cutlistData, {
@@ -236,16 +240,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         if (!materialUsed) {
           throw new Error('Material does not exist');
-        }
-
-        if (!side_a_border) {
-          // eslint-disable-next-line no-param-reassign
-          side_a_border = 0;
-        }
-
-        if (!side_b_border) {
-          // eslint-disable-next-line no-param-reassign
-          side_b_border = 0;
         }
 
         let price: number;
@@ -362,6 +356,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               options={options.sideOptions}
               placeholder="Fita A"
               defaultValue={options.sideOptions[0]}
+              isClearable={false}
             />
             <AntInput name="side_b_size" placeholder="Lado B" size="large" />
             <AntSelect
@@ -369,6 +364,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               options={options.sideOptions}
               placeholder="Fita B"
               defaultValue={options.sideOptions[0]}
+              isClearable={false}
             />
             <AntButton htmlType="submit" type="link">
               Adicionar
