@@ -361,12 +361,14 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               name="side_a_border"
               options={options.sideOptions}
               placeholder="Fita A"
+              defaultValue={options.sideOptions[0]}
             />
             <AntInput name="side_b_size" placeholder="Lado B" size="large" />
             <AntSelect
               name="side_b_border"
               options={options.sideOptions}
               placeholder="Fita B"
+              defaultValue={options.sideOptions[0]}
             />
             <AntButton htmlType="submit" type="link">
               Adicionar

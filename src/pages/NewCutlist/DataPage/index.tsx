@@ -184,6 +184,7 @@ const DataPage: React.FC<IDataPageProps> = ({
           options={options.orderStatus}
           defaultInputValue={orderData?.orderStatus}
           isClearable
+          defaultValue={options.orderStatus[0]}
         />
         <AntSelect
           name="orderStore"
