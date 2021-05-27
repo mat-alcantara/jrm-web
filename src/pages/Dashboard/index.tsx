@@ -57,7 +57,9 @@ const Dashboard: React.FC = () => {
                 }
 
                 return (
-                  <p>{`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}</p>
+                  <p key={order.id}>
+                    {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
+                  </p>
                 );
               })}
             </Col>
@@ -79,7 +81,9 @@ const Dashboard: React.FC = () => {
                 }
 
                 return (
-                  <p>{`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}</p>
+                  <p key={order.id}>
+                    {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
+                  </p>
                 );
               })}
             </Col>
