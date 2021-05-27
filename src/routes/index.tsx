@@ -12,11 +12,9 @@ import NewMaterial from '../pages/NewMaterial';
 import MaterialsList from '../pages/MaterialsList';
 import OrdersList from '../pages/OrdersList';
 import Dashboard from '../pages/Dashboard';
-// import MainWebsite from '../pages/MainWebsite';
 
 const routes: React.FC = () => (
   <Switch>
-    {/* <RRDRoute path="/" exact component={MainWebsite} /> */}
     <Route path="/" exact component={SignIn} />
     <Route path="/dashboard" exact component={Dashboard} isPrivate />
     <Route path="/newcustomer" exact component={NewCustomer} isPrivate />
