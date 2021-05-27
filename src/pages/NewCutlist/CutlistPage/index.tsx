@@ -159,18 +159,28 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     async (cutlistData: Omit<ICutlistData, 'key'>) => {
       const schema = Yup.object().shape({
         material: Yup.string().required(),
-        quantidade: Yup.number().required('Quantidade necessária'),
-        price: Yup.number().required(),
+        quantidade: Yup.number()
+          .typeError('Valor precisa ser um número')
+          .required('Quantidade necessária'),
+        price: Yup.number().typeError('Valor precisa ser um número').required(),
         side_a_size: Yup.number()
+          .typeError('Valor precisa ser um número')
           .min(60, 'Deve ter pelo menos 6mm')
           .max(2750, 'Não deve ultrapassar 2750mm')
           .required('Tamanho necessário'),
         side_b_size: Yup.number()
+          .typeError('Valor precisa ser um número')
           .min(60, 'Deve ter pelo menos 6mm')
           .max(2750, 'Não deve ultrapassar 2750mm')
           .required('Tamanho necessário'),
-        side_a_border: Yup.number().min(0).max(2),
-        side_b_border: Yup.number().min(0).max(2),
+        side_a_border: Yup.number()
+          .typeError('Valor precisa ser um número')
+          .min(0)
+          .max(2),
+        side_b_border: Yup.number()
+          .typeError('Valor precisa ser um número')
+          .min(0)
+          .max(2),
       });
 
       const isPropsValid = await schema.validate(cutlistData, {
