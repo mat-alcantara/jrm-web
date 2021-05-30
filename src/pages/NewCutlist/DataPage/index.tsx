@@ -79,15 +79,9 @@ const DataPage: React.FC<IDataPageProps> = ({
     async (allOrderData: Omit<IOrderData, 'seller'>) => {
       const schema = Yup.object().shape({
         orderStore: Yup.string().required('Loja obrigatória'),
-        paymentStatus: Yup.string().required('Método de pagamento obrigatório'),
         ps: Yup.string().nullable(),
         orderStatus: Yup.string().required('Tipo do pedido obrigatório'),
         delivery_type: Yup.string().required('Tipo de entrega obrigatório'),
-        pricePercent: Yup.number()
-          .typeError('Valor precisa ser um número')
-          .min(0, 'Valor deve ser maior que 0')
-          .max(100, 'Valor deve ser menor do que 100')
-          .required('Porcentagem necessária para calculo do preço'),
       });
 
       const isPropsValid = await schema.validate(allOrderData, {
@@ -176,7 +170,6 @@ const DataPage: React.FC<IDataPageProps> = ({
         ref={formRef}
         initialData={{
           ps: orderData?.ps,
-          pricePercent: orderData?.pricePercent,
         }}
       >
         <AntSelect
@@ -194,24 +187,11 @@ const DataPage: React.FC<IDataPageProps> = ({
           isClearable
         />
         <AntSelect
-          name="paymentStatus"
-          placeholder="Status de pagamento"
-          options={options.paymentType}
-          defaultInputValue={orderData?.paymentStatus}
-          isClearable
-        />
-        <AntSelect
           name="delivery_type"
           placeholder="Tipo de Entrega"
           options={options.deliveryType}
           defaultInputValue={orderData?.delivery_type}
           isClearable
-        />
-        <AntInput
-          name="pricePercent"
-          placeholder="Porcentagem do preço"
-          size="large"
-          defaultValue={orderData?.pricePercent}
         />
         <AntInput
           name="ps"

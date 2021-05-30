@@ -31,7 +31,7 @@ const NewCutlist: React.FC = () => {
 
   const { Step } = Steps;
 
-  const [page, setPage] = useState<number>(4);
+  const [page, setPage] = useState<number>(1);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthErrored, setIsAuthErrored] = useState<boolean>(false);
 

@@ -13,13 +13,13 @@ const calculateCutlistPrice = (
   const preço = material.price;
   const LFp = cutlistData.side_a_size * cutlistData.side_a_border;
   const AFp = cutlistData.side_b_size * cutlistData.side_b_border;
-  let porc: number;
+  const porc = 75;
 
-  if (orderData?.pricePercent) {
-    porc = orderData?.pricePercent;
-  } else {
-    porc = 75;
-  }
+  // if (orderData?.pricePercent) {
+  //   // porc = orderData?.pricePercent;
+  // } else {
+  //   porc = 75;
+  // }
 
   const calculatedMaterial = (Ap * preço * (1 + porc / 100)) / At;
 
