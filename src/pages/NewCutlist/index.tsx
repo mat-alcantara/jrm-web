@@ -17,6 +17,7 @@ import AntInput from '../../components/AntInput';
 import CustomerSelection from './CustomerSelection';
 import DataPage from './DataPage';
 import CutlistPage from './CutlistPage';
+import PaymentPage from './PaymentPage';
 
 import ICustomer from '../../types/ICustomer';
 import IOrderData from '../../types/IOrderData';
@@ -30,7 +31,7 @@ const NewCutlist: React.FC = () => {
 
   const { Step } = Steps;
 
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(4);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthErrored, setIsAuthErrored] = useState<boolean>(false);
 
@@ -135,12 +136,15 @@ const NewCutlist: React.FC = () => {
             />
           )}
           {page === 3 && (
+            <CutlistPage
+              cutlist={cutlist}
+              orderData={orderData}
+              setCutlist={setCutlist}
+            />
+          )}
+          {page === 4 && (
             <>
-              <CutlistPage
-                cutlist={cutlist}
-                orderData={orderData}
-                setCutlist={setCutlist}
-              />
+              <PaymentPage />
               <Popconfirm
                 title="Tem certeza de que deseja concluir o pedido?"
                 onConfirm={() => handleSubmitData()}
