@@ -340,6 +340,10 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         // Default material becomes created material
         setDefaultMaterial(materialOptions.length - 1);
+
+        // Restart Form
+        setNewCutlistForm(false);
+        setNewCutlistForm(true);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
