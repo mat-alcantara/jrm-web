@@ -78,7 +78,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   );
 
   useEffect(() => {
-    async function loadMaterialsFromHook() {
+    async function loadMaterialsAndCutsFromHook() {
       const allMaterialsFromHook = await loadMaterials();
 
       setAllMaterials([...allMaterialsFromHook]);
@@ -91,9 +91,34 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
       });
 
       setMaterialOptions([...allMaterialOptions]);
+
+      // Load Cutlist Data Source
+      if (cutlist.length > 0) {
+        cutlist.forEach((cut) => {
+          const materialUsed = allMaterialsFromHook.find(
+            (materialFound) => materialFound.id === cut.material_id,
+          );
+
+          if (materialUsed) {
+            setCutlistDataSource((prevVal) => [
+              ...prevVal,
+              {
+                key: cut.id,
+                material: materialUsed.name,
+                quantidade: cut.quantidade,
+                price: cut.price,
+                side_a_size: cut.side_a_size,
+                side_a_border: cut.side_b_border,
+                side_b_border: cut.side_b_border,
+                side_b_size: cut.side_b_size,
+              },
+            ]);
+          }
+        });
+      }
     }
 
-    loadMaterialsFromHook();
+    loadMaterialsAndCutsFromHook();
   }, []);
 
   const options = {

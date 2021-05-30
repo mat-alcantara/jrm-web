@@ -21,5 +21,5 @@ export const CustomerAutocompleteAndButton = styled.div`
 `;
 
 export const CustomerPageData = styled.div`
-  margin-top: 138px;
+  margin-top: 64px;
 `;

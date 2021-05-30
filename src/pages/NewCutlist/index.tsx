@@ -178,7 +178,7 @@ const NewCutlist: React.FC = () => {
                 disabled={
                   (page === 1 && !selectedCustomer) ||
                   (page === 2 && !orderData) ||
-                  (page === 3 && cutlist.length > 0) ||
+                  (page === 3 && !(cutlist.length > 0)) ||
                   page > 3
                 }
               >
