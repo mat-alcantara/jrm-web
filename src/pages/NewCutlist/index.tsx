@@ -9,7 +9,7 @@ import { useAuth } from '../../hooks/Auth';
 
 import AntDashboard from '../../components/AntDashboard';
 import AntContent from '../../components/AntContent';
-import { Container, StepsContainer } from './styles';
+import { Container, StepsContainer, ChangePageContainer } from './styles';
 
 import AntButton from '../../components/AntButton';
 import AntInput from '../../components/AntInput';
@@ -121,7 +121,6 @@ const NewCutlist: React.FC = () => {
         <Container>
           {page === 1 && (
             <CustomerSelection
-              setPage={setPage}
               setSelectedCustomer={setSelectedCustomer}
               selectedCustomer={selectedCustomer}
             />
@@ -129,7 +128,6 @@ const NewCutlist: React.FC = () => {
           {page === 2 && (
             <DataPage
               orderData={orderData}
-              page={page}
               setOrderData={setOrderData}
               setPage={setPage}
               selectedCustomer={selectedCustomer}
@@ -137,7 +135,6 @@ const NewCutlist: React.FC = () => {
           )}
           {page === 3 && (
             <CutlistPage
-              setPage={setPage}
               cutlist={cutlist}
               orderData={orderData}
               setCutlist={setCutlist}
@@ -165,7 +162,29 @@ const NewCutlist: React.FC = () => {
               </Popconfirm>
             </>
           )}
+
           <StepsContainer style={{ marginTop: '32px' }}>
+            <ChangePageContainer>
+              <AntButton
+                type="default"
+                onClick={() => setPage(page - 1)}
+                disabled={page < 2}
+              >
+                Voltar
+              </AntButton>
+              <AntButton
+                type="default"
+                onClick={() => setPage(page + 1)}
+                disabled={
+                  (page === 1 && !selectedCustomer) ||
+                  (page === 2 && !orderData) ||
+                  (page === 3 && cutlist.length > 0) ||
+                  page > 3
+                }
+              >
+                Avançar
+              </AntButton>
+            </ChangePageContainer>
             <Steps current={page - 1}>
               <Step title="Cliente" description="Selecione um cliente" />
               <Step title="Dados" description="Forneça os dados do pedido" />

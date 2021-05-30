@@ -22,7 +22,6 @@ import { DataPageContainer, DataPageNextAndBackButton } from './styles';
 
 interface IDataPageProps {
   setPage(page: number): void;
-  page: number;
   setOrderData(data: IOrderData | undefined): void;
   orderData: IOrderData | undefined;
   selectedCustomer: ICustomer | undefined;
@@ -32,7 +31,6 @@ const DataPage: React.FC<IDataPageProps> = ({
   setPage,
   orderData,
   setOrderData,
-  page,
   selectedCustomer,
 }) => {
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
@@ -236,24 +234,14 @@ const DataPage: React.FC<IDataPageProps> = ({
       )}
       {orderData && (
         <DataPageNextAndBackButton>
-          <AntButton onClick={() => setPage(page - 1)} type="default">
-            Voltar
-          </AntButton>
           <AntButton
             block
             htmlType="button"
             type="default"
-            style={{ color: '#ff9966' }}
+            style={{ color: '#ff9966', width: '100%' }}
             onClick={() => setOrderData(undefined)}
           >
             Editar
-          </AntButton>
-          <AntButton
-            onClick={() => setPage(page + 1)}
-            type="default"
-            disabled={!orderData || addressUpdate}
-          >
-            Avançar
           </AntButton>
         </DataPageNextAndBackButton>
       )}

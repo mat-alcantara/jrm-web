@@ -26,7 +26,6 @@ interface ICutlistPageProps {
   orderData: IOrderData | undefined;
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
-  setPage(page: number): void;
 }
 
 interface IMaterialForm {
@@ -40,7 +39,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   orderData,
   setCutlist,
   cutlist,
-  setPage,
 }) => {
   const { createMaterial, loadMaterials } = useMaterial();
   const formRef = useRef<FormHandles>(null);
@@ -250,7 +248,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         let price: number;
 
         if (orderData) {
-          price = calculateCutlistPrice(orderData, materialUsed, {
+          price = calculateCutlistPrice(materialUsed, {
             quantidade,
             side_a_border,
             side_a_size,
@@ -310,11 +308,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         if (materialToUpdateDefault) {
           setDefaultMaterial(materialOptions.indexOf(materialToUpdateDefault));
-
-          console.log(
-            materialOptions.indexOf(materialToUpdateDefault),
-            defaultMaterial,
-          );
         }
 
         // Restart Form
@@ -435,15 +428,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         dataSource={cutlistDataSource}
         footer={() => `Total: R$ ${totalPrice}`}
       />
-      <AntButton
-        block
-        type="primary"
-        onClick={() => setPage(4)}
-        style={{ marginTop: '16px' }}
-        disabled={cutlist.length === 0}
-      >
-        Confirmar
-      </AntButton>
     </CutlistPageContainer>
   );
 };

@@ -104,3 +104,19 @@ export const InputCutlistContainer = styled.div`
     }
   }
 `;
+
+export const ChangePageContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 64px;
+
+  button {
+    width: 100%;
+  }
+
+  button + button {
+    margin-left: 16px;
+  }
+`;

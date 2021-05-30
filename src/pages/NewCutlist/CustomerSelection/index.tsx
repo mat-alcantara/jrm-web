@@ -17,13 +17,11 @@ import ICustomer from '../../../types/ICustomer';
 
 interface ICustomerSelectionProps {
   selectedCustomer: ICustomer | undefined;
-  setPage(page: number): void;
   setSelectedCustomer(customerData: ICustomer): void;
 }
 
 const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
   selectedCustomer,
-  setPage,
   setSelectedCustomer,
 }) => {
   const { loadCustomers } = useCustomer();
@@ -93,13 +91,6 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
           size="middle"
           onSearch={onSearchProduct}
         />
-        <AntButton
-          type="default"
-          disabled={!selectedCustomer}
-          onClick={() => setPage(2)}
-        >
-          Próximo
-        </AntButton>
       </CustomerAutocompleteAndButton>
       <AntButton size="large" type="link" style={{ marginTop: '16px' }}>
         <Link to="/newcustomer">Criar um novo cliente</Link>
