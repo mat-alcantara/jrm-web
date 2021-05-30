@@ -56,7 +56,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const [materialOptions, setMaterialOptions] = useState<
     { value: string; label: string }[]
   >([]);
-  const [defaultMaterial, setDefaultMaterial] = useState<number | null>(null);
+  const [defaultMaterial, setDefaultMaterial] = useState<number | undefined>(
+    undefined,
+  );
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
@@ -308,6 +310,11 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         if (materialToUpdateDefault) {
           setDefaultMaterial(materialOptions.indexOf(materialToUpdateDefault));
+
+          console.log(
+            materialOptions.indexOf(materialToUpdateDefault),
+            defaultMaterial,
+          );
         }
 
         // Restart Form
@@ -321,7 +328,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         }
       }
     },
-    [cutlistDataSource, allMaterials],
+    [cutlistDataSource, allMaterials, defaultMaterial],
   );
 
   const handleSubmitMaterial = useCallback(
@@ -369,7 +376,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               className="materialSelect"
               options={materialOptions}
               defaultValue={
-                defaultMaterial ? materialOptions[defaultMaterial] : null
+                defaultMaterial !== undefined
+                  ? materialOptions[defaultMaterial]
+                  : null
               }
             />
             <AntInput name="quantidade" placeholder="Qtd" size="large" />
