@@ -54,6 +54,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const [materialOptions, setMaterialOptions] = useState<
     { value: string; label: string }[]
   >([]);
+  const [defaultMaterial, setDefaultMaterial] = useState<number | null>(null);
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
@@ -298,6 +299,16 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           },
         ]);
 
+        // Update default material
+        const materialToUpdateDefault = materialOptions.find(
+          (materialFound) => materialFound.value === material,
+        );
+
+        if (materialToUpdateDefault) {
+          setDefaultMaterial(materialOptions.indexOf(materialToUpdateDefault));
+        }
+
+        // Restart Form
         setNewCutlistForm(false);
         setNewCutlistForm(true);
       } catch (err) {
@@ -326,6 +337,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         ]);
 
         setNewMaterialForm(false);
+
+        // Default material becomes created material
+        setDefaultMaterial(materialOptions.length - 1);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
@@ -334,7 +348,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         }
       }
     },
-    [allMaterials],
+    [allMaterials, materialOptions],
   );
 
   return (
@@ -348,6 +362,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               placeholder="Material"
               className="materialSelect"
               options={materialOptions}
+              defaultValue={
+                defaultMaterial ? materialOptions[defaultMaterial] : null
+              }
             />
             <AntInput name="quantidade" placeholder="Qtd" size="large" />
             <AntInput name="side_a_size" placeholder="Lado A" size="large" />
