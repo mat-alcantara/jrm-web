@@ -137,6 +137,7 @@ const NewCutlist: React.FC = () => {
           )}
           {page === 3 && (
             <CutlistPage
+              setPage={setPage}
               cutlist={cutlist}
               orderData={orderData}
               setCutlist={setCutlist}
@@ -169,6 +170,10 @@ const NewCutlist: React.FC = () => {
               <Step title="Cliente" description="Selecione um cliente" />
               <Step title="Dados" description="Forneça os dados do pedido" />
               <Step title="Peças" description="Forneça a lista de peças" />
+              <Step
+                title="Pagamento"
+                description="Forneça os dados de pagamento"
+              />
             </Steps>
           </StepsContainer>
         </Container>

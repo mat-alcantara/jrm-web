@@ -26,6 +26,7 @@ interface ICutlistPageProps {
   orderData: IOrderData | undefined;
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
+  setPage(page: number): void;
 }
 
 interface IMaterialForm {
@@ -39,6 +40,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   orderData,
   setCutlist,
   cutlist,
+  setPage,
 }) => {
   const { createMaterial, loadMaterials } = useMaterial();
   const formRef = useRef<FormHandles>(null);
@@ -269,7 +271,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
         const cutlistId = v4();
 
-        await setCutlist([
+        setCutlist([
           ...cutlist,
           {
             id: cutlistId,
@@ -283,9 +285,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           },
         ]);
 
-        await setTotalPrice((prev) => prev + price);
+        setTotalPrice((prev) => prev + price);
 
-        await setCutlistDataSource((prevVal) => [
+        setCutlistDataSource((prevVal) => [
           ...prevVal,
           {
             key: cutlistId,
@@ -401,7 +403,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         )}
         {newMaterialForm && (
           <Form onSubmit={handleSubmitMaterial} ref={materialFormRef}>
-            <AntInput name="name" placeholder="Mterial" size="large" />
+            <AntInput name="name" placeholder="Material" size="large" />
             <AntInput name="price" placeholder="Price" size="large" />
             <AntInput name="width" placeholder="Largura" size="large" />
             <AntInput name="height" placeholder="Altura" size="large" />
@@ -424,6 +426,15 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         dataSource={cutlistDataSource}
         footer={() => `Total: R$ ${totalPrice}`}
       />
+      <AntButton
+        block
+        type="primary"
+        onClick={() => setPage(4)}
+        style={{ marginTop: '16px' }}
+        disabled={cutlist.length === 0}
+      >
+        Confirmar
+      </AntButton>
     </CutlistPageContainer>
   );
 };

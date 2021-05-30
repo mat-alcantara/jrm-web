@@ -117,10 +117,12 @@ const DataPage: React.FC<IDataPageProps> = ({
       try {
         await validateDataPageProps(allOrderData);
 
+        // Uses authenticated user as seller
         const seller = user.name;
 
         setOrderData({ ...allOrderData, seller });
 
+        // Check if customer address is valid. If not, request an address update
         if (
           allOrderData.delivery_type === 'Entrega' &&
           selectedCustomer?.street === 'Endereço não informado'
@@ -150,7 +152,7 @@ const DataPage: React.FC<IDataPageProps> = ({
           await updateCustomerAddress(addressData, selectedCustomer.id);
         }
 
-        await setAddressUpdate(false);
+        setAddressUpdate(false);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
