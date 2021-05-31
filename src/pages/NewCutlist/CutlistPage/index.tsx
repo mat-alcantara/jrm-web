@@ -270,19 +270,13 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           throw new Error('Material does not exist');
         }
 
-        let price: number;
-
-        if (orderData) {
-          price = calculateCutlistPrice(materialUsed, {
-            quantidade,
-            side_a_border,
-            side_a_size,
-            side_b_border,
-            side_b_size,
-          });
-        } else {
-          price = 0;
-        }
+        const price = calculateCutlistPrice(materialUsed, {
+          quantidade,
+          side_a_border,
+          side_a_size,
+          side_b_border,
+          side_b_size,
+        });
 
         await validateCutlistPageProps({
           material: materialUsed.name,

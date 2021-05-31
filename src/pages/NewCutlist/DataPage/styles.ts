@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const DataPageContainer = styled.div`
   margin-top: 32px;
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
 
   button {
     margin: 8px 0px;

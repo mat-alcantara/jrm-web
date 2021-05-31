@@ -1,18 +1,12 @@
-import React, { useRef, useCallback, useState } from 'react';
-// import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
-import { Typography, Form } from 'antd';
-import * as Yup from 'yup';
+import React, { useCallback, useState } from 'react';
+import { Typography, Form, Radio, Input, Select } from 'antd';
 
 import { useCustomer } from '../../../hooks/Customer';
 import { useAuth } from '../../../hooks/Auth';
 
-import getValidationErrors from '../../../utils/getValidationErrors';
 import { areas } from '../../../utils/listOfAreas';
 
-import AntSelect from '../../../components/ReactSelect';
 import AntButton from '../../../components/AntButton';
-import AntInput from '../../../components/AntInput';
 
 import IOrderData from '../../../types/IOrderData';
 import ICustomer from '../../../types/ICustomer';
@@ -34,132 +28,44 @@ const DataPage: React.FC<IDataPageProps> = ({
   selectedCustomer,
 }) => {
   const [form] = Form.useForm();
-
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
-  const formRef = useRef<FormHandles>(null);
-  const formAddressRef = useRef<FormHandles>(null);
+  const [isEstimate, setIsEstimate] = useState<boolean>(false);
   const { updateCustomerAddress } = useCustomer();
   const { user } = useAuth();
 
   const options = {
-    orderStore: [
-      { value: 'Japuiba', label: 'Japuíba' },
-      { value: 'Frade', label: 'Frade' },
-      { value: 'São João de Meriti', label: 'São João de Meriti' },
-    ],
-
-    paymentType: [
-      { value: 'Pago', label: 'Pago' },
-      { value: 'Parcialmente Pago', label: 'Parcialmente Pago' },
-      { value: 'Receber na Entrega', label: 'Receber na Entrega' },
-    ],
-
-    orderStatus: [
-      { value: 'Em Produção', label: 'Produção' },
-      { value: 'Orçamento', label: 'Orçamento' },
-    ],
-    deliveryType: [
-      { value: 'Entrega', label: 'Entrega' },
-      { value: 'Retirar na Loja', label: 'Retirar na Loja' },
-    ],
     areaOptions: areas.sort().map((area: string) => {
       return {
         value: area,
         label: area,
       };
     }),
-    cityOptions: [
-      { value: 'Angra dos Reis', label: 'Angra dos Reis' },
-      { value: 'Paraty', label: 'Paraty' },
-      { value: 'Rio de Janeiro', label: 'Rio de Janeiro' },
-    ],
   };
-
-  const validateDataPageProps = useCallback(
-    async (allOrderData: Omit<IOrderData, 'seller'>) => {
-      const schema = Yup.object().shape({
-        orderStore: Yup.string().required('Loja obrigatória'),
-        ps: Yup.string().nullable(),
-        orderStatus: Yup.string().required('Tipo do pedido obrigatório'),
-        delivery_type: Yup.string().required('Tipo de entrega obrigatório'),
-      });
-
-      const isPropsValid = await schema.validate(allOrderData, {
-        // Faz com que todos os erros sejam pegos pelo catch
-        abortEarly: false,
-      });
-
-      return isPropsValid;
-    },
-    [],
-  );
-
-  const validateAddressProps = useCallback(
-    async (addressData: IAddressData) => {
-      const schema = Yup.object().shape({
-        street: Yup.string().required('Endereço obrigatório'),
-        city: Yup.string().required('Cidade obrigatória'),
-        area: Yup.string().required('Bairro obrigatório'),
-      });
-
-      const isPropsValid = await schema.validate(addressData, {
-        // Faz com que todos os erros sejam pegos pelo catch
-        abortEarly: false,
-      });
-
-      return isPropsValid;
-    },
-    [],
-  );
 
   const handleSubmitDataPage = useCallback(
     async (allOrderData: Omit<IOrderData, 'seller'>) => {
-      try {
-        await validateDataPageProps(allOrderData);
+      // Uses authenticated user as seller
+      const seller = user.name;
 
-        // Uses authenticated user as seller
-        const seller = user.name;
-
-        setOrderData({ ...allOrderData, seller });
-
-        // Check if customer address is valid. If not, request an address update
-        if (
-          allOrderData.delivery_type === 'Entrega' &&
-          selectedCustomer?.street === 'Endereço não informado'
-        ) {
-          setAddressUpdate(true);
-        } else {
-          setAddressUpdate(false);
-          setPage(3);
-        }
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-
-          formRef.current?.setErrors(errors);
-        }
+      if (allOrderData.paymentStatus) {
+        // eslint-disable-next-line no-param-reassign
+        allOrderData.paymentStatus = 'Receber na Entrega';
       }
+
+      setOrderData({ ...allOrderData, seller });
+
+      setPage(3);
     },
     [addressUpdate],
   );
 
   const handleSubmitCustomerAddress = useCallback(
     async (addressData: IAddressData) => {
-      try {
-        await validateAddressProps(addressData);
-
-        if (selectedCustomer?.id) {
-          await updateCustomerAddress(addressData, selectedCustomer.id);
-        }
-
-        setAddressUpdate(false);
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err);
-
-          formAddressRef.current?.setErrors(errors);
-        }
+      if (selectedCustomer?.id) {
+        await updateCustomerAddress(addressData, selectedCustomer.id);
       }
+
+      setAddressUpdate(false);
     },
     [addressUpdate],
   );
@@ -168,67 +74,194 @@ const DataPage: React.FC<IDataPageProps> = ({
     <DataPageContainer>
       <Typography.Title level={2}>Dados do pedido</Typography.Title>
       <Form
-        onSubmit={handleSubmitDataPage}
-        ref={formRef}
-        initialData={{
-          ps: orderData?.ps,
-        }}
+        onFinish={handleSubmitDataPage}
+        form={form}
+        name="control-hooks"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        layout="horizontal"
+        labelAlign="left"
+        style={{ textAlign: 'left' }}
       >
-        <AntSelect
+        <Form.Item
+          label="Tipo do pedido"
           name="orderStatus"
-          placeholder="Tipo do pedido"
-          options={options.orderStatus}
-          defaultInputValue={orderData?.orderStatus}
-          isClearable
-        />
-        <AntSelect
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, selecione o tipo do pedido!',
+            },
+          ]}
+        >
+          <Radio.Group>
+            <Radio.Button
+              value="Em Produção"
+              onClick={() => setIsEstimate(false)}
+            >
+              Produção
+            </Radio.Button>
+            <Radio.Button value="Orçamento" onClick={() => setIsEstimate(true)}>
+              Orçamento
+            </Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          label="Loja do pedido"
           name="orderStore"
-          placeholder="Loja do pedido"
-          options={options.orderStore}
-          defaultInputValue={orderData?.orderStore}
-          isClearable
-        />
-        <AntSelect
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, selecione a loja do pedido!',
+            },
+          ]}
+        >
+          <Radio.Group>
+            <Radio.Button value="Frade">Frade</Radio.Button>
+            <Radio.Button value="Japuiba">Japuíba</Radio.Button>
+            <Radio.Button value="São João de Meriti">
+              São João de Meriti
+            </Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          label="Tipo de Entrega"
           name="delivery_type"
-          placeholder="Tipo de Entrega"
-          options={options.deliveryType}
-          defaultInputValue={orderData?.delivery_type}
-          isClearable
-        />
-        <AntInput
-          name="ps"
-          placeholder="Observações"
-          size="large"
-          defaultValue={orderData?.ps}
-        />
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, selecione o tipo de entrega!',
+            },
+          ]}
+        >
+          <Radio.Group>
+            <Radio.Button
+              value="Entrega"
+              onClick={() =>
+                selectedCustomer?.street === 'Endereço não informado'
+                  ? setAddressUpdate(true)
+                  : setAddressUpdate(false)
+              }
+            >
+              Entrega
+            </Radio.Button>
+            <Radio.Button
+              value="Retirar na Loja"
+              onClick={() => setAddressUpdate(false)}
+            >
+              Retirar na Loja
+            </Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item name="ps" label="Observações">
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Porcentagem"
+          name="pricePercent"
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, selecione uma porcentagem para cálculo!',
+              min: 0,
+              max: 100,
+            },
+          ]}
+        >
+          <Select showSearch defaultValue={75}>
+            <Select.Option value={75}>Balcão</Select.Option>
+            <Select.Option value={50}>Marceneiro</Select.Option>
+            <Select.Option value={0}>Sem acréscimo</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Tipo de pagamento" name="paymentStatus">
+          <Radio.Group disabled={!!isEstimate}>
+            <Radio.Button value="Pago">Pago</Radio.Button>
+            <Radio.Button value="Parcialmente Pago">
+              Parcialmente Pago
+            </Radio.Button>
+            <Radio.Button value="Receber na Entrega">
+              Receber na Entrega
+            </Radio.Button>
+          </Radio.Group>
+        </Form.Item>
         <AntButton
           block
           htmlType="submit"
           type="primary"
-          disabled={!!orderData}
+          disabled={!!orderData || !!addressUpdate}
         >
           Confirmar
         </AntButton>
       </Form>
       {addressUpdate && (
-        <Form ref={formAddressRef} onSubmit={handleSubmitCustomerAddress}>
+        <Form
+          onFinish={handleSubmitCustomerAddress}
+          form={form}
+          name="control-hooks"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          layout="horizontal"
+          labelAlign="left"
+          style={{ textAlign: 'left' }}
+        >
           <Typography.Title
             level={5}
-            style={{ marginTop: '32px', marginBottom: '8px', color: 'red' }}
+            type="danger"
+            style={{
+              marginTop: '32px',
+              marginBottom: '32px',
+
+              textAlign: 'center',
+            }}
           >
             Endereço do cliente não fornecido. Atualize para continuar...
           </Typography.Title>
-          <AntInput size="large" name="street" placeholder="Endereço" />
-          <AntSelect
-            placeholder="Bairro"
+          <Form.Item
+            name="street"
+            label="Endereço"
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, digite um endereço!',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Bairro"
             name="area"
-            options={options.areaOptions}
-          />
-          <AntSelect
-            placeholder="Cidade"
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, selecione um bairro!',
+              },
+            ]}
+          >
+            <Select showSearch>
+              {options.areaOptions.map((area) => (
+                <Select.Option value={area.value}>{area.label}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Cidade"
             name="city"
-            options={options.cityOptions}
-          />
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, selecione a cidade!',
+              },
+            ]}
+          >
+            <Radio.Group>
+              <Radio.Button value="Angra dos Reis">Angra dos Reis</Radio.Button>
+              <Radio.Button value="Paraty">Paraty</Radio.Button>
+              <Radio.Button value="Rio de Janeiro">Rio de Janeiro</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+
           <AntButton block htmlType="submit" type="primary">
             Atualizar endereço
           </AntButton>
