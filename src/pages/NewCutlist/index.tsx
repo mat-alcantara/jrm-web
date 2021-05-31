@@ -17,7 +17,6 @@ import AntInput from '../../components/AntInput';
 import CustomerSelection from './CustomerSelection';
 import DataPage from './DataPage';
 import CutlistPage from './CutlistPage';
-import PaymentPage from './PaymentPage';
 
 import ICustomer from '../../types/ICustomer';
 import IOrderData from '../../types/IOrderData';
@@ -43,6 +42,8 @@ const NewCutlist: React.FC = () => {
 
   // CutlistPage states
   const [cutlist, setCutlist] = useState<ICutlist[]>([]);
+
+  // PaymentPage states
 
   const handleSubmitData = useCallback(async () => {
     await createOrder(selectedCustomer, orderData, cutlist);
@@ -126,24 +127,21 @@ const NewCutlist: React.FC = () => {
             />
           )}
           {page === 2 && (
-            <DataPage
-              orderData={orderData}
-              setOrderData={setOrderData}
-              setPage={setPage}
-              selectedCustomer={selectedCustomer}
-            />
-          )}
-          {page === 3 && (
             <CutlistPage
               cutlist={cutlist}
               orderData={orderData}
               setCutlist={setCutlist}
             />
           )}
-          {page === 4 && (
+          {page === 3 && (
             <>
-              <PaymentPage />
-              <Popconfirm
+              <DataPage
+                orderData={orderData}
+                setOrderData={setOrderData}
+                setPage={setPage}
+                selectedCustomer={selectedCustomer}
+              />
+              {/* <Popconfirm
                 title="Tem certeza de que deseja concluir o pedido?"
                 onConfirm={() => handleSubmitData()}
                 okText="Sim"
@@ -159,7 +157,7 @@ const NewCutlist: React.FC = () => {
                 >
                   Confirmar pedido
                 </AntButton>
-              </Popconfirm>
+              </Popconfirm> */}
             </>
           )}
 
@@ -168,7 +166,7 @@ const NewCutlist: React.FC = () => {
               <AntButton
                 type="default"
                 onClick={() => setPage(page - 1)}
-                disabled={page < 2}
+                disabled={page <= 1}
               >
                 Voltar
               </AntButton>
@@ -177,9 +175,8 @@ const NewCutlist: React.FC = () => {
                 onClick={() => setPage(page + 1)}
                 disabled={
                   (page === 1 && !selectedCustomer) ||
-                  (page === 2 && !orderData) ||
-                  (page === 3 && !(cutlist.length > 0)) ||
-                  page > 3
+                  (page === 2 && !(cutlist.length > 0)) ||
+                  page > 2
                 }
               >
                 Avançar
@@ -187,12 +184,8 @@ const NewCutlist: React.FC = () => {
             </ChangePageContainer>
             <Steps current={page - 1}>
               <Step title="Cliente" description="Selecione um cliente" />
-              <Step title="Dados" description="Forneça os dados do pedido" />
               <Step title="Peças" description="Forneça a lista de peças" />
-              <Step
-                title="Pagamento"
-                description="Forneça os dados de pagamento"
-              />
+              <Step title="Dados" description="Forneça os dados do pedido" />
             </Steps>
           </StepsContainer>
         </Container>

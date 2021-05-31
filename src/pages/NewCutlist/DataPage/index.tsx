@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useState } from 'react';
-import { Form } from '@unform/web';
+// import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-import { Typography } from 'antd';
+import { Typography, Form } from 'antd';
 import * as Yup from 'yup';
 
 import { useCustomer } from '../../../hooks/Customer';
@@ -33,6 +33,8 @@ const DataPage: React.FC<IDataPageProps> = ({
   setOrderData,
   selectedCustomer,
 }) => {
+  const [form] = Form.useForm();
+
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
   const formRef = useRef<FormHandles>(null);
   const formAddressRef = useRef<FormHandles>(null);
