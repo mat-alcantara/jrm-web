@@ -3,4 +3,6 @@ import { Layout } from 'antd';
 
 const { Footer } = Layout;
 
-export const Container = styled(Footer)``;
+export const Container = styled(Footer)`
+  text-align: center;
+`;

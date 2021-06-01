@@ -14,9 +14,9 @@ export const Container = styled(Content)<IContainerProps>`
   ${(props) =>
     props.breakpoints
       ? css`
-          margin: 32px 64px;
+          padding: 32px 64px;
         `
       : css`
-          margin: 16px 32px;
+          padding: 16px 32px;
         `}
 `;
