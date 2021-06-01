@@ -9,7 +9,7 @@ import { Container } from './styles';
 
 const { SubMenu, Item } = Menu;
 
-const AntHeader: React.FC = () => {
+const Header: React.FC = () => {
   const { signOut } = useAuth();
 
   const handleLogOut = useCallback(async () => {
@@ -58,4 +58,4 @@ const AntHeader: React.FC = () => {
   );
 };
 
-export default AntHeader;
+export default Header;
