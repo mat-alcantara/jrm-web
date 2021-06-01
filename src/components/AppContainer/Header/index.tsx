@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
 import { Menu, Typography } from 'antd';
 
-import { useAuth } from '../../hooks/Auth';
+import { useAuth } from '../../../hooks/Auth';
 
 import { Container } from './styles';
 
