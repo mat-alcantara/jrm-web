@@ -19,11 +19,9 @@ import getValidationErrors from '../../../utils/getValidationErrors';
 
 import ICutlistData from '../../../types/ICutlistData';
 import ICutlist from '../../../types/ICutlist';
-import IOrderData from '../../../types/IOrderData';
 import IMaterial from '../../../types/IMaterial';
 
 interface ICutlistPageProps {
-  orderData: IOrderData | undefined;
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
 }
@@ -35,11 +33,7 @@ interface IMaterialForm {
   price: number;
 }
 
-const CutlistPage: React.FC<ICutlistPageProps> = ({
-  orderData,
-  setCutlist,
-  cutlist,
-}) => {
+const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
   const { createMaterial, loadMaterials } = useMaterial();
   const formRef = useRef<FormHandles>(null);
   const materialFormRef = useRef<FormHandles>(null);

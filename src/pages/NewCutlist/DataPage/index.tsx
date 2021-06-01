@@ -11,6 +11,7 @@ import AntButton from '../../../components/AntButton';
 import IOrderData from '../../../types/IOrderData';
 import ICustomer from '../../../types/ICustomer';
 import IAddressData from '../../../types/IAddressData';
+import ICutlist from '../../../types/ICutlist';
 
 import { DataPageContainer, DataPageNextAndBackButton } from './styles';
 
@@ -19,6 +20,8 @@ interface IDataPageProps {
   setOrderData(data: IOrderData | undefined): void;
   orderData: IOrderData | undefined;
   selectedCustomer: ICustomer | undefined;
+  setCutlist(data: ICutlist[]): void;
+  cutlist: ICutlist[];
 }
 
 const DataPage: React.FC<IDataPageProps> = ({

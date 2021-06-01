@@ -127,11 +127,7 @@ const NewCutlist: React.FC = () => {
             />
           )}
           {page === 2 && (
-            <CutlistPage
-              cutlist={cutlist}
-              orderData={orderData}
-              setCutlist={setCutlist}
-            />
+            <CutlistPage cutlist={cutlist} setCutlist={setCutlist} />
           )}
           {page === 3 && (
             <>
