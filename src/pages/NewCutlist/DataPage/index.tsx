@@ -30,6 +30,7 @@ const DataPage: React.FC<IDataPageProps> = ({
   const [form] = Form.useForm();
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
   const [isEstimate, setIsEstimate] = useState<boolean>(false);
+
   const { updateCustomerAddress } = useCustomer();
   const { user } = useAuth();
 
@@ -86,6 +87,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         <Form.Item
           label="Tipo do pedido"
           name="orderStatus"
+          required={false}
           rules={[
             {
               required: true,
@@ -108,6 +110,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         <Form.Item
           label="Loja do pedido"
           name="orderStore"
+          required={false}
           rules={[
             {
               required: true,
@@ -126,6 +129,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         <Form.Item
           label="Tipo de Entrega"
           name="delivery_type"
+          required={false}
           rules={[
             {
               required: true,
@@ -155,24 +159,6 @@ const DataPage: React.FC<IDataPageProps> = ({
         <Form.Item name="ps" label="Observações">
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Porcentagem"
-          name="pricePercent"
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, selecione uma porcentagem para cálculo!',
-              min: 0,
-              max: 100,
-            },
-          ]}
-        >
-          <Select showSearch defaultValue={75}>
-            <Select.Option value={75}>Balcão</Select.Option>
-            <Select.Option value={50}>Marceneiro</Select.Option>
-            <Select.Option value={0}>Sem acréscimo</Select.Option>
-          </Select>
-        </Form.Item>
 
         <Form.Item label="Tipo de pagamento" name="paymentStatus">
           <Radio.Group disabled={!!isEstimate}>
@@ -180,11 +166,106 @@ const DataPage: React.FC<IDataPageProps> = ({
             <Radio.Button value="Parcialmente Pago">
               Parcialmente Pago
             </Radio.Button>
-            <Radio.Button value="Receber na Entrega">
-              Receber na Entrega
-            </Radio.Button>
+            <Radio.Button value="Receber na Entrega">Receber</Radio.Button>
           </Radio.Group>
         </Form.Item>
+        <Form.Item
+          label="Porcentagem"
+          name="pricePercent"
+          initialValue={75}
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, selecione uma porcentagem para cálculo!',
+            },
+          ]}
+          required={false}
+        >
+          <Select>
+            <Select.Option value={75}>Balcão</Select.Option>
+            <Select.Option value={50}>Marceneiro</Select.Option>
+            <Select.Option value={0}>Sem acréscimo</Select.Option>
+          </Select>
+        </Form.Item>
+        <Typography style={{ marginTop: '16px' }}>Valor: R$ 200,00</Typography>
+        <Typography>Valor com desconto: R$ 150,00</Typography>
+        {addressUpdate && (
+          <Form
+            onFinish={handleSubmitCustomerAddress}
+            form={form}
+            name="control-hooks"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            layout="horizontal"
+            labelAlign="left"
+            style={{ textAlign: 'left' }}
+          >
+            <Typography.Title
+              level={5}
+              type="danger"
+              style={{
+                marginTop: '32px',
+                marginBottom: '32px',
+
+                textAlign: 'center',
+              }}
+            >
+              Endereço do cliente não fornecido. Atualize para continuar...
+            </Typography.Title>
+            <Form.Item
+              name="street"
+              label="Endereço"
+              rules={[
+                {
+                  required: true,
+                  message: 'Por favor, digite um endereço!',
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Bairro"
+              name="area"
+              rules={[
+                {
+                  required: true,
+                  message: 'Por favor, selecione um bairro!',
+                },
+              ]}
+            >
+              <Select showSearch>
+                {options.areaOptions.map((area) => (
+                  <Select.Option value={area.value}>{area.label}</Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Cidade"
+              name="city"
+              rules={[
+                {
+                  required: true,
+                  message: 'Por favor, selecione a cidade!',
+                },
+              ]}
+            >
+              <Radio.Group>
+                <Radio.Button value="Angra dos Reis">
+                  Angra dos Reis
+                </Radio.Button>
+                <Radio.Button value="Paraty">Paraty</Radio.Button>
+                <Radio.Button value="Rio de Janeiro">
+                  Rio de Janeiro
+                </Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+
+            <AntButton block htmlType="submit" type="primary">
+              Atualizar endereço
+            </AntButton>
+          </Form>
+        )}
         <AntButton
           block
           htmlType="submit"
@@ -194,79 +275,7 @@ const DataPage: React.FC<IDataPageProps> = ({
           Confirmar
         </AntButton>
       </Form>
-      {addressUpdate && (
-        <Form
-          onFinish={handleSubmitCustomerAddress}
-          form={form}
-          name="control-hooks"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          layout="horizontal"
-          labelAlign="left"
-          style={{ textAlign: 'left' }}
-        >
-          <Typography.Title
-            level={5}
-            type="danger"
-            style={{
-              marginTop: '32px',
-              marginBottom: '32px',
 
-              textAlign: 'center',
-            }}
-          >
-            Endereço do cliente não fornecido. Atualize para continuar...
-          </Typography.Title>
-          <Form.Item
-            name="street"
-            label="Endereço"
-            rules={[
-              {
-                required: true,
-                message: 'Por favor, digite um endereço!',
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Bairro"
-            name="area"
-            rules={[
-              {
-                required: true,
-                message: 'Por favor, selecione um bairro!',
-              },
-            ]}
-          >
-            <Select showSearch>
-              {options.areaOptions.map((area) => (
-                <Select.Option value={area.value}>{area.label}</Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="Cidade"
-            name="city"
-            rules={[
-              {
-                required: true,
-                message: 'Por favor, selecione a cidade!',
-              },
-            ]}
-          >
-            <Radio.Group>
-              <Radio.Button value="Angra dos Reis">Angra dos Reis</Radio.Button>
-              <Radio.Button value="Paraty">Paraty</Radio.Button>
-              <Radio.Button value="Rio de Janeiro">Rio de Janeiro</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-
-          <AntButton block htmlType="submit" type="primary">
-            Atualizar endereço
-          </AntButton>
-        </Form>
-      )}
       {orderData && (
         <DataPageNextAndBackButton>
           <AntButton

@@ -136,6 +136,8 @@ const NewCutlist: React.FC = () => {
           {page === 3 && (
             <>
               <DataPage
+                cutlist={cutlist}
+                setCutlist={setCutlist}
                 orderData={orderData}
                 setOrderData={setOrderData}
                 setPage={setPage}

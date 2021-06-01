@@ -21,7 +21,11 @@ const AntHeader: React.FC = () => {
       <Link to="/">
         <h1>JRM Compensados</h1>
       </Link>
-      <StyledMenu mode="horizontal" overflowedIndicator={<FiMenu size={20} />}>
+      <StyledMenu
+        mode="horizontal"
+        triggerSubMenuAction="click"
+        overflowedIndicator={<FiMenu size={20} />}
+      >
         <Item>
           <Link to="/dashboard">Dashboard</Link>
         </Item>
