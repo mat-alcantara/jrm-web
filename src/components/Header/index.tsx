@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
-import { Menu } from 'antd';
+import { Menu, Typography } from 'antd';
 
-import { useAuth } from '../../../hooks/Auth';
+import { useAuth } from '../../hooks/Auth';
 
-import { StyledHeader, StyledMenu } from './styles';
+import { Container } from './styles';
 
 const { SubMenu, Item } = Menu;
 
@@ -13,15 +13,15 @@ const AntHeader: React.FC = () => {
   const { signOut } = useAuth();
 
   const handleLogOut = useCallback(async () => {
-    await signOut();
+    signOut();
   }, []);
 
   return (
-    <StyledHeader>
+    <Container>
       <Link to="/">
-        <h1>JRM Compensados</h1>
+        <Typography.Title level={3}>JRM Compensados</Typography.Title>
       </Link>
-      <StyledMenu
+      <Menu
         mode="horizontal"
         triggerSubMenuAction="click"
         overflowedIndicator={<FiMenu size={20} />}
@@ -53,8 +53,8 @@ const AntHeader: React.FC = () => {
           </Item>
         </SubMenu>
         <Item onClick={handleLogOut}>Sair</Item>
-      </StyledMenu>
-    </StyledHeader>
+      </Menu>
+    </Container>
   );
 };
 
