@@ -23,7 +23,7 @@ const Header: React.FC = () => {
         <Col
           xl={5}
           lg={7}
-          xs={18}
+          xs={21}
           style={{
             textAlign: breakpoints.sm ? 'left' : 'center',
           }}
@@ -35,7 +35,7 @@ const Header: React.FC = () => {
         <Col
           lg={17}
           xl={19}
-          xs={2}
+          xs={3}
           style={{
             display: 'flex',
             justifyContent: breakpoints.sm ? 'flex-end' : 'flex-start',
@@ -46,7 +46,7 @@ const Header: React.FC = () => {
             triggerSubMenuAction={breakpoints.sm ? 'hover' : 'click'}
             overflowedIndicator={<FiMenu />}
           >
-            <Item disabled>
+            <Item>
               <Link to="/dashboard">Dashboard</Link>
             </Item>
             <Item>
