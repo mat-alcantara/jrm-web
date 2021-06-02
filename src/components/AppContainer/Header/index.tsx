@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
-import { Menu, Typography } from 'antd';
+import { Menu, Typography, Grid, Row, Col } from 'antd';
 
 import { useAuth } from '../../../hooks/Auth';
 
@@ -11,6 +11,7 @@ const { SubMenu, Item } = Menu;
 
 const Header: React.FC = () => {
   const { signOut } = useAuth();
+  const breakpoints = Grid.useBreakpoint();
 
   const handleLogOut = useCallback(async () => {
     signOut();
@@ -18,42 +19,63 @@ const Header: React.FC = () => {
 
   return (
     <Container>
-      <Link to="/">
-        <Typography.Title level={3}>JRM Compensados</Typography.Title>
-      </Link>
-      <Menu
-        mode="horizontal"
-        triggerSubMenuAction="click"
-        overflowedIndicator={<FiMenu size={20} />}
-      >
-        <Item>
-          <Link to="/dashboard">Dashboard</Link>
-        </Item>
-        <Item>
-          <Link to="/newcutlist">Novo serviço</Link>
-        </Item>
-        <Item>
-          <Link to="/allorders">Cortes</Link>
-        </Item>
+      <Row align="middle" justify="space-between">
+        <Col
+          xl={5}
+          lg={7}
+          xs={18}
+          style={{
+            textAlign: breakpoints.sm ? 'left' : 'center',
+          }}
+        >
+          <Typography.Title level={breakpoints.sm ? 3 : 4}>
+            <Link to="/">JRM Compensados</Link>
+          </Typography.Title>
+        </Col>
+        <Col
+          lg={17}
+          xl={19}
+          xs={2}
+          style={{
+            display: 'flex',
+            justifyContent: breakpoints.sm ? 'flex-end' : 'flex-start',
+          }}
+        >
+          <Menu
+            mode="horizontal"
+            triggerSubMenuAction={breakpoints.sm ? 'hover' : 'click'}
+            overflowedIndicator={<FiMenu />}
+          >
+            <Item disabled>
+              <Link to="/dashboard">Dashboard</Link>
+            </Item>
+            <Item>
+              <Link to="/newcutlist">Novo serviço</Link>
+            </Item>
+            <Item disabled>
+              <Link to="/allorders">Cortes</Link>
+            </Item>
 
-        <SubMenu title="Clientes">
-          <Item>
-            <Link to="/newcustomer">Novo cliente</Link>
-          </Item>
-          <Item>
-            <Link to="/customerslist">Todos os clientes</Link>
-          </Item>
-        </SubMenu>
-        <SubMenu title="Materiais">
-          <Item>
-            <Link to="/newmaterial">Novo material</Link>
-          </Item>
-          <Item>
-            <Link to="/materialslist">Todos os materiais</Link>
-          </Item>
-        </SubMenu>
-        <Item onClick={handleLogOut}>Sair</Item>
-      </Menu>
+            <SubMenu disabled title="Clientes">
+              <Item>
+                <Link to="/newcustomer">Novo cliente</Link>
+              </Item>
+              <Item>
+                <Link to="/customerslist">Todos os clientes</Link>
+              </Item>
+            </SubMenu>
+            <SubMenu disabled title="Materiais">
+              <Item>
+                <Link to="/newmaterial">Novo material</Link>
+              </Item>
+              <Item>
+                <Link to="/materialslist">Todos os materiais</Link>
+              </Item>
+            </SubMenu>
+            <Item onClick={handleLogOut}>Sair</Item>
+          </Menu>
+        </Col>
+      </Row>
     </Container>
   );
 };
