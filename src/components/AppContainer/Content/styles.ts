@@ -11,8 +11,9 @@ interface IContainerProps {
 
 export const Container = styled(Content)<IContainerProps>`
   background: #fff;
+
   ${(props) =>
-    props.breakpoints
+    props.breakpoints.sm
       ? css`
           padding: 32px 64px;
         `

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Typography, Form, Input, Button, Grid } from 'antd';
+import { Typography, Form, Input, Button, Grid, Row, Col } from 'antd';
 
 import { useAuth } from '../../../hooks/Auth';
 
@@ -34,25 +34,32 @@ const AuthSection: React.FC<IAuthSectionProps> = ({ setIsAuthenticated }) => {
 
   return (
     <Container>
-      <Typography.Title
-        level={2}
-        style={{ marginTop: breakpoint.md ? '32px' : '16px' }}
-      >
-        {`Olá, ${user.name}`}
-      </Typography.Title>
-      <Typography
-        style={{
-          fontSize: breakpoint.md ? '24px' : '16px',
-          marginBottom: '16px',
-        }}
-      >
-        Digite a sua senha para continuar...
-      </Typography>
+      <Row align="middle" justify="center" style={{ textAlign: 'center' }}>
+        <Col span={24}>
+          <Typography.Title
+            level={2}
+            style={{ marginTop: breakpoint.md ? '32px' : '16px' }}
+          >
+            {`Olá, ${user.name}`}
+          </Typography.Title>
+        </Col>
+        <Col span={24}>
+          <Typography
+            style={{
+              fontSize: breakpoint.md ? '24px' : '16px',
+              marginBottom: '16px',
+            }}
+          >
+            Digite a sua senha para continuar...
+          </Typography>
+        </Col>
+      </Row>
+
       <Form
         onFinish={handleSubmitAuth}
         form={form}
         wrapperCol={{ span: 24 }}
-        style={{ maxWidth: '400px', margin: '0 auto' }}
+        style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}
       >
         <Form.Item
           name="password"
