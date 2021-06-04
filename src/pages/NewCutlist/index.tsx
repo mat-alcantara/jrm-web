@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { Divider } from 'antd';
-import { Container } from './styles';
+import { Divider, Spin } from 'antd';
+import { Container, Loading } from './styles';
 
 import { useCustomer } from '../../hooks/Customer';
 
@@ -17,9 +17,9 @@ const NewCutlist: React.FC = () => {
   const { loadCustomers } = useCustomer();
 
   //* States
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
   // General Data
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
 
   // Select Customer Section Data
@@ -37,7 +37,17 @@ const NewCutlist: React.FC = () => {
     }
 
     loadCustomersFromApi();
-  });
+    setLoading(false);
+  }, []);
+
+  // Loading page while not load data from API
+  if (loading) {
+    return (
+      <Loading>
+        <Spin />
+      </Loading>
+    );
+  }
 
   // Require authentication to return new cutlist page
   if (!isAuthenticated) {
