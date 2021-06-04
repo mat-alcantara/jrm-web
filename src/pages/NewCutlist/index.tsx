@@ -19,6 +19,7 @@ const NewCutlist: React.FC = () => {
   //* States
   // General Data
   const [loading, setLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
 
@@ -56,13 +57,14 @@ const NewCutlist: React.FC = () => {
 
   return (
     <Container>
-      <CustomerSection
-        selectedCustomer={selectedCustomer}
-        setSelectedCustomer={setSelectedCustomer}
-        allCustomers={allCustomers}
-      />
-      <Divider />
-      {selectedCustomer && (
+      {page === 1 && (
+        <CustomerSection
+          selectedCustomer={selectedCustomer}
+          setSelectedCustomer={setSelectedCustomer}
+          allCustomers={allCustomers}
+        />
+      )}
+      {page === 2 && (
         <CutlistSection cutlist={cutlist} setCutlist={setCutlist} />
       )}
     </Container>
