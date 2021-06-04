@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Typography, AutoComplete } from 'antd';
+import { Typography, AutoComplete, Grid } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 
 import { Link } from 'react-router-dom';
@@ -18,15 +18,16 @@ import ICustomer from '../../../types/ICustomer';
 interface ICustomerSelectionProps {
   selectedCustomer: ICustomer | undefined;
   setSelectedCustomer(customerData: ICustomer): void;
+  allCustomers: ICustomer[];
 }
 
 const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
   selectedCustomer,
   setSelectedCustomer,
+  allCustomers,
 }) => {
-  const { loadCustomers } = useCustomer();
+  const breakpoints = Grid.useBreakpoint();
 
-  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<
     { value: string; id: string }[]
   >([]);
@@ -35,18 +36,14 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
   >([]);
 
   useEffect(() => {
-    async function loadCustomersFromHook() {
-      const customersFromHook = await loadCustomers();
-
-      const allOptions = customersFromHook.map((customer) => {
+    async function loadAutoCompleteOptions() {
+      const allOptions = allCustomers.map((customer) => {
         return { value: customer.name, id: customer.id };
       });
-
-      setAllCustomers((prevValue) => [...prevValue, ...customersFromHook]);
       setAutoCompleteOptions([...allOptions]);
     }
 
-    loadCustomersFromHook();
+    loadAutoCompleteOptions();
   }, []);
 
   const handleSelectedCustomer = useCallback(
@@ -82,7 +79,9 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
 
   return (
     <CustomerPageContainer>
-      <Typography.Title level={2}>Selecione um cliente</Typography.Title>
+      <Typography.Title level={breakpoints.sm ? 2 : 3}>
+        Selecione um cliente
+      </Typography.Title>
       <CustomerAutocompleteAndButton>
         <AutoComplete
           placeholder="Digite o nome de um cliente"
