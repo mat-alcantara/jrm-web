@@ -49,6 +49,7 @@ const NewCutlist: React.FC = () => {
       <CustomerSection
         selectedCustomer={selectedCustomer}
         setSelectedCustomer={setSelectedCustomer}
+        allCustomers={allCustomers}
       />
       <Divider />
       {selectedCustomer && (
