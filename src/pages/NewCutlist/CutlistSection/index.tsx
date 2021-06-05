@@ -1,5 +1,14 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { Typography, Divider, Table, Space, Popconfirm } from 'antd';
+import {
+  Typography,
+  Divider,
+  Table,
+  Space,
+  Popconfirm,
+  List,
+  Avatar,
+  Button,
+} from 'antd';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -7,6 +16,8 @@ import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import { useMaterial } from '../../../hooks/Material';
+
+import G2P0 from '../../../assets/2G0P.svg';
 
 import { CutlistPageContainer, InputCutlistContainer } from './styles';
 
@@ -115,6 +126,32 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
     loadMaterialsAndCutsFromHook();
   }, []);
 
+  const data = [
+    {
+      title: '5 - 1200 x 400',
+      description: 'MDF BRANCO TX 2 FACES COMUM 15MM',
+      avatar: G2P0,
+    },
+    {
+      title: '2 - 2200 x 480',
+      description: 'MDF 15mm Comum',
+      avatar:
+        'https://dictionary.cambridge.org/pt/images/thumb/square_noun_002_35417.jpg?version=5.0.175',
+    },
+    {
+      title: '3 - 120 x 40',
+      description: 'MDF 15mm Ultra',
+      avatar:
+        'https://dictionary.cambridge.org/pt/images/thumb/square_noun_002_35417.jpg?version=5.0.175',
+    },
+    {
+      title: '7 - 1700 x 400',
+      description: 'MDF 15mm Ultra',
+      avatar:
+        'https://dictionary.cambridge.org/pt/images/thumb/square_noun_002_35417.jpg?version=5.0.175',
+    },
+  ];
+
   const options = {
     sideOptions: [
       { value: '0', label: '0' },
@@ -128,12 +165,12 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         key: 'material',
       },
       {
-        title: 'Quantidade',
+        title: 'Qtd.',
         dataIndex: 'quantidade',
         key: 'quantidade',
       },
       {
-        title: 'Tamanho A',
+        title: 'Lado A',
         dataIndex: 'side_a_size',
         key: 'side_a_size',
       },
@@ -143,7 +180,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         key: 'side_b_border',
       },
       {
-        title: 'Tamanho B',
+        title: 'Lado B',
         dataIndex: 'side_b_size',
         key: 'side_b_size',
       },
@@ -153,7 +190,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         key: 'side_b_border',
       },
       {
-        title: 'Preço (Em R$)',
+        title: 'Preço',
         dataIndex: 'price',
         key: 'price',
       },
@@ -441,6 +478,22 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         dataSource={cutlistDataSource}
         footer={() => `Total: R$ ${totalPrice}`}
       />
+      <List
+        itemLayout="horizontal"
+        size="large"
+        dataSource={data}
+        style={{ textAlign: 'left' }}
+        renderItem={(item) => (
+          <List.Item actions={[<Button>Remover</Button>]}>
+            <List.Item.Meta
+              avatar={<Avatar src={item.avatar} size="large" shape="square" />}
+              title={<a href="https://ant.design">{item.title}</a>}
+              description={item.description}
+            />
+          </List.Item>
+        )}
+      />
+      ,
     </CutlistPageContainer>
   );
 };
