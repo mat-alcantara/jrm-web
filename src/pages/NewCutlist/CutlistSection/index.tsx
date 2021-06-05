@@ -372,7 +372,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
 
   return (
     <CutlistPageContainer>
-      <Typography.Title level={3}>Peças do pedido</Typography.Title>
+      <Typography.Title level={3} style={{ marginBottom: '32px' }}>
+        Peças do pedido
+      </Typography.Title>
       <InputCutlistContainer>
         {newCutlistForm && (
           <Form onSubmit={handleSubmit} ref={formRef}>

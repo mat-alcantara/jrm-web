@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const DataPageContainer = styled.div`
-  margin-top: 32px;
   width: 100%;
   max-width: 600px;
 

@@ -78,7 +78,10 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
 
   return (
     <CustomerPageContainer>
-      <Typography.Title level={breakpoints.sm ? 3 : 4}>
+      <Typography.Title
+        level={breakpoints.sm ? 3 : 4}
+        style={{ marginBottom: '32px' }}
+      >
         Selecione um cliente
       </Typography.Title>
       <CustomerAutocompleteAndButton>

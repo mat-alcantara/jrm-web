@@ -76,7 +76,12 @@ const DataPage: React.FC<IDataPageProps> = ({
 
   return (
     <DataPageContainer>
-      <Typography.Title level={2}>Dados do pedido</Typography.Title>
+      <Typography.Title
+        level={3}
+        style={{ textAlign: 'center', marginBottom: '32px' }}
+      >
+        Dados do pedido
+      </Typography.Title>
       <Form
         onFinish={handleSubmitDataPage}
         form={form}
@@ -274,6 +279,7 @@ const DataPage: React.FC<IDataPageProps> = ({
           htmlType="submit"
           type="primary"
           disabled={!!orderData || !!addressUpdate}
+          style={{ marginTop: '32px', marginBottom: '64px' }}
         >
           Confirmar
         </AntButton>

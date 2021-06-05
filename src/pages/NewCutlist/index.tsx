@@ -8,9 +8,11 @@ import { useCustomer } from '../../hooks/Customer';
 import AuthSection from './AuthSection';
 import CustomerSection from './CustomerSection';
 import CutlistSection from './CutlistSection';
+import DataSection from './DataSection';
 
 import ICustomer from '../../types/ICustomer';
 import ICutlist from '../../types/ICutlist';
+import IOrderData from '../../types/IOrderData';
 
 const NewCutlist: React.FC = () => {
   //* Hooks
@@ -30,6 +32,7 @@ const NewCutlist: React.FC = () => {
   const [cutlist, setCutlist] = useState<ICutlist[]>([]);
 
   // Data Section
+  const [orderData, setOrderData] = useState<IOrderData>();
 
   useEffect(() => {
     async function loadCustomersFromApi() {
@@ -67,6 +70,16 @@ const NewCutlist: React.FC = () => {
       {page === 2 && (
         <CutlistSection cutlist={cutlist} setCutlist={setCutlist} />
       )}
+      {page === 3 && (
+        <DataSection
+          selectedCustomer={selectedCustomer}
+          cutlist={cutlist}
+          setCutlist={setCutlist}
+          setPage={setPage}
+          orderData={orderData}
+          setOrderData={setOrderData}
+        />
+      )}
       <NavMenu>
         <div
           style={{
@@ -81,8 +94,11 @@ const NewCutlist: React.FC = () => {
         >
           <Button
             disabled={page < 2}
-            type="primary"
-            style={{ width: '100%', marginRight: '8px' }}
+            type="default"
+            style={{
+              width: page === 3 ? '50%' : '100%',
+              marginRight: page === 3 ? 'auto' : '8px',
+            }}
             onClick={() => setPage(page - 1)}
           >
             Retornar
@@ -92,15 +108,19 @@ const NewCutlist: React.FC = () => {
               (page === 1 && !selectedCustomer) ||
               (page === 2 && cutlist.length === 0)
             }
-            type="primary"
-            style={{ width: '100%', marginLeft: '8px' }}
+            type="default"
+            style={{
+              width: '100%',
+              marginLeft: '8px',
+              display: page === 3 ? 'none' : '',
+            }}
             onClick={() => setPage(page + 1)}
           >
             Avançar
           </Button>
         </div>
 
-        <Steps current={page}>
+        <Steps current={page - 1}>
           <Steps.Step title="Dados do cliente" />
           <Steps.Step title="Lista de Cortes" />
           <Steps.Step title="Dados do Pedido" />
