@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Typography, Form, Radio, Input, Select } from 'antd';
+import { Typography, Form, Radio, Input, Select, Grid } from 'antd';
 
 import { useCustomer } from '../../../hooks/Customer';
 import { useAuth } from '../../../hooks/Auth';
@@ -29,6 +29,7 @@ const DataPage: React.FC<IDataPageProps> = ({
   selectedCustomer,
   createOrderFromStates,
 }) => {
+  const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
   const [isEstimate, setIsEstimate] = useState<boolean>(false);
@@ -77,7 +78,10 @@ const DataPage: React.FC<IDataPageProps> = ({
     <DataPageContainer>
       <Typography.Title
         level={3}
-        style={{ textAlign: 'center', marginBottom: '32px' }}
+        style={{
+          textAlign: 'center',
+          marginBottom: breakpoints.sm ? '32px' : '16px',
+        }}
       >
         Dados do pedido
       </Typography.Title>
@@ -87,7 +91,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         name="control-hooks"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        layout="horizontal"
+        layout="inline"
         labelAlign="left"
         style={{ textAlign: 'left' }}
       >

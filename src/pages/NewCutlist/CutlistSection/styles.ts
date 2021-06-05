@@ -7,7 +7,7 @@ export const CutlistPageContainer = styled.div`
 export const InputCutlistContainer = styled.div`
   margin-top: 32px;
 
-  form {
+  /* form {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -39,5 +39,5 @@ export const InputCutlistContainer = styled.div`
     button {
       margin-left: 8px;
     }
-  }
+  } */
 `;
