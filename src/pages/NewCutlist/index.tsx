@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { Divider, Spin } from 'antd';
-import { Container, Loading } from './styles';
+import { Steps, Spin, Button } from 'antd';
+import { Container, Loading, NavMenu } from './styles';
 
 import { useCustomer } from '../../hooks/Customer';
 
@@ -67,6 +67,45 @@ const NewCutlist: React.FC = () => {
       {page === 2 && (
         <CutlistSection cutlist={cutlist} setCutlist={setCutlist} />
       )}
+      <NavMenu>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            maxWidth: '100%',
+            marginBottom: '32px',
+            margin: '0 auto 32px auto',
+          }}
+        >
+          <Button
+            disabled={page < 2}
+            type="primary"
+            style={{ width: '100%', marginRight: '8px' }}
+            onClick={() => setPage(page - 1)}
+          >
+            Retornar
+          </Button>
+          <Button
+            disabled={
+              (page === 1 && !selectedCustomer) ||
+              (page === 2 && cutlist.length === 0)
+            }
+            type="primary"
+            style={{ width: '100%', marginLeft: '8px' }}
+            onClick={() => setPage(page + 1)}
+          >
+            Avançar
+          </Button>
+        </div>
+
+        <Steps current={page}>
+          <Steps.Step title="Dados do cliente" />
+          <Steps.Step title="Lista de Cortes" />
+          <Steps.Step title="Dados do Pedido" />
+        </Steps>
+      </NavMenu>
     </Container>
   );
 };

@@ -2,8 +2,13 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
-  max-width: 1280px;
+  max-width: 780px;
   margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const CustomerSelectionContainer = styled.div`
@@ -26,4 +31,8 @@ export const Loading = styled.div`
       height: 40px;
     }
   }
+`;
+
+export const NavMenu = styled.div`
+  width: 100%;
 `;

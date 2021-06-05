@@ -5,6 +5,7 @@ export const CustomerPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 16px;
+  width: 100%;
 `;
 
 export const CustomerAutocompleteAndButton = styled.div`

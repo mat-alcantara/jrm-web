@@ -11,6 +11,9 @@ interface IContainerProps {
 
 export const Container = styled(Content)<IContainerProps>`
   background: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   ${(props) =>
     props.breakpoints.sm
