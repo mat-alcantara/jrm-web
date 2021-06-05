@@ -13,22 +13,21 @@ import ICustomer from '../../../types/ICustomer';
 import IAddressData from '../../../types/IAddressData';
 import ICutlist from '../../../types/ICutlist';
 
-import { DataPageContainer, DataPageNextAndBackButton } from './styles';
+import { DataPageContainer } from './styles';
 
 interface IDataPageProps {
   setPage(page: number): void;
-  setOrderData(data: IOrderData | undefined): void;
-  orderData: IOrderData | undefined;
+  setOrderData(data: IOrderData): void;
   selectedCustomer: ICustomer | undefined;
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
+  createOrderFromStates(): Promise<void>;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
-  setPage,
-  orderData,
   setOrderData,
   selectedCustomer,
+  createOrderFromStates,
 }) => {
   const [form] = Form.useForm();
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
@@ -58,9 +57,9 @@ const DataPage: React.FC<IDataPageProps> = ({
 
       setOrderData({ ...allOrderData, seller });
 
-      setPage(3);
+      await createOrderFromStates();
     },
-    [addressUpdate],
+    [addressUpdate, createOrderFromStates, setOrderData],
   );
 
   const handleSubmitCustomerAddress = useCallback(
@@ -278,26 +277,12 @@ const DataPage: React.FC<IDataPageProps> = ({
           block
           htmlType="submit"
           type="primary"
-          disabled={!!orderData || !!addressUpdate}
+          disabled={!!addressUpdate}
           style={{ marginTop: '32px', marginBottom: '64px' }}
         >
           Confirmar
         </AntButton>
       </Form>
-
-      {orderData && (
-        <DataPageNextAndBackButton>
-          <AntButton
-            block
-            htmlType="button"
-            type="default"
-            style={{ color: '#ff9966', width: '100%' }}
-            onClick={() => setOrderData(undefined)}
-          >
-            Editar
-          </AntButton>
-        </DataPageNextAndBackButton>
-      )}
     </DataPageContainer>
   );
 };

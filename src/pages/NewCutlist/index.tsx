@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { Steps, Spin, Button } from 'antd';
+import { Steps, Spin, Button, Grid } from 'antd';
 import { Container, Loading, NavMenu } from './styles';
 
 import { useCustomer } from '../../hooks/Customer';
+import { useOrder } from '../../hooks/Order';
 
 import AuthSection from './AuthSection';
 import CustomerSection from './CustomerSection';
@@ -15,8 +16,11 @@ import ICutlist from '../../types/ICutlist';
 import IOrderData from '../../types/IOrderData';
 
 const NewCutlist: React.FC = () => {
+  const breakpoints = Grid.useBreakpoint();
+
   //* Hooks
   const { loadCustomers } = useCustomer();
+  const { createOrder } = useOrder();
 
   //* States
   // General Data
@@ -33,6 +37,10 @@ const NewCutlist: React.FC = () => {
 
   // Data Section
   const [orderData, setOrderData] = useState<IOrderData>();
+
+  const createOrderFromStates = useCallback(async () => {
+    await createOrder(selectedCustomer, orderData, cutlist);
+  }, [selectedCustomer, cutlist, orderData]);
 
   useEffect(() => {
     async function loadCustomersFromApi() {
@@ -76,8 +84,8 @@ const NewCutlist: React.FC = () => {
           cutlist={cutlist}
           setCutlist={setCutlist}
           setPage={setPage}
-          orderData={orderData}
           setOrderData={setOrderData}
+          createOrderFromStates={createOrderFromStates}
         />
       )}
       <NavMenu>
@@ -120,7 +128,14 @@ const NewCutlist: React.FC = () => {
           </Button>
         </div>
 
-        <Steps current={page - 1}>
+        <Steps
+          current={page - 1}
+          responsive
+          style={{
+            margin: '0 auto',
+            textAlign: breakpoints.sm ? 'left' : 'center',
+          }}
+        >
           <Steps.Step title="Dados do cliente" />
           <Steps.Step title="Lista de Cortes" />
           <Steps.Step title="Dados do Pedido" />
