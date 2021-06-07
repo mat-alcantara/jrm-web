@@ -8,6 +8,7 @@ import {
   Form,
   Select,
   Input,
+  InputNumber,
 } from 'antd';
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -288,120 +289,133 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             onFinish={handleSubmit}
             form={form}
             name="control-hooks"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            layout="horizontal"
-            labelAlign="left"
-            style={{ textAlign: 'left' }}
+            layout="inline"
+            wrapperCol={{ span: 24 }}
+            style={{ width: '100%' }}
           >
             {/* Input de material */}
             <Form.Item
-              label="Material"
               name="material"
               required={false}
+              style={{ width: '450px' }}
               rules={[
                 {
                   required: true,
-                  message: 'Por favor, selecione o material do pedido!',
+                  message: 'Material necessário',
                 },
               ]}
             >
-              <Select options={materialOptions} />
+              <Select
+                placeholder="Material"
+                style={{ width: '100%' }}
+                options={materialOptions}
+              />
             </Form.Item>
+
             {/* Input da quantidade */}
             <Form.Item
-              label="Qtd"
               name="quantidade"
               required={false}
+              style={{ width: '75px' }}
               rules={[
                 {
                   required: true,
-                  message: 'Por favor, selecione a quantidade do pedido!',
+                  message: 'Insira um valor entre 1 e 100',
+                  type: 'number',
                   min: 1,
                   max: 100,
-                  whitespace: false,
                 },
               ]}
             >
-              <Input />
+              <InputNumber placeholder="Qtd" style={{ width: '100%' }} />
             </Form.Item>
+
             {/* Input do lado A */}
             <Form.Item
-              label="Tamanho A"
               name="side_a_size"
               required={false}
+              style={{ width: '150px' }}
               rules={[
                 {
                   required: true,
-                  message: 'Por favor, selecione o tamanho A do pedido!',
+                  min: 60,
+                  max: 2750,
+                  type: 'number',
+                  message: 'Insira um valor entre 60 e 2750',
                 },
               ]}
             >
-              <Input />
+              <InputNumber placeholder="Lado A" style={{ width: '100%' }} />
             </Form.Item>
+
             {/* Input da fita A */}
             <Form.Item
-              label="Fita A"
               name="side_a_border"
               required={false}
+              initialValue={0}
               rules={[
                 {
                   required: true,
-                  message: 'Por favor, selecione a fita do lado A!',
                 },
               ]}
             >
-              <Select>
-                <Select.Option value={0}>0</Select.Option>
-                <Select.Option value={1}>1</Select.Option>
-                <Select.Option value={2}>2</Select.Option>
-              </Select>
-            </Form.Item>
-            {/* Input do lado B */}
-            <Form.Item
-              label="Tamanho B"
-              name="side_b_size"
-              required={false}
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, selecione o tamanho B do pedido!',
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            {/* Input da fita B */}
-            <Form.Item
-              label="Fita B"
-              name="side_b_border"
-              required={false}
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, selecione a fita do lado B!',
-                },
-              ]}
-            >
-              <Select>
+              <Select placeholder="Fita A">
                 <Select.Option value={0}>0</Select.Option>
                 <Select.Option value={1}>1</Select.Option>
                 <Select.Option value={2}>2</Select.Option>
               </Select>
             </Form.Item>
 
-            <AntButton htmlType="submit" type="link">
-              Adicionar
-            </AntButton>
-            <AntButton
-              htmlType="button"
-              type="link"
-              onClick={() => setNewMaterialForm(true)}
+            {/* Input do lado B */}
+            <Form.Item
+              name="side_b_size"
+              required={false}
+              style={{ width: '150px' }}
+              rules={[
+                {
+                  required: true,
+                  min: 60,
+                  max: 2750,
+                  type: 'number',
+                  message: 'Insira um valor entre 60 e 2750',
+                },
+              ]}
             >
-              Novo material
+              <InputNumber placeholder="Lado B" style={{ width: '100%' }} />
+            </Form.Item>
+
+            {/* Input da fita B */}
+            <Form.Item
+              name="side_b_border"
+              required={false}
+              initialValue={0}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Select placeholder="Fita B">
+                <Select.Option value={0}>0</Select.Option>
+                <Select.Option value={1}>1</Select.Option>
+                <Select.Option value={2}>2</Select.Option>
+              </Select>
+            </Form.Item>
+
+            {/* Confirm Button */}
+            <AntButton htmlType="submit" type="primary">
+              Adicionar
             </AntButton>
           </Form>
         )}
+        <AntButton
+          htmlType="button"
+          type="link"
+          onClick={() => setNewMaterialForm(true)}
+        >
+          Novo material
+        </AntButton>
+
         {/* {newMaterialForm && (
           <Form onFinish={handleSubmitMaterial}>
             <AntInput name="name" placeholder="Material" size="large" />
@@ -422,11 +436,11 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         )} */}
       </InputCutlistContainer>
       <Divider />
-      <Table
+      {/* <Table
         columns={options.columns}
         dataSource={cutlistDataSource}
         footer={() => `Total: R$ ${totalPrice}`}
-      />
+      /> */}
     </CutlistPageContainer>
   );
 };

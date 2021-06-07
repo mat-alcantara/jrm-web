@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
-  max-width: 780px;
+  max-width: 1350px;
   margin: 0 auto;
   flex: 1;
   display: flex;
@@ -34,5 +34,5 @@ export const Loading = styled.div`
 `;
 
 export const NavMenu = styled.div`
-  width: 100%;
+  width: 75%;
 `;
