@@ -311,6 +311,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
               <Select
                 placeholder="Material"
                 showSearch
+                allowClear
                 style={{
                   width: '100%',
                   fontSize: breakpoints.sm ? '' : '10px',
