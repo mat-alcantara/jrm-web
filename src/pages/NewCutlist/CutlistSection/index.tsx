@@ -9,6 +9,7 @@ import {
   Select,
   Input,
   InputNumber,
+  Grid,
 } from 'antd';
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -41,6 +42,7 @@ interface IMaterialForm {
 const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
   const { createMaterial, loadMaterials } = useMaterial();
   const [form] = Form.useForm();
+  const breakpoints = Grid.useBreakpoint();
 
   const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -289,15 +291,17 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             onFinish={handleSubmit}
             form={form}
             name="control-hooks"
-            layout="inline"
+            layout={breakpoints.sm ? 'inline' : 'horizontal'}
             wrapperCol={{ span: 24 }}
-            style={{ width: '100%' }}
+            style={{ width: breakpoints.sm ? '100%' : '50%' }}
           >
             {/* Input de material */}
             <Form.Item
               name="material"
               required={false}
-              style={{ width: '450px' }}
+              style={{
+                width: breakpoints.sm ? '450px' : '350px',
+              }}
               rules={[
                 {
                   required: true,
@@ -307,16 +311,25 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             >
               <Select
                 placeholder="Material"
-                style={{ width: '100%' }}
-                options={materialOptions}
-              />
+                showSearch
+                style={{
+                  width: '100%',
+                  fontSize: breakpoints.sm ? '' : '10px',
+                }}
+              >
+                {materialOptions.map((material) => (
+                  <Select.Option value={material.value}>
+                    {material.label}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
 
             {/* Input da quantidade */}
             <Form.Item
               name="quantidade"
               required={false}
-              style={{ width: '75px' }}
+              style={{ width: breakpoints.sm ? '75px' : '350px' }}
               rules={[
                 {
                   required: true,
@@ -334,7 +347,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             <Form.Item
               name="side_a_size"
               required={false}
-              style={{ width: '150px' }}
+              style={{ width: breakpoints.sm ? '150px' : '350px' }}
               rules={[
                 {
                   required: true,
@@ -353,6 +366,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
               name="side_a_border"
               required={false}
               initialValue={0}
+              style={{ width: breakpoints.sm ? '' : '350px' }}
               rules={[
                 {
                   required: true,
@@ -370,7 +384,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             <Form.Item
               name="side_b_size"
               required={false}
-              style={{ width: '150px' }}
+              style={{ width: breakpoints.sm ? '150px' : '350px' }}
               rules={[
                 {
                   required: true,
@@ -388,6 +402,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             <Form.Item
               name="side_b_border"
               required={false}
+              style={{ width: breakpoints.sm ? '' : '350px' }}
               initialValue={0}
               rules={[
                 {
@@ -403,7 +418,12 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             </Form.Item>
 
             {/* Confirm Button */}
-            <AntButton htmlType="submit" type="primary">
+            <AntButton
+              htmlType="submit"
+              type="primary"
+              block={!breakpoints.sm}
+              style={{ width: breakpoints.sm ? '' : '350px' }}
+            >
               Adicionar
             </AntButton>
           </Form>
