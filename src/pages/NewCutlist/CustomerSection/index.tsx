@@ -101,7 +101,7 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
         <CustomerPageData>
           <CheckCircleOutlined style={{ color: 'green' }} />
           <Typography.Title level={4}>{selectedCustomer.name}</Typography.Title>
-          <Typography>
+          <Typography style={{ width: breakpoints.sm ? '' : '350px' }}>
             {`${selectedCustomer.street}, ${selectedCustomer.area} - ${selectedCustomer.city}`}
           </Typography>
         </CustomerPageData>

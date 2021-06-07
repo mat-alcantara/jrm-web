@@ -14,7 +14,6 @@ import {
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-import { number } from 'yup/lib/locale';
 import { useMaterial } from '../../../hooks/Material';
 
 import { CutlistPageContainer, InputCutlistContainer } from './styles';
@@ -86,7 +85,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
       const allMaterialOptions = allMaterialsFromHook.map((material) => {
         return {
           label: material.name,
-          value: material.id,
+          value: material.name,
         };
       });
 
