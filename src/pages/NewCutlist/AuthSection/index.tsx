@@ -87,6 +87,7 @@ const AuthSection: React.FC<IAuthSectionProps> = ({ setIsAuthenticated }) => {
           style={{
             color: 'red',
             marginTop: '16px',
+            textAlign: 'center',
           }}
         >
           SENHA INVÁLIDA
