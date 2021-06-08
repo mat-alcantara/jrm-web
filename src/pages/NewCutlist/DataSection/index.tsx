@@ -22,12 +22,14 @@ interface IDataPageProps {
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
   createOrderFromStates(): Promise<void>;
+  orderData: IOrderData | undefined;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
   setOrderData,
   selectedCustomer,
   createOrderFromStates,
+  orderData,
 }) => {
   const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
@@ -60,7 +62,7 @@ const DataPage: React.FC<IDataPageProps> = ({
 
       await createOrderFromStates();
     },
-    [addressUpdate, createOrderFromStates, setOrderData],
+    [addressUpdate, createOrderFromStates, orderData],
   );
 
   const handleSubmitCustomerAddress = useCallback(

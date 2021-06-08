@@ -86,6 +86,7 @@ const NewCutlist: React.FC = () => {
         )}
         {page === 3 && (
           <DataSection
+            orderData={orderData}
             selectedCustomer={selectedCustomer}
             cutlist={cutlist}
             setCutlist={setCutlist}
