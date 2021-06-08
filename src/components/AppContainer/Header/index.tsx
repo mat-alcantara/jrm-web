@@ -52,11 +52,11 @@ const Header: React.FC = () => {
             <Item>
               <Link to="/newcutlist">Novo serviço</Link>
             </Item>
-            <Item disabled>
+            <Item>
               <Link to="/allorders">Cortes</Link>
             </Item>
 
-            <SubMenu disabled title="Clientes">
+            <SubMenu title="Clientes">
               <Item>
                 <Link to="/newcustomer">Novo cliente</Link>
               </Item>
@@ -64,7 +64,7 @@ const Header: React.FC = () => {
                 <Link to="/customerslist">Todos os clientes</Link>
               </Item>
             </SubMenu>
-            <SubMenu disabled title="Materiais">
+            <SubMenu title="Materiais">
               <Item>
                 <Link to="/newmaterial">Novo material</Link>
               </Item>
