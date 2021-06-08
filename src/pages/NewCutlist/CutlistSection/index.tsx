@@ -190,7 +190,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
       side_b_size,
     }: ICutlistData) => {
       const materialUsed = allMaterials.find(
-        (materialFound) => materialFound.id === material,
+        (materialFound) => materialFound.name === material,
       );
 
       if (!materialUsed) {
@@ -485,7 +485,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             >
               <InputNumber style={{ width: '100%' }} placeholder="Altura" />
             </Form.Item>
-
             <Button htmlType="submit" type="primary">
               Adicionar material
             </Button>
