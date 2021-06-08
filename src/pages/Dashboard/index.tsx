@@ -9,6 +9,8 @@ import { Container } from './styles';
 import IOrder from '../../types/IOrder';
 import ICustomer from '../../types/ICustomer';
 
+import AppContainer from '../../components/AppContainer';
+
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
   const { loadCustomers } = useCustomer();
@@ -35,74 +37,76 @@ const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <Container>
-      <Row
-        justify="center"
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        <Col sm={0} xs={24} style={{ margin: '0 auto 16px auto' }}>
-          <Typography.Title level={4}>Lista de Cortes</Typography.Title>
-        </Col>
-
-        <Col
-          xs={24}
-          md={9}
-          style={{ marginBottom: breakpoints.sm ? '0px' : '8px' }}
+    <AppContainer>
+      <Container>
+        <Row
+          justify="center"
+          style={{
+            textAlign: 'center',
+          }}
         >
-          <Typography.Title level={breakpoints.sm ? 4 : 5}>
-            Em Produção
-          </Typography.Title>
-          {allOrders.map((order) => {
-            if (order.orderStatus !== 'Em Produção') {
-              return null;
-            }
+          <Col sm={0} xs={24} style={{ margin: '0 auto 16px auto' }}>
+            <Typography.Title level={4}>Lista de Cortes</Typography.Title>
+          </Col>
 
-            const customerFound = allCustomers.find(
-              (customer) => customer.id === order.customerId,
-            );
+          <Col
+            xs={24}
+            md={9}
+            style={{ marginBottom: breakpoints.sm ? '0px' : '8px' }}
+          >
+            <Typography.Title level={breakpoints.sm ? 4 : 5}>
+              Em Produção
+            </Typography.Title>
+            {allOrders.map((order) => {
+              if (order.orderStatus !== 'Em Produção') {
+                return null;
+              }
 
-            if (!customerFound) {
-              return null;
-            }
+              const customerFound = allCustomers.find(
+                (customer) => customer.id === order.customerId,
+              );
 
-            return (
-              <p key={order.id}>
-                {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
-              </p>
-            );
-          })}
-        </Col>
-        <Col xs={24} sm={0}>
-          <Divider />
-        </Col>
-        <Col xs={24} md={9}>
-          <Typography.Title level={breakpoints.sm ? 4 : 5}>
-            Liberados para transporte
-          </Typography.Title>
-          {allOrders.map((order) => {
-            if (order.orderStatus !== 'Liberado para Transporte') {
-              return null;
-            }
+              if (!customerFound) {
+                return null;
+              }
 
-            const customerFound = allCustomers.find(
-              (customer) => customer.id === order.customerId,
-            );
+              return (
+                <p key={order.id}>
+                  {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
+                </p>
+              );
+            })}
+          </Col>
+          <Col xs={24} sm={0}>
+            <Divider />
+          </Col>
+          <Col xs={24} md={9}>
+            <Typography.Title level={breakpoints.sm ? 4 : 5}>
+              Liberados para transporte
+            </Typography.Title>
+            {allOrders.map((order) => {
+              if (order.orderStatus !== 'Liberado para Transporte') {
+                return null;
+              }
 
-            if (!customerFound) {
-              return null;
-            }
+              const customerFound = allCustomers.find(
+                (customer) => customer.id === order.customerId,
+              );
 
-            return (
-              <p key={order.id}>
-                {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
-              </p>
-            );
-          })}
-        </Col>
-      </Row>
-    </Container>
+              if (!customerFound) {
+                return null;
+              }
+
+              return (
+                <p key={order.id}>
+                  {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
+                </p>
+              );
+            })}
+          </Col>
+        </Row>
+      </Container>
+    </AppContainer>
   );
 };
 

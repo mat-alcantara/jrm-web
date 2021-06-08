@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { Steps, Spin, Button, Grid } from 'antd';
 import { Container, Loading, NavMenu } from './styles';
+import AppContainer from '../../components/AppContainer';
 
 import { useCustomer } from '../../hooks/Customer';
 import { useOrder } from '../../hooks/Order';
@@ -63,85 +64,91 @@ const NewCutlist: React.FC = () => {
 
   // Require authentication to return new cutlist page
   if (!isAuthenticated) {
-    return <AuthSection setIsAuthenticated={setIsAuthenticated} />;
+    return (
+      <AppContainer>
+        <AuthSection setIsAuthenticated={setIsAuthenticated} />
+      </AppContainer>
+    );
   }
 
   return (
-    <Container>
-      {page === 1 && (
-        <CustomerSection
-          selectedCustomer={selectedCustomer}
-          setSelectedCustomer={setSelectedCustomer}
-          allCustomers={allCustomers}
-        />
-      )}
-      {page === 2 && (
-        <CutlistSection cutlist={cutlist} setCutlist={setCutlist} />
-      )}
-      {page === 3 && (
-        <DataSection
-          selectedCustomer={selectedCustomer}
-          cutlist={cutlist}
-          setCutlist={setCutlist}
-          setPage={setPage}
-          setOrderData={setOrderData}
-          createOrderFromStates={createOrderFromStates}
-        />
-      )}
-      <NavMenu>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            maxWidth: '100%',
-            marginBottom: '32px',
-            margin: '0 auto 32px auto',
-          }}
-        >
-          <Button
-            disabled={page < 2}
-            type="default"
+    <AppContainer>
+      <Container>
+        {page === 1 && (
+          <CustomerSection
+            selectedCustomer={selectedCustomer}
+            setSelectedCustomer={setSelectedCustomer}
+            allCustomers={allCustomers}
+          />
+        )}
+        {page === 2 && (
+          <CutlistSection cutlist={cutlist} setCutlist={setCutlist} />
+        )}
+        {page === 3 && (
+          <DataSection
+            selectedCustomer={selectedCustomer}
+            cutlist={cutlist}
+            setCutlist={setCutlist}
+            setPage={setPage}
+            setOrderData={setOrderData}
+            createOrderFromStates={createOrderFromStates}
+          />
+        )}
+        <NavMenu>
+          <div
             style={{
-              width: page === 3 ? '50%' : '100%',
-              marginRight: page === 3 ? 'auto' : '8px',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              maxWidth: '100%',
+              marginBottom: '32px',
+              margin: '0 auto 32px auto',
             }}
-            onClick={() => setPage(page - 1)}
           >
-            Retornar
-          </Button>
-          <Button
-            disabled={
-              (page === 1 && !selectedCustomer) ||
-              (page === 2 && cutlist.length === 0)
-            }
-            type="default"
-            style={{
-              width: '100%',
-              marginLeft: '8px',
-              display: page === 3 ? 'none' : '',
-            }}
-            onClick={() => setPage(page + 1)}
-          >
-            Avançar
-          </Button>
-        </div>
+            <Button
+              disabled={page < 2}
+              type="default"
+              style={{
+                width: page === 3 ? '50%' : '100%',
+                marginRight: page === 3 ? 'auto' : '8px',
+              }}
+              onClick={() => setPage(page - 1)}
+            >
+              Retornar
+            </Button>
+            <Button
+              disabled={
+                (page === 1 && !selectedCustomer) ||
+                (page === 2 && cutlist.length === 0)
+              }
+              type="default"
+              style={{
+                width: '100%',
+                marginLeft: '8px',
+                display: page === 3 ? 'none' : '',
+              }}
+              onClick={() => setPage(page + 1)}
+            >
+              Avançar
+            </Button>
+          </div>
 
-        <Steps
-          current={page - 1}
-          responsive
-          style={{
-            margin: '0 auto',
-            textAlign: breakpoints.sm ? 'left' : 'center',
-          }}
-        >
-          <Steps.Step title="Dados do cliente" />
-          <Steps.Step title="Lista de Cortes" />
-          <Steps.Step title="Dados do Pedido" />
-        </Steps>
-      </NavMenu>
-    </Container>
+          <Steps
+            current={page - 1}
+            responsive
+            style={{
+              margin: '0 auto',
+              textAlign: breakpoints.sm ? 'left' : 'center',
+            }}
+          >
+            <Steps.Step title="Dados do cliente" />
+            <Steps.Step title="Lista de Cortes" />
+            <Steps.Step title="Dados do Pedido" />
+          </Steps>
+        </NavMenu>
+      </Container>
+    </AppContainer>
   );
 };
 

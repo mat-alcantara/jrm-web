@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Table, Space, Typography, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import AppContainer from '../../components/AppContainer';
 
 import { useCustomer } from '../../hooks/Customer';
 
-import AntDashboard from '../../components/AntDashboard';
-import AntContent from '../../components/AntContent';
 import AntButton from '../../components/AntButton';
 
 import { Container } from './styles';
@@ -125,18 +124,16 @@ const CustomersList: React.FC = () => {
   ];
 
   return (
-    <AntDashboard>
-      <AntContent>
-        <Container>
-          <Typography.Title level={2}>Lista de Clientes</Typography.Title>
-          <Table
-            dataSource={customersDataSource}
-            columns={tableColumns}
-            style={{ margin: '32px 0px' }}
-          />
-        </Container>
-      </AntContent>
-    </AntDashboard>
+    <AppContainer>
+      <Container>
+        <Typography.Title level={2}>Lista de Clientes</Typography.Title>
+        <Table
+          dataSource={customersDataSource}
+          columns={tableColumns}
+          style={{ margin: '32px 0px' }}
+        />
+      </Container>
+    </AppContainer>
   );
 };
 

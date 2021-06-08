@@ -6,15 +6,11 @@ import Routes from './routes';
 
 import AppProvider from './hooks'; // Allows the use of all hooks by the app
 
-import AppContainer from './components/AppContainer';
-
 const App: React.FC = () => {
   return (
     <Router>
       <AppProvider>
-        <AppContainer>
-          <Routes />
-        </AppContainer>
+        <Routes />
       </AppProvider>
       <GlobalStyle />
     </Router>

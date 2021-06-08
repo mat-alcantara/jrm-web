@@ -2,6 +2,7 @@ import React, { useRef, useState, useCallback } from 'react';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
+import AppContainer from '../../components/AppContainer';
 
 import { useCustomer } from '../../hooks/Customer';
 import getValidationErrors from '../../utils/getValidationErrors';
@@ -10,8 +11,6 @@ import { areas } from '../../utils/listOfAreas';
 
 import { Container } from './styles';
 
-import AntDashboard from '../../components/AntDashboard';
-import AntContent from '../../components/AntContent';
 import AntInput from '../../components/AntInput';
 import AntButton from '../../components/AntButton';
 import ReactSelect from '../../components/ReactSelect';
@@ -115,43 +114,41 @@ const CreateCustomer: React.FC = () => {
   );
 
   return (
-    <AntDashboard>
-      <AntContent>
-        <Container>
-          <h1>Crie um novo cliente</h1>
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <AntInput size="large" name="name" placeholder="Nome completo" />
-            <AntInput size="large" name="email" placeholder="Email" />
-            <AntInput
-              size="large"
-              name="tel"
-              placeholder="Telefone"
-              value={phone}
-              onChange={(e) =>
-                setPhone((prevValue: string): string =>
-                  normalizeTelephoneInput(e.target.value, prevValue),
-                )
-              }
-            />
-            <AntInput size="large" name="street" placeholder="Endereço" />
-            <ReactSelect
-              placeholder="Bairro"
-              name="area"
-              options={options.areaOptions}
-            />
-            <ReactSelect
-              placeholder="Cidade"
-              name="city"
-              options={options.cityOptions}
-            />
+    <AppContainer>
+      <Container>
+        <h1>Crie um novo cliente</h1>
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <AntInput size="large" name="name" placeholder="Nome completo" />
+          <AntInput size="large" name="email" placeholder="Email" />
+          <AntInput
+            size="large"
+            name="tel"
+            placeholder="Telefone"
+            value={phone}
+            onChange={(e) =>
+              setPhone((prevValue: string): string =>
+                normalizeTelephoneInput(e.target.value, prevValue),
+              )
+            }
+          />
+          <AntInput size="large" name="street" placeholder="Endereço" />
+          <ReactSelect
+            placeholder="Bairro"
+            name="area"
+            options={options.areaOptions}
+          />
+          <ReactSelect
+            placeholder="Cidade"
+            name="city"
+            options={options.cityOptions}
+          />
 
-            <AntButton block type="primary" htmlType="submit">
-              Criar
-            </AntButton>
-          </Form>
-        </Container>
-      </AntContent>
-    </AntDashboard>
+          <AntButton block type="primary" htmlType="submit">
+            Criar
+          </AntButton>
+        </Form>
+      </Container>
+    </AppContainer>
   );
 };
 
