@@ -2,4 +2,5 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   margin-top: 64px;
+  text-align: center;
 `;
