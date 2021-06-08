@@ -11,6 +11,7 @@ import {
   InputNumber,
   Grid,
   Button,
+  Spin,
 } from 'antd';
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -54,6 +55,8 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
     { value: string; label: string }[]
   >([]);
   const [defaultMaterial, setDefaultMaterial] = useState<number>(0);
+
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
@@ -116,6 +119,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
     }
 
     loadMaterialsAndCutsFromHook();
+    setLoading(false);
   }, []);
 
   const options = {
@@ -267,6 +271,10 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
     },
     [allMaterials, materialOptions],
   );
+
+  if (loading) {
+    return <Spin />;
+  }
 
   return (
     <CutlistPageContainer>
