@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { Steps, Popconfirm, Typography } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Steps, Typography } from 'antd';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
@@ -138,6 +137,7 @@ const NewCutlist: React.FC = () => {
                 setOrderData={setOrderData}
                 setPage={setPage}
                 selectedCustomer={selectedCustomer}
+                handleSubmitData={handleSubmitData}
               />
               {/* <Popconfirm
                 title="Tem certeza de que deseja concluir o pedido?"

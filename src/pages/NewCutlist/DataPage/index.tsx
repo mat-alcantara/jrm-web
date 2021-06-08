@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { Typography, Form, Radio, Input, Select } from 'antd';
+import { Typography, Form, Radio, Input, Select, Popconfirm } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import { useCustomer } from '../../../hooks/Customer';
 import { useAuth } from '../../../hooks/Auth';
@@ -22,13 +23,14 @@ interface IDataPageProps {
   selectedCustomer: ICustomer | undefined;
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
+  handleSubmitData(): Promise<void>;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
-  setPage,
   orderData,
   setOrderData,
   selectedCustomer,
+  handleSubmitData,
 }) => {
   const [form] = Form.useForm();
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
@@ -58,7 +60,7 @@ const DataPage: React.FC<IDataPageProps> = ({
 
       setOrderData({ ...allOrderData, seller });
 
-      setPage(3);
+      handleSubmitData();
     },
     [addressUpdate],
   );
@@ -269,14 +271,25 @@ const DataPage: React.FC<IDataPageProps> = ({
             </AntButton>
           </Form>
         )}
-        <AntButton
-          block
-          htmlType="submit"
-          type="primary"
-          disabled={!!orderData || !!addressUpdate}
+        <Popconfirm
+          title="Tem certeza de que deseja concluir o pedido?"
+          okText="Sim"
+          onConfirm={() => {
+            form.submit();
+          }}
+          cancelText="Não"
+          icon={<ExclamationCircleOutlined style={{ color: 'green' }} />}
         >
-          Confirmar
-        </AntButton>
+          <AntButton
+            block
+            htmlType="button"
+            type="primary"
+            style={{ marginTop: '16px' }}
+            disabled={!!orderData || !!addressUpdate}
+          >
+            Confirmar
+          </AntButton>
+        </Popconfirm>
       </Form>
 
       {orderData && (
