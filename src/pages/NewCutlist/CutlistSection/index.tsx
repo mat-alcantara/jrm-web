@@ -49,7 +49,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
   const [cutlistDataSource, setCutlistDataSource] = useState<ICutlistData[]>(
     [],
   );
-  const [newCutlistForm, setNewCutlistForm] = useState(true);
   const [newMaterialForm, setNewMaterialForm] = useState(false);
   const [materialOptions, setMaterialOptions] = useState<
     { value: string; label: string }[]
@@ -246,10 +245,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
       if (materialToUpdateDefault) {
         setDefaultMaterial(materialOptions.indexOf(materialToUpdateDefault));
       }
-
-      // Restart Form
-      setNewCutlistForm(false);
-      setNewCutlistForm(true);
     },
     [cutlistDataSource, allMaterials, defaultMaterial],
   );
@@ -269,10 +264,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
 
       // Default material becomes created material
       setDefaultMaterial(materialOptions.length - 1);
-
-      // Restart Form
-      setNewCutlistForm(false);
-      setNewCutlistForm(true);
     },
     [allMaterials, materialOptions],
   );
@@ -284,153 +275,183 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
       </Typography.Title>
       <InputCutlistContainer>
         {/* Formulário de nova peça */}
-        {newCutlistForm && (
-          <Form
-            onFinish={handleSubmit}
-            form={form}
-            name="control-hooks"
-            layout={breakpoints.sm ? 'inline' : 'horizontal'}
-            wrapperCol={{ span: 24 }}
-            style={{ width: breakpoints.sm ? '100%' : '50%' }}
+        <Form
+          onFinish={handleSubmit}
+          form={form}
+          name="control-hooks"
+          layout={breakpoints.sm ? 'inline' : 'horizontal'}
+          wrapperCol={{ span: 24 }}
+          style={{ width: breakpoints.sm ? '100%' : '50%' }}
+        >
+          {/* Input de material */}
+          <Form.Item
+            name="material"
+            required={false}
+            style={{
+              width: breakpoints.sm ? '450px' : '350px',
+            }}
+            rules={[
+              {
+                required: true,
+                message: 'Material necessário',
+              },
+            ]}
           >
-            {/* Input de material */}
-            <Form.Item
-              name="material"
-              initialValue={
-                materialOptions[defaultMaterial].value || 'MDF 15mm Comum'
-              }
-              required={false}
+            <Select
+              placeholder="Material"
+              showSearch
+              allowClear
               style={{
-                width: breakpoints.sm ? '450px' : '350px',
+                width: '100%',
+                fontSize: breakpoints.sm ? '' : '10px',
               }}
-              rules={[
-                {
-                  required: true,
-                  message: 'Material necessário',
-                },
-              ]}
             >
-              <Select
-                placeholder="Material"
-                showSearch
-                allowClear
-                style={{
-                  width: '100%',
-                  fontSize: breakpoints.sm ? '' : '10px',
-                }}
-              >
-                {materialOptions.map((material) => (
-                  <Select.Option value={material.value}>
-                    {material.label}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
+              {materialOptions.map((material) => (
+                <Select.Option value={material.value}>
+                  {material.label}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-            {/* Input da quantidade */}
-            <Form.Item
-              name="quantidade"
-              required={false}
-              style={{ width: breakpoints.sm ? '75px' : '350px' }}
-              rules={[
-                {
-                  required: true,
-                  message: 'Insira um valor entre 1 e 100',
-                  type: 'number',
-                  min: 1,
-                  max: 100,
-                },
-              ]}
-            >
-              <InputNumber placeholder="Qtd" style={{ width: '100%' }} />
-            </Form.Item>
+          {/* Input da quantidade */}
+          <Form.Item
+            name="quantidade"
+            required={false}
+            style={{ width: breakpoints.sm ? '75px' : '350px' }}
+            rules={[
+              {
+                required: true,
+                message: 'Insira um valor entre 1 e 100',
+                type: 'number',
+                min: 1,
+                max: 100,
+              },
+            ]}
+          >
+            <InputNumber placeholder="Qtd" style={{ width: '100%' }} />
+          </Form.Item>
 
-            {/* Input do lado A */}
-            <Form.Item
-              name="side_a_size"
-              required={false}
-              style={{ width: breakpoints.sm ? '150px' : '350px' }}
-              rules={[
-                {
-                  required: true,
-                  min: 60,
-                  max: 2750,
-                  type: 'number',
-                  message: 'Insira um valor entre 60 e 2750',
-                },
-              ]}
-            >
-              <InputNumber placeholder="Lado A" style={{ width: '100%' }} />
-            </Form.Item>
+          {/* Input do lado A */}
+          <Form.Item
+            name="side_a_size"
+            required={false}
+            style={{ width: breakpoints.sm ? '150px' : '350px' }}
+            rules={[
+              {
+                required: true,
+                min: 60,
+                max: 2750,
+                type: 'number',
+                message: 'Insira um valor entre 60 e 2750',
+              },
+            ]}
+          >
+            <InputNumber placeholder="Lado A" style={{ width: '100%' }} />
+          </Form.Item>
 
-            {/* Input da fita A */}
-            <Form.Item
-              name="side_a_border"
-              required={false}
-              initialValue={0}
-              style={{ width: breakpoints.sm ? '' : '350px' }}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Select placeholder="Fita A">
-                <Select.Option value={0}>0</Select.Option>
-                <Select.Option value={1}>1</Select.Option>
-                <Select.Option value={2}>2</Select.Option>
-              </Select>
-            </Form.Item>
+          {/* Input da fita A */}
+          <Form.Item
+            name="side_a_border"
+            required={false}
+            initialValue={0}
+            style={{ width: breakpoints.sm ? '' : '350px' }}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select placeholder="Fita A">
+              <Select.Option value={0}>0</Select.Option>
+              <Select.Option value={1}>1</Select.Option>
+              <Select.Option value={2}>2</Select.Option>
+            </Select>
+          </Form.Item>
 
-            {/* Input do lado B */}
-            <Form.Item
-              name="side_b_size"
-              required={false}
-              style={{ width: breakpoints.sm ? '150px' : '350px' }}
-              rules={[
-                {
-                  required: true,
-                  min: 60,
-                  max: 2750,
-                  type: 'number',
-                  message: 'Insira um valor entre 60 e 2750',
-                },
-              ]}
-            >
-              <InputNumber placeholder="Lado B" style={{ width: '100%' }} />
-            </Form.Item>
+          {/* Input do lado B */}
+          <Form.Item
+            name="side_b_size"
+            required={false}
+            style={{ width: breakpoints.sm ? '150px' : '350px' }}
+            rules={[
+              {
+                required: true,
+                min: 60,
+                max: 2750,
+                type: 'number',
+                message: 'Insira um valor entre 60 e 2750',
+              },
+            ]}
+          >
+            <InputNumber placeholder="Lado B" style={{ width: '100%' }} />
+          </Form.Item>
 
-            {/* Input da fita B */}
-            <Form.Item
-              name="side_b_border"
-              required={false}
-              style={{ width: breakpoints.sm ? '' : '350px' }}
-              initialValue={0}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Select placeholder="Fita B">
-                <Select.Option value={0}>0</Select.Option>
-                <Select.Option value={1}>1</Select.Option>
-                <Select.Option value={2}>2</Select.Option>
-              </Select>
-            </Form.Item>
+          {/* Input da fita B */}
+          <Form.Item
+            name="side_b_border"
+            required={false}
+            style={{ width: breakpoints.sm ? '' : '350px' }}
+            initialValue={0}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select placeholder="Fita B">
+              <Select.Option value={0}>0</Select.Option>
+              <Select.Option value={1}>1</Select.Option>
+              <Select.Option value={2}>2</Select.Option>
+            </Select>
+          </Form.Item>
 
-            {/* Confirm Button */}
-            <AntButton
-              htmlType="submit"
-              type="primary"
-              block={!breakpoints.sm}
-              style={{ width: breakpoints.sm ? '' : '350px' }}
-            >
-              Adicionar
-            </AntButton>
-          </Form>
-        )}
-        {newMaterialForm ? (
+          {/* Confirm Button */}
+          <AntButton
+            htmlType="submit"
+            type="primary"
+            block={!breakpoints.sm}
+            style={{ width: breakpoints.sm ? '' : '350px' }}
+          >
+            Adicionar
+          </AntButton>
+        </Form>
+
+        {/* Formulario de novo material */}
+        <Form
+          onFinish={handleSubmitMaterial}
+          form={form}
+          name="control-hooks"
+          layout={breakpoints.sm ? 'inline' : 'horizontal'}
+          wrapperCol={{ span: 24 }}
+          style={{ width: breakpoints.sm ? '100%' : '50%' }}
+        >
+          <Form.Item label="Material" name="name">
+            <Input size="large" />
+          </Form.Item>
+          <Form.Item label="Preço" name="price">
+            <Input size="large" />
+          </Form.Item>
+          <Form.Item label="Largura" name="width">
+            <Input size="large" />
+          </Form.Item>
+          <Form.Item label="Altura" name="height">
+            <Input size="large" />
+          </Form.Item>
+
+          <Button htmlType="submit" type="link">
+            Adicionar material
+          </Button>
+          <Button
+            htmlType="button"
+            type="link"
+            onClick={() => setNewMaterialForm(false)}
+          >
+            Fechar
+          </Button>
+        </Form>
+
+        {!newMaterialForm ? (
           <Button
             htmlType="button"
             type="link"
@@ -448,25 +469,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
           >
             Novo material
           </Button>
-        )}
-
-        {newMaterialForm && (
-          <Form onFinish={handleSubmitMaterial}>
-            <Input name="name" placeholder="Material" size="large" />
-            <Input name="price" placeholder="Price" size="large" />
-            <Input name="width" placeholder="Largura" size="large" />
-            <Input name="height" placeholder="Altura" size="large" />
-            <Button htmlType="submit" type="link">
-              Adicionar material
-            </Button>
-            <Button
-              htmlType="button"
-              type="link"
-              onClick={() => setNewMaterialForm(false)}
-            >
-              Fechar
-            </Button>
-          </Form>
         )}
       </InputCutlistContainer>
       <Divider />
