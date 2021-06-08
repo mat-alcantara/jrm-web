@@ -10,6 +10,7 @@ import {
   Input,
   InputNumber,
   Grid,
+  Button,
 } from 'antd';
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -429,40 +430,51 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             </AntButton>
           </Form>
         )}
-        <AntButton
-          htmlType="button"
-          type="link"
-          onClick={() => setNewMaterialForm(true)}
-          style={{ marginTop: '8px' }}
-        >
-          Novo material
-        </AntButton>
+        {newMaterialForm ? (
+          <Button
+            htmlType="button"
+            type="link"
+            onClick={() => setNewMaterialForm(false)}
+            style={{ marginTop: '8px' }}
+          >
+            Nova Peça
+          </Button>
+        ) : (
+          <Button
+            htmlType="button"
+            type="link"
+            onClick={() => setNewMaterialForm(true)}
+            style={{ marginTop: '8px' }}
+          >
+            Novo material
+          </Button>
+        )}
 
-        {/* {newMaterialForm && (
+        {newMaterialForm && (
           <Form onFinish={handleSubmitMaterial}>
-            <AntInput name="name" placeholder="Material" size="large" />
-            <AntInput name="price" placeholder="Price" size="large" />
-            <AntInput name="width" placeholder="Largura" size="large" />
-            <AntInput name="height" placeholder="Altura" size="large" />
-            <AntButton htmlType="submit" type="link">
+            <Input name="name" placeholder="Material" size="large" />
+            <Input name="price" placeholder="Price" size="large" />
+            <Input name="width" placeholder="Largura" size="large" />
+            <Input name="height" placeholder="Altura" size="large" />
+            <Button htmlType="submit" type="link">
               Adicionar material
-            </AntButton>
-            <AntButton
+            </Button>
+            <Button
               htmlType="button"
               type="link"
               onClick={() => setNewMaterialForm(false)}
             >
               Fechar
-            </AntButton>
+            </Button>
           </Form>
-        )} */}
+        )}
       </InputCutlistContainer>
       <Divider />
-      {/* <Table
+      <Table
         columns={options.columns}
         dataSource={cutlistDataSource}
         footer={() => `Total: R$ ${totalPrice}`}
-      /> */}
+      />
     </CutlistPageContainer>
   );
 };
