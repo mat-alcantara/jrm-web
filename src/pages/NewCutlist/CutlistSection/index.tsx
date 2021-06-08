@@ -53,9 +53,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
   const [materialOptions, setMaterialOptions] = useState<
     { value: string; label: string }[]
   >([]);
-  const [defaultMaterial, setDefaultMaterial] = useState<number | undefined>(
-    undefined,
-  );
+  const [defaultMaterial, setDefaultMaterial] = useState<number>(0);
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
@@ -297,6 +295,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             {/* Input de material */}
             <Form.Item
               name="material"
+              initialValue={
+                materialOptions[defaultMaterial].value || 'MDF 15mm Comum'
+              }
               required={false}
               style={{
                 width: breakpoints.sm ? '450px' : '350px',
@@ -432,6 +433,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
           htmlType="button"
           type="link"
           onClick={() => setNewMaterialForm(true)}
+          style={{ marginTop: '8px' }}
         >
           Novo material
         </AntButton>
