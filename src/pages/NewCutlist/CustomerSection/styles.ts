@@ -4,12 +4,13 @@ export const CustomerPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 16px;
+  width: 1000px;
 `;
 
 export const CustomerAutocompleteAndButton = styled.div`
   display: flex;
   flex-direction: row;
+  text-align: center;
 
   div {
     min-width: 300px;
@@ -21,5 +22,6 @@ export const CustomerAutocompleteAndButton = styled.div`
 `;
 
 export const CustomerPageData = styled.div`
-  margin-top: 64px;
+  margin-top: 32px;
+  text-align: center;
 `;

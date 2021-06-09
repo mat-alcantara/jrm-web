@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Table, Space, Typography, Popconfirm, Button } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import AppContainer from '../../components/AppContainer';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
-
-import AntDashboard from '../../components/AntDashboard';
-import AntContent from '../../components/AntContent';
 
 import AntButton from '../../components/AntButton';
 
@@ -201,30 +199,26 @@ const AllOrders: React.FC = () => {
   ];
 
   return (
-    <AntDashboard>
-      <AntContent>
-        <Container>
-          <Typography.Title level={2}>Lista de Pedidos</Typography.Title>
-          <Space style={{ marginBottom: 16, marginTop: 16 }}>
-            <Button onClick={() => setOrderSort('')}>Todos os pedidos</Button>
-            <Button onClick={() => setOrderSort('Em Produção')}>
-              Em produção
-            </Button>
-            <Button onClick={() => setOrderSort('Liberado para Transporte')}>
-              Liberados para transporte
-            </Button>
-            <Button onClick={() => setOrderSort('Transportado')}>
-              Transportados
-            </Button>
-            <Button onClick={() => setOrderSort('Entregue')}>Entregues</Button>
-            <Button onClick={() => setOrderSort('Orçamento')}>
-              Orçamentos
-            </Button>
-          </Space>
-          <Table columns={columns} dataSource={dataSource} />
-        </Container>
-      </AntContent>
-    </AntDashboard>
+    <AppContainer>
+      <Container>
+        <Typography.Title level={3}>Lista de Pedidos</Typography.Title>
+        <Space style={{ marginBottom: 16, marginTop: 16 }}>
+          <Button onClick={() => setOrderSort('')}>Todos os pedidos</Button>
+          <Button onClick={() => setOrderSort('Em Produção')}>
+            Em produção
+          </Button>
+          <Button onClick={() => setOrderSort('Liberado para Transporte')}>
+            Liberados para transporte
+          </Button>
+          <Button onClick={() => setOrderSort('Transportado')}>
+            Transportados
+          </Button>
+          <Button onClick={() => setOrderSort('Entregue')}>Entregues</Button>
+          <Button onClick={() => setOrderSort('Orçamento')}>Orçamentos</Button>
+        </Space>
+        <Table columns={columns} dataSource={dataSource} />
+      </Container>
+    </AppContainer>
   );
 };
 

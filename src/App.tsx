@@ -6,13 +6,15 @@ import Routes from './routes';
 
 import AppProvider from './hooks'; // Allows the use of all hooks by the app
 
-const App: React.FC = () => (
-  <Router>
-    <AppProvider>
-      <Routes />
-    </AppProvider>
-    <GlobalStyle />
-  </Router>
-);
+const App: React.FC = () => {
+  return (
+    <Router>
+      <AppProvider>
+        <Routes />
+      </AppProvider>
+      <GlobalStyle />
+    </Router>
+  );
+};
 
 export default App;

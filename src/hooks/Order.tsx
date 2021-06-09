@@ -91,10 +91,10 @@ export const OrderProvider: React.FC = ({ children }) => {
         cutlist: cutlistWithoutId,
         orderStore: orderData?.orderStore,
         orderStatus: orderData?.orderStatus,
-        // paymentStatus: orderData?.paymentStatus,
+        paymentStatus: orderData?.paymentStatus,
         ps: orderData?.ps,
         seller: orderData?.seller,
-        delivery_type: orderData.delivery_type,
+        delivery_type: orderData?.delivery_type,
       };
 
       const orderCreated = await api.post('/orders', orderPostData, {

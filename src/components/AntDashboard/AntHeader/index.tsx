@@ -35,15 +35,7 @@ const AntHeader: React.FC = () => {
         <Item>
           <Link to="/allorders">Cortes</Link>
         </Item>
-        {/* <SubMenu title="Cortes">
-          <Item>Em produção</Item>
-          <Item>Liberados para transporte</Item>
-          <Item>Concluídos</Item>
-          <Item>Orçamentos</Item>
-          <Item>
-            <Link to="/allorders">Todos os cortes</Link>
-          </Item>
-        </SubMenu> */}
+
         <SubMenu title="Clientes">
           <Item>
             <Link to="/newcustomer">Novo cliente</Link>
@@ -61,10 +53,6 @@ const AntHeader: React.FC = () => {
           </Item>
         </SubMenu>
         <Item onClick={handleLogOut}>Sair</Item>
-        {/* <SubMenu icon={<FiUser size={20} style={{ margin: '0 auto' }} />}>
-          <Item>Ajustes</Item>
-          <Item onClick={handleLogOut}>Sair</Item>
-        </SubMenu> */}
       </StyledMenu>
     </StyledHeader>
   );

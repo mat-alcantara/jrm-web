@@ -6,9 +6,9 @@ import { useMaterial } from '../../hooks/Material';
 
 import { Container } from './styles';
 
-import AntDashboard from '../../components/AntDashboard';
-import AntContent from '../../components/AntContent';
 import AntButton from '../../components/AntButton';
+
+import AppContainer from '../../components/AppContainer';
 
 interface IMaterialsTableProps {
   key: string;
@@ -102,18 +102,16 @@ const MaterialsList: React.FC = () => {
   ];
 
   return (
-    <AntDashboard>
-      <AntContent>
-        <Container>
-          <Typography.Title level={2}>Lista de materiais</Typography.Title>
-          <Table
-            columns={tableColumns}
-            dataSource={materialsDataSource}
-            style={{ margin: '32px 128px' }}
-          />
-        </Container>
-      </AntContent>
-    </AntDashboard>
+    <AppContainer>
+      <Container>
+        <Typography.Title level={3}>Lista de materiais</Typography.Title>
+        <Table
+          columns={tableColumns}
+          dataSource={materialsDataSource}
+          style={{ margin: '32px 128px' }}
+        />
+      </Container>
+    </AppContainer>
   );
 };
 

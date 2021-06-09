@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Typography, Form, Radio, Input, Select, Popconfirm } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Typography, Form, Radio, Input, Select, Grid } from 'antd';
 
 import { useCustomer } from '../../../hooks/Customer';
 import { useAuth } from '../../../hooks/Auth';
@@ -14,24 +13,21 @@ import ICustomer from '../../../types/ICustomer';
 import IAddressData from '../../../types/IAddressData';
 import ICutlist from '../../../types/ICutlist';
 
-import { DataPageContainer, DataPageNextAndBackButton } from './styles';
+import { DataPageContainer } from './styles';
 
 interface IDataPageProps {
   setPage(page: number): void;
-  setOrderData(data: IOrderData | undefined): void;
-  orderData: IOrderData | undefined;
+  handleUpdateOrderData(data: IOrderData): Promise<void>;
   selectedCustomer: ICustomer | undefined;
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
-  handleSubmitData(): Promise<void>;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
-  orderData,
-  setOrderData,
+  handleUpdateOrderData,
   selectedCustomer,
-  handleSubmitData,
 }) => {
+  const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
   const [isEstimate, setIsEstimate] = useState<boolean>(false);
@@ -58,9 +54,7 @@ const DataPage: React.FC<IDataPageProps> = ({
         allOrderData.paymentStatus = 'Receber na Entrega';
       }
 
-      setOrderData({ ...allOrderData, seller });
-
-      handleSubmitData();
+      handleUpdateOrderData({ ...allOrderData, seller });
     },
     [addressUpdate],
   );
@@ -78,7 +72,15 @@ const DataPage: React.FC<IDataPageProps> = ({
 
   return (
     <DataPageContainer>
-      <Typography.Title level={2}>Dados do pedido</Typography.Title>
+      <Typography.Title
+        level={3}
+        style={{
+          textAlign: 'center',
+          marginBottom: breakpoints.sm ? '32px' : '16px',
+        }}
+      >
+        Dados do pedido
+      </Typography.Title>
       <Form
         onFinish={handleSubmitDataPage}
         form={form}
@@ -174,26 +176,7 @@ const DataPage: React.FC<IDataPageProps> = ({
             <Radio.Button value="Receber na Entrega">Receber</Radio.Button>
           </Radio.Group>
         </Form.Item>
-        <Form.Item
-          label="Porcentagem"
-          name="pricePercent"
-          initialValue={75}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, selecione uma porcentagem para cálculo!',
-            },
-          ]}
-          required={false}
-        >
-          <Select>
-            <Select.Option value={75}>Balcão</Select.Option>
-            <Select.Option value={50}>Marceneiro</Select.Option>
-            <Select.Option value={0}>Sem acréscimo</Select.Option>
-          </Select>
-        </Form.Item>
-        <Typography style={{ marginTop: '16px' }}>Valor: R$ 200,00</Typography>
-        <Typography>Valor com desconto: R$ 150,00</Typography>
+
         {addressUpdate && (
           <Form
             onFinish={handleSubmitCustomerAddress}
@@ -271,40 +254,16 @@ const DataPage: React.FC<IDataPageProps> = ({
             </AntButton>
           </Form>
         )}
-        <Popconfirm
-          title="Tem certeza de que deseja concluir o pedido?"
-          okText="Sim"
-          onConfirm={() => {
-            form.submit();
-          }}
-          cancelText="Não"
-          icon={<ExclamationCircleOutlined style={{ color: 'green' }} />}
+        <AntButton
+          block
+          htmlType="submit"
+          type="primary"
+          disabled={!!addressUpdate}
+          style={{ marginTop: '32px', marginBottom: '64px' }}
         >
-          <AntButton
-            block
-            htmlType="button"
-            type="primary"
-            style={{ marginTop: '16px' }}
-            disabled={!!orderData || !!addressUpdate}
-          >
-            Confirmar
-          </AntButton>
-        </Popconfirm>
+          Confirmar
+        </AntButton>
       </Form>
-
-      {orderData && (
-        <DataPageNextAndBackButton>
-          <AntButton
-            block
-            htmlType="button"
-            type="default"
-            style={{ color: '#ff9966', width: '100%' }}
-            onClick={() => setOrderData(undefined)}
-          >
-            Editar
-          </AntButton>
-        </DataPageNextAndBackButton>
-      )}
     </DataPageContainer>
   );
 };

@@ -1,194 +1,184 @@
-import React, { useCallback, useState, useRef } from 'react';
-import { Steps, Typography } from 'antd';
-import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
+import React, { useCallback, useEffect, useState } from 'react';
 
+import { Steps, Spin, Button, Grid } from 'antd';
+import { Container, Loading, NavMenu } from './styles';
+import AppContainer from '../../components/AppContainer';
+
+import { useCustomer } from '../../hooks/Customer';
 import { useOrder } from '../../hooks/Order';
-import { useAuth } from '../../hooks/Auth';
 
-import AntDashboard from '../../components/AntDashboard';
-import AntContent from '../../components/AntContent';
-import { Container, StepsContainer, ChangePageContainer } from './styles';
-
-import AntButton from '../../components/AntButton';
-import AntInput from '../../components/AntInput';
-
-import CustomerSelection from './CustomerSelection';
-import DataPage from './DataPage';
-import CutlistPage from './CutlistPage';
+import AuthSection from './AuthSection';
+import CustomerSection from './CustomerSection';
+import CutlistSection from './CutlistSection';
+import DataSection from './DataSection';
 
 import ICustomer from '../../types/ICustomer';
-import IOrderData from '../../types/IOrderData';
 import ICutlist from '../../types/ICutlist';
+import IOrderData from '../../types/IOrderData';
 
 const NewCutlist: React.FC = () => {
-  const formRef = useRef<FormHandles>(null);
+  const breakpoints = Grid.useBreakpoint();
 
+  //* Hooks
+  const { loadCustomers } = useCustomer();
   const { createOrder } = useOrder();
-  const { user, checkAuth } = useAuth();
 
-  const { Step } = Steps;
-
+  //* States
+  // General Data
+  const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isAuthErrored, setIsAuthErrored] = useState<boolean>(false);
+  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [priceBase, setPriceBase] = useState<number | null>(null);
 
-  // CustomerSelection states
+  // Select Customer Section Data
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
 
-  // DataPage states
-  const [orderData, setOrderData] = useState<IOrderData>();
-
-  // CutlistPage states
+  // Cutlist Section Data
   const [cutlist, setCutlist] = useState<ICutlist[]>([]);
 
-  // PaymentPage states
+  // Data Section
+  // const [orderData, setOrderData] = useState<IOrderData>();
 
-  const handleSubmitData = useCallback(async () => {
-    await createOrder(selectedCustomer, orderData, cutlist);
-  }, [selectedCustomer, orderData, cutlist]);
+  // const createOrderFromStates = useCallback(async () => {
+  //   console.log(selectedCustomer, orderData, cutlist);
+  //   await createOrder(selectedCustomer, orderData, cutlist);
+  // }, [selectedCustomer, cutlist, orderData]);
 
-  const handleSubmitAuth = useCallback(
-    async (formData) => {
-      setIsAuthErrored(false);
+  useEffect(() => {
+    async function loadCustomersFromApi() {
+      const customersFromHook = await loadCustomers();
+      setAllCustomers((prevValue) => [...prevValue, ...customersFromHook]);
+    }
 
-      const checkIfAuthIsCorrect = await checkAuth({
-        email: user.email,
-        password: formData.password,
-      });
+    loadCustomersFromApi();
+    setLoading(false);
+  }, []);
 
-      if (checkIfAuthIsCorrect) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthErrored(true);
-      }
+  const handleUpdatePrice = useCallback(
+    (newPrice) => {
+      setTotalPrice((prevValue) => prevValue + newPrice);
     },
-    [isAuthenticated],
+    [totalPrice],
   );
 
+  const handleUpdateOrderData = useCallback(
+    async (orderDataFromSection: IOrderData) => {
+      await createOrder(selectedCustomer, orderDataFromSection, cutlist);
+    },
+    [cutlist, selectedCustomer],
+  );
+
+  const handleUpdatePriceBase = useCallback(
+    (percent: number) => {
+      setPriceBase(percent);
+    },
+    [priceBase],
+  );
+
+  // Loading page while not load data from API
+  if (loading) {
+    return (
+      <Loading>
+        <Spin />
+      </Loading>
+    );
+  }
+
+  // Require authentication to return new cutlist page
   if (!isAuthenticated) {
     return (
-      <AntDashboard>
-        <AntContent>
-          <Container>
-            <div>
-              <Typography.Title level={1} style={{ marginTop: '64px' }}>
-                {`Olá, ${user.name}`}
-              </Typography.Title>
-              <Typography style={{ fontSize: '24px', marginBottom: '16px' }}>
-                Digite a sua senha para continuar
-              </Typography>
-              <Form
-                onSubmit={handleSubmitAuth}
-                ref={formRef}
-                style={{
-                  maxWidth: '400px',
-                  margin: '0 auto',
-                }}
-              >
-                <AntInput
-                  name="password"
-                  placeholder="Senha"
-                  type="password"
-                  style={{ textAlign: 'center' }}
-                  size="large"
-                />
-                <AntButton htmlType="submit" type="primary" size="middle" block>
-                  Confirmar
-                </AntButton>
-              </Form>
-              {isAuthErrored && (
-                <Typography
-                  style={{
-                    color: 'red',
-                    marginTop: '16px',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  SENHA INVÁLIDA
-                </Typography>
-              )}
-            </div>
-          </Container>
-        </AntContent>
-      </AntDashboard>
+      <AppContainer>
+        <AuthSection setIsAuthenticated={setIsAuthenticated} />
+      </AppContainer>
     );
   }
 
   return (
-    <AntDashboard>
-      <AntContent>
-        <Container>
-          {page === 1 && (
-            <CustomerSelection
-              setSelectedCustomer={setSelectedCustomer}
-              selectedCustomer={selectedCustomer}
-            />
-          )}
-          {page === 2 && (
-            <CutlistPage cutlist={cutlist} setCutlist={setCutlist} />
-          )}
-          {page === 3 && (
-            <>
-              <DataPage
-                cutlist={cutlist}
-                setCutlist={setCutlist}
-                orderData={orderData}
-                setOrderData={setOrderData}
-                setPage={setPage}
-                selectedCustomer={selectedCustomer}
-                handleSubmitData={handleSubmitData}
-              />
-              {/* <Popconfirm
-                title="Tem certeza de que deseja concluir o pedido?"
-                onConfirm={() => handleSubmitData()}
-                okText="Sim"
-                cancelText="Não"
-                icon={<ExclamationCircleOutlined style={{ color: 'green' }} />}
-              >
-                <AntButton
-                  block
-                  type="primary"
-                  size="large"
-                  style={{ maxWidth: '1000px' }}
-                  disabled={cutlist.length === 0}
-                >
-                  Confirmar pedido
-                </AntButton>
-              </Popconfirm> */}
-            </>
-          )}
+    <AppContainer>
+      <Container>
+        {page === 1 && (
+          <CustomerSection
+            selectedCustomer={selectedCustomer}
+            setSelectedCustomer={setSelectedCustomer}
+            allCustomers={allCustomers}
+          />
+        )}
+        {page === 2 && (
+          <CutlistSection
+            handleUpdatePriceBase={handleUpdatePriceBase}
+            priceBase={priceBase}
+            cutlist={cutlist}
+            setCutlist={setCutlist}
+            totalPrice={totalPrice}
+            handleUpdatePrice={handleUpdatePrice}
+          />
+        )}
+        {page === 3 && (
+          <DataSection
+            selectedCustomer={selectedCustomer}
+            cutlist={cutlist}
+            setCutlist={setCutlist}
+            setPage={setPage}
+            handleUpdateOrderData={handleUpdateOrderData}
+          />
+        )}
+        <NavMenu>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              maxWidth: '100%',
+              marginBottom: '32px',
+              margin: '0 auto 32px auto',
+            }}
+          >
+            <Button
+              disabled={page < 2}
+              type="default"
+              style={{
+                width: page === 3 ? '50%' : '100%',
+                marginRight: page === 3 ? 'auto' : '8px',
+              }}
+              onClick={() => setPage(page - 1)}
+            >
+              Retornar
+            </Button>
+            <Button
+              disabled={
+                (page === 1 && !selectedCustomer) ||
+                (page === 2 && cutlist.length === 0)
+              }
+              type="default"
+              style={{
+                width: '100%',
+                marginLeft: '8px',
+                display: page === 3 ? 'none' : '',
+              }}
+              onClick={() => setPage(page + 1)}
+            >
+              Avançar
+            </Button>
+          </div>
 
-          <StepsContainer style={{ marginTop: '32px' }}>
-            <ChangePageContainer>
-              <AntButton
-                type="default"
-                onClick={() => setPage(page - 1)}
-                disabled={page <= 1}
-              >
-                Voltar
-              </AntButton>
-              <AntButton
-                type="default"
-                onClick={() => setPage(page + 1)}
-                disabled={
-                  (page === 1 && !selectedCustomer) ||
-                  (page === 2 && !(cutlist.length > 0)) ||
-                  page > 2
-                }
-              >
-                Avançar
-              </AntButton>
-            </ChangePageContainer>
-            <Steps current={page - 1}>
-              <Step title="Cliente" description="Selecione um cliente" />
-              <Step title="Peças" description="Forneça a lista de peças" />
-              <Step title="Dados" description="Forneça os dados do pedido" />
-            </Steps>
-          </StepsContainer>
-        </Container>
-      </AntContent>
-    </AntDashboard>
+          <Steps
+            current={page - 1}
+            responsive
+            style={{
+              margin: '0 auto',
+              textAlign: breakpoints.sm ? 'left' : 'center',
+            }}
+          >
+            <Steps.Step title="Dados do cliente" />
+            <Steps.Step title="Lista de Cortes" />
+            <Steps.Step title="Dados do Pedido" />
+          </Steps>
+        </NavMenu>
+      </Container>
+    </AppContainer>
   );
 };
 
