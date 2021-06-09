@@ -281,8 +281,8 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         'quantidade',
         'side_a_size',
         'side_b_size',
-        'size_a_border',
-        'size_b_border',
+        'side_a_border',
+        'side_b_border',
       ]);
     },
     [cutlistDataSource, allMaterials, defaultMaterial, priceBase],
