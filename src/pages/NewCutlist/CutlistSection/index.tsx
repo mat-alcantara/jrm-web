@@ -294,6 +294,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         {!newMaterialForm ? (
           <Form
             onFinish={handleSubmit}
+            validateTrigger="onFinish"
             form={form}
             name="control-hooks"
             layout={breakpoints.sm ? 'inline' : 'horizontal'}
