@@ -104,7 +104,7 @@ const MaterialsList: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <Typography.Title level={2}>Lista de materiais</Typography.Title>
+        <Typography.Title level={3}>Lista de materiais</Typography.Title>
         <Table
           columns={tableColumns}
           dataSource={materialsDataSource}

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
+import { Typography } from 'antd';
 import AppContainer from '../../components/AppContainer';
 
 import { useMaterial } from '../../hooks/Material';
@@ -86,7 +87,7 @@ const NewMaterial: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <h1>Crie um novo material</h1>
+        <Typography.Title level={2}>Crie um novo material</Typography.Title>
         <Form onSubmit={handleFormSubmit} ref={formRef}>
           <AntInput name="name" placeholder="Material" />
           <div>

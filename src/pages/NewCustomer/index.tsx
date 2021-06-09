@@ -2,6 +2,7 @@ import React, { useRef, useState, useCallback } from 'react';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
+import { Typography } from 'antd';
 import AppContainer from '../../components/AppContainer';
 
 import { useCustomer } from '../../hooks/Customer';
@@ -116,7 +117,7 @@ const CreateCustomer: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <h1>Crie um novo cliente</h1>
+        <Typography.Title level={3}>Crie um novo cliente</Typography.Title>
         <Form ref={formRef} onSubmit={handleSubmit}>
           <AntInput size="large" name="name" placeholder="Nome completo" />
           <AntInput size="large" name="email" placeholder="Email" />

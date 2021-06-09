@@ -201,7 +201,7 @@ const AllOrders: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <Typography.Title level={2}>Lista de Pedidos</Typography.Title>
+        <Typography.Title level={3}>Lista de Pedidos</Typography.Title>
         <Space style={{ marginBottom: 16, marginTop: 16 }}>
           <Button onClick={() => setOrderSort('')}>Todos os pedidos</Button>
           <Button onClick={() => setOrderSort('Em Produção')}>

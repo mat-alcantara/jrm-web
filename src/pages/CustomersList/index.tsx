@@ -126,7 +126,7 @@ const CustomersList: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <Typography.Title level={2}>Lista de Clientes</Typography.Title>
+        <Typography.Title level={3}>Lista de Clientes</Typography.Title>
         <Table
           dataSource={customersDataSource}
           columns={tableColumns}
