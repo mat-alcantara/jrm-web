@@ -40,6 +40,7 @@ const NewCutlist: React.FC = () => {
   const [orderData, setOrderData] = useState<IOrderData>();
 
   const createOrderFromStates = useCallback(async () => {
+    console.log(orderData);
     await createOrder(selectedCustomer, orderData, cutlist);
   }, [selectedCustomer, cutlist, orderData]);
 

@@ -215,7 +215,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         ...cutlist,
         {
           id: cutlistId,
-          material_id: material,
+          material_id: materialUsed.id,
           quantidade,
           price,
           side_a_size,
