@@ -249,6 +249,15 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
       if (materialToUpdateDefault) {
         setDefaultMaterial(materialOptions.indexOf(materialToUpdateDefault));
       }
+
+      // Clear all fields of form
+      form.resetFields([
+        'quantidade',
+        'side_a_size',
+        'side_b_size',
+        'size_a_border',
+        'size_b_border',
+      ]);
     },
     [cutlistDataSource, allMaterials, defaultMaterial],
   );
@@ -294,6 +303,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
             {/* Input de material */}
             <Form.Item
               name="material"
+              preserve
               required={false}
               style={{
                 width: breakpoints.sm ? '450px' : '350px',
