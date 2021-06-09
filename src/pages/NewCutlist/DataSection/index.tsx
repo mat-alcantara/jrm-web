@@ -49,7 +49,12 @@ const DataPage: React.FC<IDataPageProps> = ({
       // Uses authenticated user as seller
       const seller = user.name;
 
-      if (allOrderData.paymentStatus) {
+      if (!allOrderData.ps) {
+        // eslint-disable-next-line no-param-reassign
+        allOrderData.ps = '-';
+      }
+
+      if (!allOrderData.paymentStatus) {
         // eslint-disable-next-line no-param-reassign
         allOrderData.paymentStatus = 'Receber na Entrega';
       }

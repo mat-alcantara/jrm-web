@@ -326,10 +326,13 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         layout="vertical"
         labelAlign="left"
       >
+        <Typography.Title level={3} style={{ textAlign: 'center' }}>
+          Tipo de cliente para cálculo do preço
+        </Typography.Title>
         <Form.Item
-          label="Tipo de cliente para calculo do preço"
           name="pricePercent"
           initialValue={75}
+          style={{ width: '410px', margin: '0 auto 12px auto' }}
           rules={[
             {
               required: true,
@@ -338,7 +341,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           ]}
           required={false}
         >
-          <Select style={{ width: '300px', textAlign: 'center' }}>
+          <Select style={{ width: '100%', textAlign: 'center' }}>
             <Select.Option value={75}>Balcão</Select.Option>
             <Select.Option value={50}>Marceneiro</Select.Option>
             <Select.Option value={0}>Sem acréscimo</Select.Option>
