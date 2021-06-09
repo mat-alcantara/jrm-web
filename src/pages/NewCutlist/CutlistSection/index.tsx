@@ -33,6 +33,8 @@ interface ICutlistPageProps {
   cutlist: ICutlist[];
   totalPrice: number;
   handleUpdatePrice(newPrice: number): void;
+  handleUpdatePriceBase(percent: number): void;
+  priceBase: number | null;
 }
 
 interface IMaterialForm {
@@ -47,6 +49,8 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   cutlist,
   totalPrice,
   handleUpdatePrice,
+  handleUpdatePriceBase,
+  priceBase,
 }) => {
   const { createMaterial, loadMaterials } = useMaterial();
   const [form] = Form.useForm();
@@ -207,13 +211,29 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         throw new Error('Material does not exist');
       }
 
-      const price = calculateCutlistPrice(materialUsed, {
-        quantidade,
-        side_a_border,
-        side_a_size,
-        side_b_border,
-        side_b_size,
-      });
+      let price: number;
+
+      if (priceBase) {
+        price = calculateCutlistPrice(
+          materialUsed,
+          {
+            quantidade,
+            side_a_border,
+            side_a_size,
+            side_b_border,
+            side_b_size,
+          },
+          priceBase,
+        );
+      } else {
+        price = calculateCutlistPrice(materialUsed, {
+          quantidade,
+          side_a_border,
+          side_a_size,
+          side_b_border,
+          side_b_size,
+        });
+      }
 
       const cutlistId = v4();
 
@@ -265,7 +285,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         'size_b_border',
       ]);
     },
-    [cutlistDataSource, allMaterials, defaultMaterial],
+    [cutlistDataSource, allMaterials, defaultMaterial, priceBase],
   );
 
   const handleSubmitMaterial = useCallback(
@@ -287,8 +307,48 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [allMaterials, materialOptions],
   );
 
+  const updatePriceBase = useCallback(
+    ({ pricePercent }) => {
+      handleUpdatePriceBase(pricePercent);
+    },
+    [priceBase],
+  );
+
   if (loading) {
     return <Spin />;
+  }
+
+  if (!priceBase) {
+    return (
+      <Form
+        form={form}
+        onFinish={updatePriceBase}
+        layout="vertical"
+        labelAlign="left"
+      >
+        <Form.Item
+          label="Tipo de cliente para calculo do preço"
+          name="pricePercent"
+          initialValue={75}
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, selecione uma porcentagem para cálculo!',
+            },
+          ]}
+          required={false}
+        >
+          <Select style={{ width: '300px', textAlign: 'center' }}>
+            <Select.Option value={75}>Balcão</Select.Option>
+            <Select.Option value={50}>Marceneiro</Select.Option>
+            <Select.Option value={0}>Sem acréscimo</Select.Option>
+          </Select>
+        </Form.Item>
+        <Button type="primary" htmlType="submit" block>
+          Confirmar
+        </Button>
+      </Form>
+    );
   }
 
   return (

@@ -176,26 +176,7 @@ const DataPage: React.FC<IDataPageProps> = ({
             <Radio.Button value="Receber na Entrega">Receber</Radio.Button>
           </Radio.Group>
         </Form.Item>
-        <Form.Item
-          label="Porcentagem"
-          name="pricePercent"
-          initialValue={75}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, selecione uma porcentagem para cálculo!',
-            },
-          ]}
-          required={false}
-        >
-          <Select>
-            <Select.Option value={75}>Balcão</Select.Option>
-            <Select.Option value={50}>Marceneiro</Select.Option>
-            <Select.Option value={0}>Sem acréscimo</Select.Option>
-          </Select>
-        </Form.Item>
-        <Typography style={{ marginTop: '16px' }}>Valor: R$ 200,00</Typography>
-        <Typography>Valor com desconto: R$ 150,00</Typography>
+
         {addressUpdate && (
           <Form
             onFinish={handleSubmitCustomerAddress}

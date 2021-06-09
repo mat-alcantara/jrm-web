@@ -30,6 +30,7 @@ const NewCutlist: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [priceBase, setPriceBase] = useState<number | null>(null);
 
   // Select Customer Section Data
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
@@ -69,6 +70,13 @@ const NewCutlist: React.FC = () => {
     [cutlist, selectedCustomer],
   );
 
+  const handleUpdatePriceBase = useCallback(
+    (percent: number) => {
+      setPriceBase(percent);
+    },
+    [priceBase],
+  );
+
   // Loading page while not load data from API
   if (loading) {
     return (
@@ -99,6 +107,8 @@ const NewCutlist: React.FC = () => {
         )}
         {page === 2 && (
           <CutlistSection
+            handleUpdatePriceBase={handleUpdatePriceBase}
+            priceBase={priceBase}
             cutlist={cutlist}
             setCutlist={setCutlist}
             totalPrice={totalPrice}
