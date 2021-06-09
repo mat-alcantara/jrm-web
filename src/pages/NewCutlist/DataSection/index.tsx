@@ -17,19 +17,15 @@ import { DataPageContainer } from './styles';
 
 interface IDataPageProps {
   setPage(page: number): void;
-  setOrderData(data: IOrderData): void;
+  handleUpdateOrderData(data: IOrderData): Promise<void>;
   selectedCustomer: ICustomer | undefined;
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
-  createOrderFromStates(): Promise<void>;
-  orderData: IOrderData | undefined;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
-  setOrderData,
+  handleUpdateOrderData,
   selectedCustomer,
-  createOrderFromStates,
-  orderData,
 }) => {
   const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
@@ -58,11 +54,9 @@ const DataPage: React.FC<IDataPageProps> = ({
         allOrderData.paymentStatus = 'Receber na Entrega';
       }
 
-      setOrderData({ ...allOrderData, seller });
-
-      await createOrderFromStates();
+      handleUpdateOrderData({ ...allOrderData, seller });
     },
-    [addressUpdate, createOrderFromStates, orderData],
+    [addressUpdate],
   );
 
   const handleSubmitCustomerAddress = useCallback(

@@ -38,11 +38,12 @@ const NewCutlist: React.FC = () => {
   const [cutlist, setCutlist] = useState<ICutlist[]>([]);
 
   // Data Section
-  const [orderData, setOrderData] = useState<IOrderData>();
+  // const [orderData, setOrderData] = useState<IOrderData>();
 
-  const createOrderFromStates = useCallback(async () => {
-    await createOrder(selectedCustomer, orderData, cutlist);
-  }, [selectedCustomer, cutlist, orderData]);
+  // const createOrderFromStates = useCallback(async () => {
+  //   console.log(selectedCustomer, orderData, cutlist);
+  //   await createOrder(selectedCustomer, orderData, cutlist);
+  // }, [selectedCustomer, cutlist, orderData]);
 
   useEffect(() => {
     async function loadCustomersFromApi() {
@@ -54,9 +55,19 @@ const NewCutlist: React.FC = () => {
     setLoading(false);
   }, []);
 
-  const handleUpdatePrice = useCallback((newPrice) => {
-    setTotalPrice((prevValue) => prevValue + newPrice);
-  }, []);
+  const handleUpdatePrice = useCallback(
+    (newPrice) => {
+      setTotalPrice((prevValue) => prevValue + newPrice);
+    },
+    [totalPrice],
+  );
+
+  const handleUpdateOrderData = useCallback(
+    async (orderDataFromSection: IOrderData) => {
+      await createOrder(selectedCustomer, orderDataFromSection, cutlist);
+    },
+    [cutlist, selectedCustomer],
+  );
 
   // Loading page while not load data from API
   if (loading) {
@@ -96,13 +107,11 @@ const NewCutlist: React.FC = () => {
         )}
         {page === 3 && (
           <DataSection
-            orderData={orderData}
             selectedCustomer={selectedCustomer}
             cutlist={cutlist}
             setCutlist={setCutlist}
             setPage={setPage}
-            setOrderData={setOrderData}
-            createOrderFromStates={createOrderFromStates}
+            handleUpdateOrderData={handleUpdateOrderData}
           />
         )}
         <NavMenu>
