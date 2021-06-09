@@ -29,6 +29,7 @@ const NewCutlist: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   // Select Customer Section Data
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
@@ -40,7 +41,6 @@ const NewCutlist: React.FC = () => {
   const [orderData, setOrderData] = useState<IOrderData>();
 
   const createOrderFromStates = useCallback(async () => {
-    console.log(orderData);
     await createOrder(selectedCustomer, orderData, cutlist);
   }, [selectedCustomer, cutlist, orderData]);
 
@@ -52,6 +52,10 @@ const NewCutlist: React.FC = () => {
 
     loadCustomersFromApi();
     setLoading(false);
+  }, []);
+
+  const handleUpdatePrice = useCallback((newPrice) => {
+    setTotalPrice((prevValue) => prevValue + newPrice);
   }, []);
 
   // Loading page while not load data from API
@@ -83,7 +87,12 @@ const NewCutlist: React.FC = () => {
           />
         )}
         {page === 2 && (
-          <CutlistSection cutlist={cutlist} setCutlist={setCutlist} />
+          <CutlistSection
+            cutlist={cutlist}
+            setCutlist={setCutlist}
+            totalPrice={totalPrice}
+            handleUpdatePrice={handleUpdatePrice}
+          />
         )}
         {page === 3 && (
           <DataSection

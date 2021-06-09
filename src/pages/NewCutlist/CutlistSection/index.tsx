@@ -31,6 +31,8 @@ import IMaterial from '../../../types/IMaterial';
 interface ICutlistPageProps {
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
+  totalPrice: number;
+  handleUpdatePrice(newPrice: number): void;
 }
 
 interface IMaterialForm {
@@ -40,13 +42,17 @@ interface IMaterialForm {
   price: number;
 }
 
-const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
+const CutlistPage: React.FC<ICutlistPageProps> = ({
+  setCutlist,
+  cutlist,
+  totalPrice,
+  handleUpdatePrice,
+}) => {
   const { createMaterial, loadMaterials } = useMaterial();
   const [form] = Form.useForm();
   const breakpoints = Grid.useBreakpoint();
 
   const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [cutlistDataSource, setCutlistDataSource] = useState<ICutlistData[]>(
     [],
   );
@@ -68,7 +74,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         ?.price;
 
       if (priceToRemove) {
-        setTotalPrice((prevValue) => prevValue - priceToRemove);
+        handleUpdatePrice(priceToRemove * -1);
       }
 
       setCutlistDataSource([...newCutlistDataSourceState]);
@@ -225,7 +231,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({ setCutlist, cutlist }) => {
         },
       ]);
 
-      setTotalPrice((prev) => prev + price);
+      handleUpdatePrice(price);
 
       setCutlistDataSource((prevVal) => [
         ...prevVal,
