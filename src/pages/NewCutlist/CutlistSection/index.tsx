@@ -296,7 +296,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
       setMaterialOptions((prevValue) => [
         ...prevValue,
-        { value: materialCreated.id, label: materialCreated.name },
+        { value: materialCreated.name, label: materialCreated.name },
       ]);
 
       setNewMaterialForm(false);
