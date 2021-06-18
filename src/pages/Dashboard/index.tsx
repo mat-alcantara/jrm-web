@@ -3,6 +3,7 @@ import { Row, Col, Typography, Grid, Divider } from 'antd';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
+import { useAuth } from '../../hooks/Auth';
 
 import { Container } from './styles';
 
@@ -14,6 +15,7 @@ import AppContainer from '../../components/AppContainer';
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
   const { loadCustomers } = useCustomer();
+  const { signOut } = useAuth();
   const breakpoints = Grid.useBreakpoint();
 
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
@@ -32,8 +34,12 @@ const Dashboard: React.FC = () => {
       setAllCustomers([...allCustomersFromHook]);
     }
 
-    loadOrdersFromHook();
-    loadCustomersFromHook();
+    try {
+      loadOrdersFromHook();
+      loadCustomersFromHook();
+    } catch {
+      signOut();
+    }
   }, []);
 
   return (
