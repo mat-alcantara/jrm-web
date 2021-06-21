@@ -66,6 +66,10 @@ const AllOrders: React.FC = () => {
 
       const allOrdersFromHook = await loadOrders();
 
+      const filteredOrdersFromHook = allOrdersFromHook.filter(
+        (order) => order.orderStatus === ordersFilter,
+      );
+
       const dataToSetDataSource = allOrdersFromHook.map((order) => {
         const customerFound = allCustomersFromHook.find(
           (customer) => customer.id === order.customerId,
