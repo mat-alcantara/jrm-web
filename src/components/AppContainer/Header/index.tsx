@@ -53,23 +53,25 @@ const Header: React.FC = () => {
               <Link to="/newcutlist">Novo serviço</Link>
             </Item>
             <SubMenu title="Pedidos">
-              <Item disabled>
-                <Link to="/allorders">Em Produção</Link>
-              </Item>
-              <Item disabled>
-                <Link to="/allorders">Liberados para Transporte</Link>
-              </Item>
-              <Item disabled>
-                <Link to="/allorders">Transportados</Link>
-              </Item>
-              <Item disabled>
-                <Link to="/allorders">Entregues</Link>
-              </Item>
-              <Item disabled>
-                <Link to="/allorders">Orçamentos</Link>
+              <Item>
+                <Link to="/orders/producao">Em Produção</Link>
               </Item>
               <Item>
-                <Link to="/allorders">Todos os pedidos</Link>
+                <Link to="/orders/liberado-para-transporte">
+                  Liberados para Transporte
+                </Link>
+              </Item>
+              <Item>
+                <Link to="/orders/transportado">Transportados</Link>
+              </Item>
+              <Item>
+                <Link to="/orders/entregue">Entregues</Link>
+              </Item>
+              <Item>
+                <Link to="/orders/orcamento">Orçamentos</Link>
+              </Item>
+              <Item disabled>
+                <Link to="/orders/all">Todos os pedidos</Link>
               </Item>
             </SubMenu>
 
