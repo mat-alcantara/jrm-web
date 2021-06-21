@@ -70,7 +70,7 @@ const Header: React.FC = () => {
               <Item>
                 <Link to="/orders/orcamento">Orçamentos</Link>
               </Item>
-              <Item disabled>
+              <Item>
                 <Link to="/orders/todas">Todos os pedidos</Link>
               </Item>
             </SubMenu>
