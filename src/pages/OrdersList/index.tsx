@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Table, Space, Typography, Popconfirm, Button } from 'antd';
+import { Table, Space, Typography, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import AppContainer from '../../components/AppContainer';
 
@@ -35,7 +35,6 @@ const AllOrders: React.FC = () => {
   const { loadCustomers } = useCustomer();
   const { type } = useParams<IOrdersParams>();
 
-  const [orderSort, setOrderSort] = useState('');
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
 
   useEffect(() => {
@@ -66,11 +65,12 @@ const AllOrders: React.FC = () => {
 
       const allOrdersFromHook = await loadOrders();
 
+      // Filter orders with query param
       const filteredOrdersFromHook = allOrdersFromHook.filter(
         (order) => order.orderStatus === ordersFilter,
       );
 
-      const dataToSetDataSource = allOrdersFromHook.map((order) => {
+      const dataToSetDataSource = filteredOrdersFromHook.map((order) => {
         const customerFound = allCustomersFromHook.find(
           (customer) => customer.id === order.customerId,
         );
@@ -154,10 +154,10 @@ const AllOrders: React.FC = () => {
       title: 'Status do Pedido',
       dataIndex: 'orderStatus',
       key: 'orderStatus',
-      filteredValue: [orderSort],
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onFilter: (value: any, record: IDataSource) =>
-        record.orderStatus.indexOf(value) === 0,
+      // filteredValue: [orderSort],
+      // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // onFilter: (value: any, record: IDataSource) =>
+      //   record.orderStatus.indexOf(value) === 0,
     },
     {
       title: 'Preço',
@@ -234,7 +234,7 @@ const AllOrders: React.FC = () => {
     <AppContainer>
       <Container>
         <Typography.Title level={3}>Lista de Pedidos</Typography.Title>
-        <Space style={{ marginBottom: 16, marginTop: 16 }}>
+        {/* <Space style={{ marginBottom: 16, marginTop: 16 }}>
           <Button onClick={() => setOrderSort('')}>Todos os pedidos</Button>
           <Button onClick={() => setOrderSort('Em Produção')}>
             Em produção
@@ -247,7 +247,7 @@ const AllOrders: React.FC = () => {
           </Button>
           <Button onClick={() => setOrderSort('Entregue')}>Entregues</Button>
           <Button onClick={() => setOrderSort('Orçamento')}>Orçamentos</Button>
-        </Space>
+        </Space> */}
         <Table columns={columns} dataSource={dataSource} />
       </Container>
     </AppContainer>
