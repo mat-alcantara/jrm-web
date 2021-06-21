@@ -56,6 +56,9 @@ const AllOrders: React.FC = () => {
       case 'orcamento':
         ordersFilter = 'Orçamento';
         break;
+      case 'todas':
+        ordersFilter = '';
+        break;
       default:
         ordersFilter = null;
     }
@@ -66,9 +69,12 @@ const AllOrders: React.FC = () => {
       const allOrdersFromHook = await loadOrders();
 
       // Filter orders with query param
-      const filteredOrdersFromHook = allOrdersFromHook.filter(
-        (order) => order.orderStatus === ordersFilter,
-      );
+      const filteredOrdersFromHook = allOrdersFromHook.filter((order) => {
+        if (ordersFilter !== '') {
+          return order.orderStatus === ordersFilter;
+        }
+        return order;
+      });
 
       const dataToSetDataSource = filteredOrdersFromHook.map((order) => {
         const customerFound = allCustomersFromHook.find(
