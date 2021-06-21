@@ -57,16 +57,16 @@ const Header: React.FC = () => {
                 <Link to="/allorders">Em Produção</Link>
               </Item>
               <Item disabled>
-                <Link to="/allorders">Liberado para Transporte</Link>
+                <Link to="/allorders">Liberados para Transporte</Link>
               </Item>
               <Item disabled>
-                <Link to="/allorders">Transportado</Link>
+                <Link to="/allorders">Transportados</Link>
               </Item>
               <Item disabled>
-                <Link to="/allorders">Entregue</Link>
+                <Link to="/allorders">Entregues</Link>
               </Item>
               <Item disabled>
-                <Link to="/allorders">Orçamento</Link>
+                <Link to="/allorders">Orçamentos</Link>
               </Item>
               <Item>
                 <Link to="/allorders">Todos os pedidos</Link>

@@ -22,7 +22,7 @@ const routes: React.FC = () => (
     <Route path="/customerslist" exact component={CustomersList} isPrivate />
     <Route path="/newmaterial" exact component={NewMaterial} isPrivate />
     <Route path="/materialslist" exact component={MaterialsList} isPrivate />
-    <Route path="/allorders" exact component={OrdersList} isPrivate />
+    <Route path="/orders/:type" exact component={OrdersList} isPrivate />
   </Switch>
 );
 

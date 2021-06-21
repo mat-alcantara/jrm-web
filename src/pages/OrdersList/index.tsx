@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Table, Space, Typography, Popconfirm, Button } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import AppContainer from '../../components/AppContainer';
@@ -20,6 +21,10 @@ interface IDataSource {
   deliveryDate: string;
 }
 
+interface IOrdersParams {
+  type: string;
+}
+
 const AllOrders: React.FC = () => {
   const {
     loadOrders,
@@ -28,6 +33,7 @@ const AllOrders: React.FC = () => {
     updateOrderStatus,
   } = useOrder();
   const { loadCustomers } = useCustomer();
+  const { type } = useParams<IOrdersParams>();
 
   const [orderSort, setOrderSort] = useState('');
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
