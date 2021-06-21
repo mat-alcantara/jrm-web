@@ -39,6 +39,28 @@ const AllOrders: React.FC = () => {
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
 
   useEffect(() => {
+    let ordersFilter: string | null;
+
+    switch (type) {
+      case 'producao':
+        ordersFilter = 'Em Produção';
+        break;
+      case 'liberado-para-transporte':
+        ordersFilter = 'Liberado para Transporte';
+        break;
+      case 'transportado':
+        ordersFilter = 'Transportado';
+        break;
+      case 'entregue':
+        ordersFilter = 'Entregue';
+        break;
+      case 'orcamento':
+        ordersFilter = 'Orçamento';
+        break;
+      default:
+        ordersFilter = null;
+    }
+
     async function loadDataFromHook() {
       const allCustomersFromHook = await loadCustomers();
 
