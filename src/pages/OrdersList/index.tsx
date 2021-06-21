@@ -36,6 +36,7 @@ const AllOrders: React.FC = () => {
   const { type } = useParams<IOrdersParams>();
 
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
+  const [pageTitle, setPageTitle] = useState<string>('');
 
   useEffect(() => {
     let ordersFilter: string | null;
@@ -62,6 +63,8 @@ const AllOrders: React.FC = () => {
       default:
         ordersFilter = null;
     }
+
+    setPageTitle(`Lista de Pedidos - ${ordersFilter}`);
 
     async function loadDataFromHook() {
       const allCustomersFromHook = await loadCustomers();
@@ -239,7 +242,7 @@ const AllOrders: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <Typography.Title level={3}>Lista de Pedidos</Typography.Title>
+        <Typography.Title level={3}>{pageTitle}</Typography.Title>
         {/* <Space style={{ marginBottom: 16, marginTop: 16 }}>
           <Button onClick={() => setOrderSort('')}>Todos os pedidos</Button>
           <Button onClick={() => setOrderSort('Em Produção')}>
