@@ -186,16 +186,16 @@ const AllOrders: React.FC = () => {
 
         switch (record.orderStatus) {
           case 'Orçamento':
-            buttonMessage = 'Produzir';
+            buttonMessage = 'Enviar para produção';
             break;
           case 'Em Produção':
-            buttonMessage = 'Liberar para Transporte';
+            buttonMessage = 'Concluir etapa';
             break;
           case 'Liberado para Transporte':
-            buttonMessage = 'Transportado';
+            buttonMessage = 'Concluir etapa';
             break;
           case 'Transportado':
-            buttonMessage = 'Entregue';
+            buttonMessage = 'Concluir etapa';
             break;
           case 'Entregue':
             buttonMessage = 'Retornar para Produção';
