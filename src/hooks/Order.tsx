@@ -107,7 +107,7 @@ export const OrderProvider: React.FC = ({ children }) => {
 
       addToast({ type: 'success', title: 'Pedido criado com sucesso' });
 
-      history.push('/allorders');
+      history.push('/orders/producao');
     },
     [],
   );
