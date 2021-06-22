@@ -12,6 +12,8 @@ import {
   Grid,
   Button,
   Spin,
+  List,
+  Avatar,
 } from 'antd';
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -27,6 +29,8 @@ import calculateCutlistPrice from '../../../utils/calculateCutlistPrice';
 import ICutlistData from '../../../types/ICutlistData';
 import ICutlist from '../../../types/ICutlist';
 import IMaterial from '../../../types/IMaterial';
+
+import G2P1 from '../../../assets/G2P1.svg';
 
 interface ICutlistPageProps {
   setCutlist(data: ICutlist[]): void;
@@ -67,6 +71,26 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const [defaultMaterial, setDefaultMaterial] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(true);
+
+  const data = [
+    {
+      title: '2 - 1200 [ 2 ] x 400 [ 1 ]',
+      description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 52,00',
+      avatar: G2P1,
+    },
+    {
+      title: '4 - 1500 [ 2 ] x 2400 [ 2 ]',
+      description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 61,00',
+    },
+    {
+      title: '8 - 600 [ 0 ] x 400 [ 0 ]',
+      description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 32,00',
+    },
+    {
+      title: '1 - 1200 [ 2 ] x 400 [ 1 ]',
+      description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 21,00',
+    },
+  ];
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
@@ -600,10 +624,27 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         )}
       </InputCutlistContainer>
       <Divider />
-      <Table
+      {/* <Table
         columns={options.columns}
         dataSource={cutlistDataSource}
         footer={() => `Total: R$ ${totalPrice}`}
+      /> */}
+      <List
+        dataSource={data}
+        itemLayout="horizontal"
+        style={{ width: '100%', margin: '0 auto 64px auto' }}
+        renderItem={(item) => (
+          <List.Item
+            style={{ textAlign: 'left' }}
+            actions={[<a href="/">Remover</a>]}
+          >
+            <List.Item.Meta
+              avatar={<Avatar src={item.avatar} shape="square" />}
+              title={<a href="https://ant.design">{item.title}</a>}
+              description={item.description}
+            />
+          </List.Item>
+        )}
       />
     </CutlistPageContainer>
   );
