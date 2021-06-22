@@ -113,7 +113,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             (materialFound) => materialFound.id === cut.material_id,
           );
 
-          const { avatar, gborder, gside, pborder, pside } = sortCutlistData({
+          const { avatar, gside, pside } = sortCutlistData({
             side_a_size: cut.side_a_size,
             side_a_border: cut.side_a_border,
             side_b_size: cut.side_b_size,
@@ -125,7 +125,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               ...prevVal,
               {
                 key: cut.id,
-                title: `${cut.quantidade} - ${gside} [ ${gborder} ] x ${pside} [ ${pborder} ]`,
+                title: `${cut.quantidade} - ${gside} x ${pside}`,
                 description: `${materialUsed.name} | R$ ${cut.price}`,
                 avatar,
               },
@@ -198,7 +198,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
       handleUpdatePrice(price);
 
-      const { avatar, pside, pborder, gside, gborder } = sortCutlistData({
+      const { avatar, pside, gside } = sortCutlistData({
         side_a_border,
         side_a_size,
         side_b_border,
@@ -209,7 +209,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         ...prevVal,
         {
           key: cutlistId,
-          title: `${quantidade} - ${gside} [ ${gborder} ] x ${pside} [ ${pborder} ]`,
+          title: `${quantidade} - ${gside} x ${pside}`,
           description: `${materialUsed.name} | R$ ${price}`,
           avatar,
         },

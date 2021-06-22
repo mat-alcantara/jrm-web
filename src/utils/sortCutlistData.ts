@@ -17,9 +17,7 @@ type sortCutlistDataProps = {
 
 type sortCutlistDataReturn = {
   gside: number;
-  gborder: number;
   pside: number;
-  pborder: number;
   avatar: string;
 };
 
@@ -85,9 +83,7 @@ export const sortCutlistData = ({
 
   return {
     gside,
-    gborder,
     pside,
-    pborder,
     avatar,
   };
 };
