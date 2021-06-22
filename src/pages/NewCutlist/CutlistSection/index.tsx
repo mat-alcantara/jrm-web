@@ -64,6 +64,14 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const [cutlistDataSource, setCutlistDataSource] = useState<ICutlistData[]>(
     [],
   );
+  const [listData, setListData] = useState<
+    {
+      key: string;
+      title: string;
+      description: string;
+      avatar: string;
+    }[]
+  >([]);
   const [newMaterialForm, setNewMaterialForm] = useState(false);
   const [materialOptions, setMaterialOptions] = useState<
     { value: string; label: string }[]
@@ -74,21 +82,10 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
   const data = [
     {
+      key: 'teste',
       title: '2 - 1200 [ 2 ] x 400 [ 1 ]',
       description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 52,00',
       avatar: G2P1,
-    },
-    {
-      title: '4 - 1500 [ 2 ] x 2400 [ 2 ]',
-      description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 61,00',
-    },
-    {
-      title: '8 - 600 [ 0 ] x 400 [ 0 ]',
-      description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 32,00',
-    },
-    {
-      title: '1 - 1200 [ 2 ] x 400 [ 1 ]',
-      description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 21,00',
     },
   ];
 
@@ -134,17 +131,13 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           );
 
           if (materialUsed) {
-            setCutlistDataSource((prevVal) => [
+            setListData((prevVal) => [
               ...prevVal,
               {
                 key: cut.id,
-                material: materialUsed.name,
-                quantidade: cut.quantidade,
-                price: cut.price,
-                side_a_size: cut.side_a_size,
-                side_a_border: cut.side_b_border,
-                side_b_border: cut.side_b_border,
-                side_b_size: cut.side_b_size,
+                title: `${cut.quantidade} - ${cut.side_a_size} [ ${cut.side_b_border} ] x ${cut.side_b_size} [ ${cut.side_b_border} ]`,
+                description: `${materialUsed.name} | ${cut.price}`,
+                avatar: G2P1,
               },
             ]);
           }
@@ -630,14 +623,24 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         footer={() => `Total: R$ ${totalPrice}`}
       /> */}
       <List
-        dataSource={data}
+        dataSource={listData}
         itemLayout="horizontal"
         footer={<div>{`Total: R$ ${totalPrice}`}</div>}
         style={{ width: '100%', margin: '0 auto 64px auto' }}
         renderItem={(item) => (
           <List.Item
             style={{ textAlign: 'left' }}
-            actions={[<a href="/">Remover</a>]}
+            actions={[
+              <Popconfirm
+                title="Tem certeza de que deseja excluir essa peça?"
+                onConfirm={() => handleRemoveCutlist(item.key)}
+                okText="Sim"
+                cancelText="Não"
+                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              >
+                <AntButton type="link">Remover</AntButton>
+              </Popconfirm>,
+            ]}
           >
             <List.Item.Meta
               avatar={<Avatar src={item.avatar} shape="square" />}
