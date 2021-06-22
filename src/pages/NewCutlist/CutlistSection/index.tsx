@@ -342,11 +342,26 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
                   fontSize: breakpoints.sm ? '' : '10px',
                 }}
               >
-                {materialOptions.map((material) => (
-                  <Select.Option value={material.value}>
-                    {material.label}
-                  </Select.Option>
-                ))}
+                <Select.OptGroup label="MDFs">
+                  {materialOptions
+                    .sort((a, b) => (a.label > b.label ? 1 : -1))
+                    .filter((material) => material.label.includes('MDF'))
+                    .map((material) => (
+                      <Select.Option value={material.value}>
+                        {material.label}
+                      </Select.Option>
+                    ))}
+                </Select.OptGroup>
+                <Select.OptGroup label="Compensados">
+                  {materialOptions
+                    .sort((a, b) => (a.label > b.label ? 1 : -1))
+                    .filter((material) => material.label.includes('COMPENSADO'))
+                    .map((material) => (
+                      <Select.Option value={material.value}>
+                        {material.label}
+                      </Select.Option>
+                    ))}
+                </Select.OptGroup>
               </Select>
             </Form.Item>
 
