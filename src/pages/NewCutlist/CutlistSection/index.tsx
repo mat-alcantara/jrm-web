@@ -632,6 +632,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
       <List
         dataSource={data}
         itemLayout="horizontal"
+        footer={<div>{`Total: R$ ${totalPrice}`}</div>}
         style={{ width: '100%', margin: '0 auto 64px auto' }}
         renderItem={(item) => (
           <List.Item
@@ -640,7 +641,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           >
             <List.Item.Meta
               avatar={<Avatar src={item.avatar} shape="square" />}
-              title={<a href="https://ant.design">{item.title}</a>}
+              title={<Typography>{item.title}</Typography>}
               description={item.description}
             />
           </List.Item>
