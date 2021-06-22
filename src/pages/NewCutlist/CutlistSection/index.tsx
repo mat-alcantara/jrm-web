@@ -80,18 +80,15 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
   const handleRemoveCutlist = useCallback(
     (id: string) => {
-      const newCutlistDataSourceState = cutlistDataSource.filter(
-        (cut) => cut.key !== id,
-      );
+      const newListDataState = listData.filter((cut) => cut.key !== id);
       const newCutlistState = cutlist.filter((cut) => cut.id !== id);
-      const priceToRemove = cutlistDataSource.find((cut) => cut.key === id)
-        ?.price;
+      const priceToRemove = cutlist.find((cut) => cut.id === id)?.price;
 
       if (priceToRemove) {
         handleUpdatePrice(priceToRemove * -1);
       }
 
-      setCutlistDataSource([...newCutlistDataSourceState]);
+      setListData([...newListDataState]);
       setCutlist([...newCutlistState]);
     },
     [cutlist, cutlistDataSource],
@@ -125,7 +122,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               {
                 key: cut.id,
                 title: `${cut.quantidade} - ${cut.side_a_size} [ ${cut.side_a_border} ] x ${cut.side_b_size} [ ${cut.side_b_border} ]`,
-                description: `${materialUsed.name} | ${cut.price}`,
+                description: `${materialUsed.name} | R$ ${cut.price}`,
                 avatar: G2P1,
               },
             ]);
@@ -202,7 +199,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         {
           key: cutlistId,
           title: `${quantidade} - ${side_a_size} [ ${side_a_border} ] x ${side_b_size} [ ${side_b_border} ]`,
-          description: `${materialUsed.name} | ${price}`,
+          description: `${materialUsed.name} | R$ ${price}`,
           avatar: G2P1,
         },
       ]);
