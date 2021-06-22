@@ -2,8 +2,6 @@ import React, { useCallback, useState, useEffect } from 'react';
 import {
   Typography,
   Divider,
-  Table,
-  Space,
   Popconfirm,
   Form,
   Select,
@@ -80,15 +78,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const data = [
-    {
-      key: 'teste',
-      title: '2 - 1200 [ 2 ] x 400 [ 1 ]',
-      description: 'MDF BRANCO TX 2 FACES COMUM 15MM | R$ 52,00',
-      avatar: G2P1,
-    },
-  ];
-
   const handleRemoveCutlist = useCallback(
     (id: string) => {
       const newCutlistDataSourceState = cutlistDataSource.filter(
@@ -135,7 +124,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               ...prevVal,
               {
                 key: cut.id,
-                title: `${cut.quantidade} - ${cut.side_a_size} [ ${cut.side_b_border} ] x ${cut.side_b_size} [ ${cut.side_b_border} ]`,
+                title: `${cut.quantidade} - ${cut.side_a_size} [ ${cut.side_a_border} ] x ${cut.side_b_size} [ ${cut.side_b_border} ]`,
                 description: `${materialUsed.name} | ${cut.price}`,
                 avatar: G2P1,
               },
@@ -148,68 +137,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     loadMaterialsAndCutsFromHook();
     setLoading(false);
   }, []);
-
-  const options = {
-    sideOptions: [
-      { value: '0', label: '0' },
-      { value: '1', label: '1' },
-      { value: '2', label: '2' },
-    ],
-    columns: [
-      {
-        title: 'Material',
-        dataIndex: 'material',
-        key: 'material',
-      },
-      {
-        title: 'Qtd.',
-        dataIndex: 'quantidade',
-        key: 'quantidade',
-      },
-      {
-        title: 'Lado A',
-        dataIndex: 'side_a_size',
-        key: 'side_a_size',
-      },
-      {
-        title: 'Fita A',
-        dataIndex: 'side_a_border',
-        key: 'side_b_border',
-      },
-      {
-        title: 'Lado B',
-        dataIndex: 'side_b_size',
-        key: 'side_b_size',
-      },
-      {
-        title: 'Fita B',
-        dataIndex: 'side_b_border',
-        key: 'side_b_border',
-      },
-      {
-        title: 'Preço',
-        dataIndex: 'price',
-        key: 'price',
-      },
-      {
-        title: '',
-        key: 'action',
-        render: (text: string, record: ICutlistData) => (
-          <Space size="middle">
-            <Popconfirm
-              title="Tem certeza de que deseja excluir essa peça?"
-              onConfirm={() => handleRemoveCutlist(record.key)}
-              okText="Sim"
-              cancelText="Não"
-              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-            >
-              <AntButton type="link">Remover</AntButton>
-            </Popconfirm>
-          </Space>
-        ),
-      },
-    ],
-  };
 
   const handleSubmit = useCallback(
     async ({
@@ -270,17 +197,13 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
       handleUpdatePrice(price);
 
-      setCutlistDataSource((prevVal) => [
+      setListData((prevVal) => [
         ...prevVal,
         {
           key: cutlistId,
-          material: materialUsed.name,
-          quantidade,
-          price,
-          side_a_size,
-          side_a_border,
-          side_b_border,
-          side_b_size,
+          title: `${quantidade} - ${side_a_size} [ ${side_a_border} ] x ${side_b_size} [ ${side_b_border} ]`,
+          description: `${materialUsed.name} | ${price}`,
+          avatar: G2P1,
         },
       ]);
 
@@ -617,11 +540,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         )}
       </InputCutlistContainer>
       <Divider />
-      {/* <Table
-        columns={options.columns}
-        dataSource={cutlistDataSource}
-        footer={() => `Total: R$ ${totalPrice}`}
-      /> */}
       <List
         dataSource={listData}
         itemLayout="horizontal"
