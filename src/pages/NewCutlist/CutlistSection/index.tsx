@@ -59,9 +59,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const breakpoints = Grid.useBreakpoint();
 
   const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
-  const [cutlistDataSource, setCutlistDataSource] = useState<ICutlistData[]>(
-    [],
-  );
   const [listData, setListData] = useState<
     {
       key: string;
@@ -91,7 +88,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
       setListData([...newListDataState]);
       setCutlist([...newCutlistState]);
     },
-    [cutlist, cutlistDataSource],
+    [cutlist, listData],
   );
 
   useEffect(() => {
@@ -222,7 +219,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         'side_b_border',
       ]);
     },
-    [cutlistDataSource, allMaterials, defaultMaterial, priceBase],
+    [listData, allMaterials, defaultMaterial, priceBase],
   );
 
   const handleSubmitMaterial = useCallback(
