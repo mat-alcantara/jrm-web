@@ -28,7 +28,7 @@ import ICutlistData from '../../../types/ICutlistData';
 import ICutlist from '../../../types/ICutlist';
 import IMaterial from '../../../types/IMaterial';
 
-import G2P1 from '../../../assets/G2P1.svg';
+import { sortCutlistData } from '../../../utils/sortCutlistData';
 
 interface ICutlistPageProps {
   setCutlist(data: ICutlist[]): void;
@@ -113,14 +113,21 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             (materialFound) => materialFound.id === cut.material_id,
           );
 
+          const { avatar, gborder, gside, pborder, pside } = sortCutlistData({
+            side_a_size: cut.side_a_size,
+            side_a_border: cut.side_a_border,
+            side_b_size: cut.side_b_size,
+            side_b_border: cut.side_b_border,
+          });
+
           if (materialUsed) {
             setListData((prevVal) => [
               ...prevVal,
               {
                 key: cut.id,
-                title: `${cut.quantidade} - ${cut.side_a_size} [ ${cut.side_a_border} ] x ${cut.side_b_size} [ ${cut.side_b_border} ]`,
+                title: `${cut.quantidade} - ${gside} [ ${gborder} ] x ${pside} [ ${pborder} ]`,
                 description: `${materialUsed.name} | R$ ${cut.price}`,
-                avatar: G2P1,
+                avatar,
               },
             ]);
           }
@@ -191,13 +198,20 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
 
       handleUpdatePrice(price);
 
+      const { avatar, pside, pborder, gside, gborder } = sortCutlistData({
+        side_a_border,
+        side_a_size,
+        side_b_border,
+        side_b_size,
+      });
+
       setListData((prevVal) => [
         ...prevVal,
         {
           key: cutlistId,
-          title: `${quantidade} - ${side_a_size} [ ${side_a_border} ] x ${side_b_size} [ ${side_b_border} ]`,
+          title: `${quantidade} - ${gside} [ ${gborder} ] x ${pside} [ ${pborder} ]`,
           description: `${materialUsed.name} | R$ ${price}`,
-          avatar: G2P1,
+          avatar,
         },
       ]);
 
