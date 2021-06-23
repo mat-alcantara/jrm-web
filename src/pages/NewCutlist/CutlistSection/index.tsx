@@ -15,8 +15,6 @@ import {
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-import { useMaterial } from '../../../hooks/Material';
-
 import { CutlistPageContainer, InputCutlistContainer } from './styles';
 
 import AntButton from '../../../components/AntButton';
@@ -36,21 +34,21 @@ interface ICutlistPageProps {
   handleUpdatePrice(newPrice: number): void;
   handleUpdatePriceBase(percent: number): void;
   priceBase: number;
+  allMaterials: IMaterial[];
 }
 
 const CutlistPage: React.FC<ICutlistPageProps> = ({
   setCutlist,
   cutlist,
+  allMaterials,
   totalPrice,
   handleUpdatePrice,
   handleUpdatePriceBase,
   priceBase,
 }) => {
-  const { loadMaterials } = useMaterial();
   const [form] = Form.useForm();
   const breakpoints = Grid.useBreakpoint();
 
-  const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
   const [listData, setListData] = useState<
     {
       key: string;
@@ -83,12 +81,8 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   );
 
   useEffect(() => {
-    async function loadMaterialsAndCutsFromHook() {
-      const allMaterialsFromHook = await loadMaterials();
-
-      setAllMaterials([...allMaterialsFromHook]);
-
-      const allMaterialOptions = allMaterialsFromHook.map((material) => {
+    async function loadMaterialsAndCuts() {
+      const allMaterialOptions = allMaterials.map((material) => {
         return {
           label: material.name,
           value: material.name,
@@ -100,7 +94,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
       // Load Cutlist Data Source
       if (cutlist.length > 0) {
         cutlist.forEach((cut) => {
-          const materialUsed = allMaterialsFromHook.find(
+          const materialUsed = allMaterials.find(
             (materialFound) => materialFound.id === cut.material_id,
           );
 
@@ -126,7 +120,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
       }
     }
 
-    loadMaterialsAndCutsFromHook();
+    loadMaterialsAndCuts();
     setLoading(false);
   }, []);
 

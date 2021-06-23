@@ -6,6 +6,7 @@ import AppContainer from '../../components/AppContainer';
 
 import { useCustomer } from '../../hooks/Customer';
 import { useOrder } from '../../hooks/Order';
+import { useMaterial } from '../../hooks/Material';
 
 import AuthSection from './AuthSection';
 import CustomerSection from './CustomerSection';
@@ -15,6 +16,7 @@ import DataSection from './DataSection';
 import ICustomer from '../../types/ICustomer';
 import ICutlist from '../../types/ICutlist';
 import IOrderData from '../../types/IOrderData';
+import IMaterial from '../../types/IMaterial';
 
 const NewCutlist: React.FC = () => {
   const breakpoints = Grid.useBreakpoint();
@@ -22,6 +24,7 @@ const NewCutlist: React.FC = () => {
   //* Hooks
   const { loadCustomers } = useCustomer();
   const { createOrder } = useOrder();
+  const { loadMaterials } = useMaterial();
 
   //* States
   // General Data
@@ -29,6 +32,8 @@ const NewCutlist: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
+  const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
+
   const [totalPrice, setTotalPrice] = useState(0);
   const [priceBase, setPriceBase] = useState<number>(75);
 
@@ -44,7 +49,14 @@ const NewCutlist: React.FC = () => {
       setAllCustomers((prevValue) => [...prevValue, ...customersFromHook]);
     }
 
+    async function loadMaterialsFromApi() {
+      const allMaterialsFromHook = await loadMaterials();
+
+      setAllMaterials([...allMaterialsFromHook]);
+    }
+
     loadCustomersFromApi();
+    loadMaterialsFromApi();
     setLoading(false);
   }, []);
 
@@ -105,6 +117,7 @@ const NewCutlist: React.FC = () => {
             setCutlist={setCutlist}
             totalPrice={totalPrice}
             handleUpdatePrice={handleUpdatePrice}
+            allMaterials={allMaterials}
           />
         )}
         {page === 3 && (
