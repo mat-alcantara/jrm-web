@@ -10,7 +10,7 @@ import { Container } from './styles';
 const { SubMenu, Item } = Menu;
 
 const Header: React.FC = () => {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const breakpoints = Grid.useBreakpoint();
 
   const handleLogOut = useCallback(async () => {
@@ -83,14 +83,17 @@ const Header: React.FC = () => {
                 <Link to="/customerslist">Todos os clientes</Link>
               </Item>
             </SubMenu>
-            <SubMenu title="Materiais">
-              <Item>
-                <Link to="/newmaterial">Novo material</Link>
-              </Item>
-              <Item>
-                <Link to="/materialslist">Todos os materiais</Link>
-              </Item>
-            </SubMenu>
+            {user.userType === 'production' && (
+              <SubMenu title="Materiais">
+                <Item>
+                  <Link to="/newmaterial">Novo material</Link>
+                </Item>
+                <Item>
+                  <Link to="/materialslist">Todos os materiais</Link>
+                </Item>
+              </SubMenu>
+            )}
+
             <Item onClick={handleLogOut}>Sair</Item>
           </Menu>
         </Col>
