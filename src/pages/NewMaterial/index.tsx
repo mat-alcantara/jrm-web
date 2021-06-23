@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Form } from '@unform/web';
@@ -8,6 +8,7 @@ import { Typography } from 'antd';
 import AppContainer from '../../components/AppContainer';
 
 import { useMaterial } from '../../hooks/Material';
+import { useAuth } from '../../hooks/Auth';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -26,9 +27,16 @@ interface IFormData {
 
 const NewMaterial: React.FC = () => {
   const { createMaterial } = useMaterial();
+  const { user } = useAuth();
 
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
+
+  useEffect(() => {
+    if (user.userType !== 'production') {
+      history.push('/dashboard');
+    }
+  }, []);
 
   const validateCustomerProps = useCallback(
     async ({ name, price, width, height }: IFormData) => {

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Table, Space, Typography, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import { useMaterial } from '../../hooks/Material';
+import { useAuth } from '../../hooks/Auth';
 
 import { Container } from './styles';
 
@@ -20,12 +22,18 @@ interface IMaterialsTableProps {
 
 const MaterialsList: React.FC = () => {
   const { loadMaterials, removeMaterial } = useMaterial();
+  const { user } = useAuth();
+  const history = useHistory();
 
   const [materialsDataSource, setMaterialsDataSource] = useState<
     IMaterialsTableProps[]
   >([]);
 
   useEffect(() => {
+    if (user.userType !== 'production') {
+      history.push('/dashboard');
+    }
+
     async function loadAllMaterialsFromHook() {
       const materialsFromHook = await loadMaterials();
 
