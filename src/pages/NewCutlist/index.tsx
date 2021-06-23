@@ -30,21 +30,13 @@ const NewCutlist: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [priceBase, setPriceBase] = useState<number | null>(null);
+  const [priceBase, setPriceBase] = useState<number>(75);
 
   // Select Customer Section Data
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
 
   // Cutlist Section Data
   const [cutlist, setCutlist] = useState<ICutlist[]>([]);
-
-  // Data Section
-  // const [orderData, setOrderData] = useState<IOrderData>();
-
-  // const createOrderFromStates = useCallback(async () => {
-  //   console.log(selectedCustomer, orderData, cutlist);
-  //   await createOrder(selectedCustomer, orderData, cutlist);
-  // }, [selectedCustomer, cutlist, orderData]);
 
   useEffect(() => {
     async function loadCustomersFromApi() {

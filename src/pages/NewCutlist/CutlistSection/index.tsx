@@ -35,7 +35,7 @@ interface ICutlistPageProps {
   totalPrice: number;
   handleUpdatePrice(newPrice: number): void;
   handleUpdatePriceBase(percent: number): void;
-  priceBase: number | null;
+  priceBase: number;
 }
 
 const CutlistPage: React.FC<ICutlistPageProps> = ({
