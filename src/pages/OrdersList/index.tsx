@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Table, Space, Typography, Popconfirm } from 'antd';
+import { Table, Space, Typography, Popconfirm, Input } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import AppContainer from '../../components/AppContainer';
 
@@ -36,7 +36,28 @@ const AllOrders: React.FC = () => {
   const { type } = useParams<IOrdersParams>();
 
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
+  const [tableDataSource, setTableDataSource] = useState<IDataSource[]>([]);
   const [pageTitle, setPageTitle] = useState<string>('');
+  const [orderSearch, setOrderSearch] = useState<string>('');
+
+  const handleUpdateTableDataSource = useCallback(() => {
+    const filteredDataSource = dataSource.filter((data) => {
+      const splittedSearchValue = orderSearch.split(' ');
+
+      return splittedSearchValue.every(
+        (subs) =>
+          data.order_code
+            .toString()
+            .toLocaleLowerCase()
+            .includes(subs.toLocaleLowerCase()) ||
+          data.customerName
+            .toLocaleLowerCase()
+            .includes(subs.toLocaleLowerCase()),
+      );
+    });
+
+    setTableDataSource([...filteredDataSource]);
+  }, [tableDataSource, dataSource, orderSearch]);
 
   useEffect(() => {
     let ordersFilter: string | null;
@@ -96,9 +117,11 @@ const AllOrders: React.FC = () => {
       });
 
       setDataSource([...dataToSetDataSource]);
+      setTableDataSource([...dataToSetDataSource]);
     }
 
     loadDataFromHook();
+    handleUpdateTableDataSource();
   }, []);
 
   const handleRemoveOrder = useCallback(
@@ -163,10 +186,6 @@ const AllOrders: React.FC = () => {
       title: 'Status do Pedido',
       dataIndex: 'orderStatus',
       key: 'orderStatus',
-      // filteredValue: [orderSort],
-      // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      // onFilter: (value: any, record: IDataSource) =>
-      //   record.orderStatus.indexOf(value) === 0,
     },
     {
       title: 'Preço',
@@ -243,21 +262,18 @@ const AllOrders: React.FC = () => {
     <AppContainer>
       <Container>
         <Typography.Title level={3}>{pageTitle}</Typography.Title>
-        {/* <Space style={{ marginBottom: 16, marginTop: 16 }}>
-          <Button onClick={() => setOrderSort('')}>Todos os pedidos</Button>
-          <Button onClick={() => setOrderSort('Em Produção')}>
-            Em produção
-          </Button>
-          <Button onClick={() => setOrderSort('Liberado para Transporte')}>
-            Liberados para transporte
-          </Button>
-          <Button onClick={() => setOrderSort('Transportado')}>
-            Transportados
-          </Button>
-          <Button onClick={() => setOrderSort('Entregue')}>Entregues</Button>
-          <Button onClick={() => setOrderSort('Orçamento')}>Orçamentos</Button>
-        </Space> */}
-        <Table columns={columns} dataSource={dataSource} />
+        <Input.Search
+          placeholder="Digite o código ou nome do cliente"
+          value={orderSearch}
+          onChange={(e) => setOrderSearch(e.target.value)}
+          onSearch={() => handleUpdateTableDataSource()}
+          style={{
+            maxWidth: '400px',
+            margin: '32px auto',
+            textAlign: 'center',
+          }}
+        />
+        <Table columns={columns} dataSource={tableDataSource} />
       </Container>
     </AppContainer>
   );

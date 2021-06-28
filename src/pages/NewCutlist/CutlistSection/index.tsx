@@ -15,6 +15,8 @@ import {
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
+import { useMaterial } from '../../../hooks/Material';
+
 import { CutlistPageContainer, InputCutlistContainer } from './styles';
 
 import AntButton from '../../../components/AntButton';
@@ -46,6 +48,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   handleUpdatePriceBase,
   priceBase,
 }) => {
+  const { createMaterial } = useMaterial();
   const [form] = Form.useForm();
   const breakpoints = Grid.useBreakpoint();
 
