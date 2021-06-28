@@ -151,9 +151,6 @@ const NewCutlist: React.FC = () => {
           <DataSection
             priceBase={priceBase}
             selectedCustomer={selectedCustomer}
-            cutlist={cutlist}
-            setCutlist={setCutlist}
-            setPage={setPage}
             handleUpdateOrderData={handleUpdateOrderData}
             totalPrice={totalPrice}
             handleAppyDiscount={handleAppyDiscount}
