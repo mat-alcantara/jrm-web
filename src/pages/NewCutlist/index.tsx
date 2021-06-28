@@ -76,13 +76,6 @@ const NewCutlist: React.FC = () => {
     [cutlist, selectedCustomer],
   );
 
-  const handleUpdatePriceBase = useCallback(
-    (percent: number) => {
-      setPriceBase(percent);
-    },
-    [priceBase],
-  );
-
   const handleAppyDiscount = useCallback(
     (updatedPriceBase: number) => {
       let priceSum = 0;
@@ -105,8 +98,6 @@ const NewCutlist: React.FC = () => {
             },
             updatedPriceBase,
           );
-
-          console.log(cut.price);
         }
 
         priceSum += cut.price;
@@ -148,7 +139,6 @@ const NewCutlist: React.FC = () => {
         )}
         {page === 2 && (
           <CutlistSection
-            handleUpdatePriceBase={handleUpdatePriceBase}
             priceBase={priceBase}
             cutlist={cutlist}
             setCutlist={setCutlist}
@@ -159,6 +149,7 @@ const NewCutlist: React.FC = () => {
         )}
         {page === 3 && (
           <DataSection
+            priceBase={priceBase}
             selectedCustomer={selectedCustomer}
             cutlist={cutlist}
             setCutlist={setCutlist}

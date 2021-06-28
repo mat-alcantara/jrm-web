@@ -7,7 +7,6 @@ import {
   Select,
   InputNumber,
   Grid,
-  Button,
   Spin,
   List,
   Avatar,
@@ -15,7 +14,7 @@ import {
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-import { useMaterial } from '../../../hooks/Material';
+// import { useMaterial } from '../../../hooks/Material';
 
 import { CutlistPageContainer, InputCutlistContainer } from './styles';
 
@@ -34,7 +33,6 @@ interface ICutlistPageProps {
   cutlist: ICutlist[];
   totalPrice: number;
   handleUpdatePrice(newPrice: number): void;
-  handleUpdatePriceBase(percent: number): void;
   priceBase: number;
   allMaterials: IMaterial[];
 }
@@ -45,10 +43,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   allMaterials,
   totalPrice,
   handleUpdatePrice,
-  handleUpdatePriceBase,
   priceBase,
 }) => {
-  const { createMaterial } = useMaterial();
+  // const { createMaterial } = useMaterial();
   const [form] = Form.useForm();
   const breakpoints = Grid.useBreakpoint();
 
@@ -224,51 +221,8 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
     [listData, allMaterials, defaultMaterial, priceBase],
   );
 
-  const updatePriceBase = useCallback(
-    ({ pricePercent }) => {
-      handleUpdatePriceBase(pricePercent);
-    },
-    [priceBase],
-  );
-
   if (loading) {
     return <Spin />;
-  }
-
-  if (!priceBase) {
-    return (
-      <Form
-        form={form}
-        onFinish={updatePriceBase}
-        layout="vertical"
-        labelAlign="left"
-      >
-        <Typography.Title level={3} style={{ textAlign: 'center' }}>
-          Tipo de cliente para cálculo do preço
-        </Typography.Title>
-        <Form.Item
-          name="pricePercent"
-          initialValue={75}
-          style={{ width: '410px', margin: '0 auto 12px auto' }}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, selecione uma porcentagem para cálculo!',
-            },
-          ]}
-          required={false}
-        >
-          <Select style={{ width: '100%', textAlign: 'center' }}>
-            <Select.Option value={75}>Balcão</Select.Option>
-            <Select.Option value={50}>Marceneiro</Select.Option>
-            <Select.Option value={0}>Sem acréscimo</Select.Option>
-          </Select>
-        </Form.Item>
-        <Button type="primary" htmlType="submit" block>
-          Confirmar
-        </Button>
-      </Form>
-    );
   }
 
   return (

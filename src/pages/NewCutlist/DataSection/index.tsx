@@ -23,6 +23,7 @@ interface IDataPageProps {
   cutlist: ICutlist[];
   totalPrice: number;
   handleAppyDiscount(updatedPriceBase: number): void;
+  priceBase: number;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
@@ -30,6 +31,7 @@ const DataPage: React.FC<IDataPageProps> = ({
   selectedCustomer,
   totalPrice,
   handleAppyDiscount,
+  priceBase,
 }) => {
   const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
@@ -187,17 +189,19 @@ const DataPage: React.FC<IDataPageProps> = ({
         <Form.Item label="Desconto">
           <Radio.Group
             onChange={(event) => handleAppyDiscount(event.target.value)}
+            defaultValue={priceBase}
           >
-            <Radio.Button defaultChecked value={75}>
-              Balcão
-            </Radio.Button>
+            <Radio.Button value={75}>Balcão</Radio.Button>
             <Radio.Button value={50}>Marceneiro</Radio.Button>
             <Radio.Button value={1}>Sem acréscimo</Radio.Button>
           </Radio.Group>
-          <Typography style={{ marginTop: '8px' }}>
-            {`Valor: R$ ${totalPrice},00`}
-          </Typography>
         </Form.Item>
+        <Typography.Title
+          level={5}
+          style={{ marginTop: '16px', color: '#009966', textAlign: 'center' }}
+        >
+          {`Valor: R$ ${totalPrice},00`}
+        </Typography.Title>
 
         {addressUpdate && (
           <Form
@@ -281,7 +285,7 @@ const DataPage: React.FC<IDataPageProps> = ({
           htmlType="submit"
           type="primary"
           disabled={!!addressUpdate}
-          style={{ marginTop: '32px', marginBottom: '64px' }}
+          style={{ marginTop: '16px', marginBottom: '64px' }}
         >
           Confirmar
         </AntButton>
