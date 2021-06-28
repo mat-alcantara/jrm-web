@@ -11,16 +11,12 @@ import AntButton from '../../../components/AntButton';
 import IOrderData from '../../../types/IOrderData';
 import ICustomer from '../../../types/ICustomer';
 import IAddressData from '../../../types/IAddressData';
-import ICutlist from '../../../types/ICutlist';
 
 import { DataPageContainer } from './styles';
 
 interface IDataPageProps {
-  setPage(page: number): void;
   handleUpdateOrderData(data: IOrderData): Promise<void>;
   selectedCustomer: ICustomer | undefined;
-  setCutlist(data: ICutlist[]): void;
-  cutlist: ICutlist[];
   totalPrice: number;
   handleAppyDiscount(updatedPriceBase: number): void;
   priceBase: number;

@@ -17,7 +17,8 @@ import AntButton from '../../components/AntButton';
 import ReactSelect from '../../components/ReactSelect';
 
 interface ISubmitData {
-  name: string;
+  firstname: string;
+  lastname: string;
   email?: string;
   tel: string;
   street: string;
@@ -50,7 +51,10 @@ const CreateCustomer: React.FC = () => {
   const validateCustomerProps = useCallback(
     async (validationData: ISubmitData) => {
       const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
+        firstname: Yup.string().required('Nome obrigatório'),
+        lastname: Yup.string().required(
+          'Sobrenome obrigatório. São as regras do banco de dados ¯\\_(ツ)_/¯',
+        ),
         email: Yup.string().email('Digite um e-mail válido'),
         tel: Yup.string()
           .required('Telefone obrigatório')
@@ -71,7 +75,34 @@ const CreateCustomer: React.FC = () => {
   );
 
   const handleSubmit = useCallback(
-    async ({ name, email, tel, area, street, city }: ISubmitData) => {
+    async ({
+      firstname,
+      lastname,
+      email,
+      tel,
+      area,
+      street,
+      city,
+    }: ISubmitData) => {
+      const capitalizeAndStrip = (input: string) => {
+        if (input) {
+          const updatedInput = input
+            .replace(/\w+/g, (txt) => {
+              // uppercase first letter and add rest unchanged
+              return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            })
+            .replace(/\s/g, '');
+
+          return updatedInput;
+        }
+
+        return input;
+      };
+
+      const name = `${capitalizeAndStrip(firstname)} ${capitalizeAndStrip(
+        lastname,
+      )}`;
+
       const telephone = tel.replace(/[^A-Z0-9]/gi, '');
       const state = 'Rio de Janeiro';
       const emailHandled = email || undefined; // Empty email returns undefined
@@ -85,7 +116,8 @@ const CreateCustomer: React.FC = () => {
 
       try {
         await validateCustomerProps({
-          name,
+          firstname,
+          lastname,
           email: emailHandled,
           tel: telephone,
           area,
@@ -119,7 +151,8 @@ const CreateCustomer: React.FC = () => {
       <Container>
         <Typography.Title level={3}>Crie um novo cliente</Typography.Title>
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <AntInput size="large" name="name" placeholder="Nome completo" />
+          <AntInput size="large" name="firstname" placeholder="Nome" />
+          <AntInput size="large" name="lastname" placeholder="Sobrenome" />
           <AntInput size="large" name="email" placeholder="Email" />
           <AntInput
             size="large"
