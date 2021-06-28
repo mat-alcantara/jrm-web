@@ -22,12 +22,14 @@ interface IDataPageProps {
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
   totalPrice: number;
+  handleAppyDiscount(updatedPriceBase: number): void;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
   handleUpdateOrderData,
   selectedCustomer,
   totalPrice,
+  handleAppyDiscount,
 }) => {
   const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
@@ -183,10 +185,14 @@ const DataPage: React.FC<IDataPageProps> = ({
           </Radio.Group>
         </Form.Item>
         <Form.Item label="Desconto">
-          <Radio.Group>
-            <Radio.Button value={75}>Balcão</Radio.Button>
+          <Radio.Group
+            onChange={(event) => handleAppyDiscount(event.target.value)}
+          >
+            <Radio.Button defaultChecked value={75}>
+              Balcão
+            </Radio.Button>
             <Radio.Button value={50}>Marceneiro</Radio.Button>
-            <Radio.Button value={0}>Sem acréscimo</Radio.Button>
+            <Radio.Button value={1}>Sem acréscimo</Radio.Button>
           </Radio.Group>
           <Typography style={{ marginTop: '8px' }}>
             {`Valor: R$ ${totalPrice},00`}

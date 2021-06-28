@@ -83,39 +83,40 @@ const NewCutlist: React.FC = () => {
     [priceBase],
   );
 
-  const handleAppyDiscount = useCallback((updatedPriceBase: number) => {
-    // material: IMaterial,
-    // cutlistData: Omit<ICutlist, 'id' | 'price' | 'material_id'>,
-    // pricePercent?: number,
+  const handleAppyDiscount = useCallback(
+    (updatedPriceBase: number) => {
+      let priceSum = 0;
 
-    let priceSum = 0;
-
-    cutlist.forEach((cut) => {
-      const materialUsed = allMaterials.find(
-        (material) => material.id === cut.material_id,
-      );
-
-      if (materialUsed) {
-        // eslint-disable-next-line no-param-reassign
-        cut.price = calculateCutlistPrice(
-          materialUsed,
-          {
-            quantidade: cut.quantidade,
-            side_a_border: cut.side_a_border,
-            side_a_size: cut.side_a_size,
-            side_b_border: cut.side_b_border,
-            side_b_size: cut.side_b_size,
-          },
-          updatedPriceBase,
+      cutlist.forEach((cut) => {
+        const materialUsed = allMaterials.find(
+          (material) => material.id === cut.material_id,
         );
-      }
 
-      priceSum += cut.price;
-    });
+        if (materialUsed) {
+          // eslint-disable-next-line no-param-reassign
+          cut.price = calculateCutlistPrice(
+            materialUsed,
+            {
+              quantidade: cut.quantidade,
+              side_a_border: cut.side_a_border,
+              side_a_size: cut.side_a_size,
+              side_b_border: cut.side_b_border,
+              side_b_size: cut.side_b_size,
+            },
+            updatedPriceBase,
+          );
 
-    setPriceBase(updatedPriceBase);
-    setTotalPrice(priceSum);
-  }, []);
+          console.log(cut.price);
+        }
+
+        priceSum += cut.price;
+      });
+
+      setPriceBase(updatedPriceBase);
+      setTotalPrice(priceSum);
+    },
+    [priceBase, totalPrice],
+  );
 
   // Loading page while not load data from API
   if (loading) {
@@ -164,6 +165,7 @@ const NewCutlist: React.FC = () => {
             setPage={setPage}
             handleUpdateOrderData={handleUpdateOrderData}
             totalPrice={totalPrice}
+            handleAppyDiscount={handleAppyDiscount}
           />
         )}
         <NavMenu>
