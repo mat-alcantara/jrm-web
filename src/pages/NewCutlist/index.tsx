@@ -18,6 +18,8 @@ import ICutlist from '../../types/ICutlist';
 import IOrderData from '../../types/IOrderData';
 import IMaterial from '../../types/IMaterial';
 
+import calculateCutlistPrice from '../../utils/calculateCutlistPrice';
+
 const NewCutlist: React.FC = () => {
   const breakpoints = Grid.useBreakpoint();
 
@@ -81,6 +83,40 @@ const NewCutlist: React.FC = () => {
     [priceBase],
   );
 
+  const handleAppyDiscount = useCallback((updatedPriceBase: number) => {
+    // material: IMaterial,
+    // cutlistData: Omit<ICutlist, 'id' | 'price' | 'material_id'>,
+    // pricePercent?: number,
+
+    let priceSum = 0;
+
+    cutlist.forEach((cut) => {
+      const materialUsed = allMaterials.find(
+        (material) => material.id === cut.material_id,
+      );
+
+      if (materialUsed) {
+        // eslint-disable-next-line no-param-reassign
+        cut.price = calculateCutlistPrice(
+          materialUsed,
+          {
+            quantidade: cut.quantidade,
+            side_a_border: cut.side_a_border,
+            side_a_size: cut.side_a_size,
+            side_b_border: cut.side_b_border,
+            side_b_size: cut.side_b_size,
+          },
+          updatedPriceBase,
+        );
+      }
+
+      priceSum += cut.price;
+    });
+
+    setPriceBase(updatedPriceBase);
+    setTotalPrice(priceSum);
+  }, []);
+
   // Loading page while not load data from API
   if (loading) {
     return (
@@ -127,6 +163,7 @@ const NewCutlist: React.FC = () => {
             setCutlist={setCutlist}
             setPage={setPage}
             handleUpdateOrderData={handleUpdateOrderData}
+            totalPrice={totalPrice}
           />
         )}
         <NavMenu>

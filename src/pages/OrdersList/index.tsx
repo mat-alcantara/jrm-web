@@ -85,7 +85,11 @@ const AllOrders: React.FC = () => {
         ordersFilter = null;
     }
 
-    setPageTitle(`Lista de Pedidos - ${ordersFilter}`);
+    setPageTitle(
+      ordersFilter === ''
+        ? 'Lista de Pedidos'
+        : `Lista de Pedidos - ${ordersFilter}`,
+    );
 
     async function loadDataFromHook() {
       const allCustomersFromHook = await loadCustomers();

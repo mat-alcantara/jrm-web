@@ -21,11 +21,13 @@ interface IDataPageProps {
   selectedCustomer: ICustomer | undefined;
   setCutlist(data: ICutlist[]): void;
   cutlist: ICutlist[];
+  totalPrice: number;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
   handleUpdateOrderData,
   selectedCustomer,
+  totalPrice,
 }) => {
   const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
@@ -171,7 +173,6 @@ const DataPage: React.FC<IDataPageProps> = ({
         <Form.Item name="ps" label="Observações">
           <Input />
         </Form.Item>
-
         <Form.Item label="Tipo de pagamento" name="paymentStatus">
           <Radio.Group disabled={!!isEstimate}>
             <Radio.Button value="Pago">Pago</Radio.Button>
@@ -180,6 +181,16 @@ const DataPage: React.FC<IDataPageProps> = ({
             </Radio.Button>
             <Radio.Button value="Receber na Entrega">Receber</Radio.Button>
           </Radio.Group>
+        </Form.Item>
+        <Form.Item label="Desconto">
+          <Radio.Group>
+            <Radio.Button value={75}>Balcão</Radio.Button>
+            <Radio.Button value={50}>Marceneiro</Radio.Button>
+            <Radio.Button value={0}>Sem acréscimo</Radio.Button>
+          </Radio.Group>
+          <Typography style={{ marginTop: '8px' }}>
+            {`Valor: R$ ${totalPrice},00`}
+          </Typography>
         </Form.Item>
 
         {addressUpdate && (
