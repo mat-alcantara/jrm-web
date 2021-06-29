@@ -57,7 +57,9 @@ const AllOrders: React.FC = () => {
       );
     });
 
-    setTableDataSource([...filteredDataSource]);
+    setTableDataSource([
+      ...filteredDataSource.sort((a, b) => a.order_code - b.order_code),
+    ]);
   }, [tableDataSource, dataSource, orderSearch]);
 
   useEffect(() => {
@@ -122,7 +124,9 @@ const AllOrders: React.FC = () => {
       });
 
       setDataSource([...dataToSetDataSource]);
-      setTableDataSource([...dataToSetDataSource]);
+      setTableDataSource([
+        ...dataToSetDataSource.sort((a, b) => a.order_code - b.order_code),
+      ]);
     }
 
     loadDataFromHook();
