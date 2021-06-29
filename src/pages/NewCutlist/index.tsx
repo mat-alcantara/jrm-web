@@ -75,6 +75,15 @@ const NewCutlist: React.FC = () => {
       setCutlist(JSON.parse(cutlistFromLocalStorage));
     }
 
+    // Load stored discount
+    const priceBaseFromLocalStorage = localStorage.getItem(
+      '@JRMCompensados:selectedPriceBase',
+    );
+
+    if (priceBaseFromLocalStorage) {
+      setPriceBase(JSON.parse(priceBaseFromLocalStorage));
+    }
+
     loadCustomersFromApi();
     loadMaterialsFromApi();
     setLoading(false);
@@ -131,6 +140,10 @@ const NewCutlist: React.FC = () => {
 
       setPriceBase(updatedPriceBase);
       setTotalPrice(priceSum);
+      localStorage.setItem(
+        '@JRMCompensados:selectedPriceBase',
+        JSON.stringify(updatedPriceBase),
+      );
     },
     [priceBase, totalPrice],
   );

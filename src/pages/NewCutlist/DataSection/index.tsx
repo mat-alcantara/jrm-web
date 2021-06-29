@@ -79,7 +79,7 @@ const DataPage: React.FC<IDataPageProps> = ({
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function onChange(_: any, dateString: string) {
+  function onChangeDate(_: any, dateString: string) {
     const date = new Date(dateString);
 
     date.setDate(date.getDate() + 1);
@@ -193,7 +193,7 @@ const DataPage: React.FC<IDataPageProps> = ({
           </Radio.Group>
         </Form.Item>
         <Form.Item label="Data de Entrega">
-          <DatePicker onChange={onChange} />
+          <DatePicker onChange={onChangeDate} />
         </Form.Item>
         <Form.Item label="Desconto">
           <Radio.Group
