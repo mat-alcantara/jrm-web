@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Steps, Spin, Button, Grid, Popconfirm } from 'antd';
+import { Steps, Spin, Button, Grid } from 'antd';
 import { Container, Loading, NavMenu } from './styles';
 import AppContainer from '../../components/AppContainer';
 
