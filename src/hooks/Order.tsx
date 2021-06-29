@@ -67,6 +67,30 @@ export const OrderProvider: React.FC = ({ children }) => {
     window.open(fileURL);
   }, []);
 
+  const updateDeliveryDate = useCallback(
+    async (id: string, deliveryDate?: Date) => {
+      try {
+        const token = getToken();
+
+        await api.put(
+          `/delivery/${id}`,
+          { deliveryDate },
+          {
+            headers: {
+              Authorization: `bearer ${token}`,
+            },
+          },
+        );
+      } catch {
+        addToast({
+          type: 'error',
+          title: 'Ocorreu um erro ao atualizar a data de entrega do pedido',
+        });
+      }
+    },
+    [],
+  );
+
   const createOrder = useCallback(
     async (
       selectedCustomer: ICustomer,
@@ -74,8 +98,6 @@ export const OrderProvider: React.FC = ({ children }) => {
       cutlist: ICutlist[],
     ) => {
       const token = getToken();
-
-      console.log(orderData.deliveryDate);
 
       const cutlistWithoutId = cutlist.map((cut) => {
         return {
@@ -107,15 +129,7 @@ export const OrderProvider: React.FC = ({ children }) => {
       });
 
       if (orderData.deliveryDate) {
-        await api.put(
-          `/delivery/${orderCreated.data.id}`,
-          orderData.deliveryDate,
-          {
-            headers: {
-              Authorization: `bearer ${token}`,
-            },
-          },
-        );
+        await updateDeliveryDate(orderCreated.data.id, orderData.deliveryDate);
       }
 
       await generatePDF(orderCreated.data.id);
@@ -162,30 +176,6 @@ export const OrderProvider: React.FC = ({ children }) => {
         addToast({
           type: 'error',
           title: 'Ocorreu um erro na atualização do status do pedido',
-        });
-      }
-    },
-    [],
-  );
-
-  const updateDeliveryDate = useCallback(
-    async (id: string, deliveryDate?: Date) => {
-      try {
-        const token = getToken();
-
-        await api.put(
-          `/delivery/${id}`,
-          { deliveryDate },
-          {
-            headers: {
-              Authorization: `bearer ${token}`,
-            },
-          },
-        );
-      } catch {
-        addToast({
-          type: 'error',
-          title: 'Ocorreu um erro ao atualizar a data de entrega do pedido',
         });
       }
     },
