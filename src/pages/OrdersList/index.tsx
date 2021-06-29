@@ -31,6 +31,7 @@ const AllOrders: React.FC = () => {
     removeOrder,
     generatePDF,
     updateOrderStatus,
+    updateDeliveryDate,
   } = useOrder();
   const { loadCustomers } = useCustomer();
   const { type } = useParams<IOrdersParams>();
@@ -163,6 +164,9 @@ const AllOrders: React.FC = () => {
           orderUpdated = 'Em Produção';
       }
 
+      if (orderStatus === 'Orçamento') {
+        await updateDeliveryDate(id);
+      }
       await updateOrderStatus(id, orderUpdated);
 
       window.location.reload();
