@@ -209,6 +209,23 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         setDefaultMaterial(materialOptions.indexOf(materialToUpdateDefault));
       }
 
+      localStorage.setItem(
+        '@JRMCompensados:cutlist',
+        JSON.stringify([
+          ...cutlist,
+          {
+            id: cutlistId,
+            material_id: materialUsed.id,
+            quantidade,
+            price,
+            side_a_size,
+            side_a_border,
+            side_b_border,
+            side_b_size,
+          },
+        ]),
+      );
+
       // Clear all fields of form
       form.resetFields([
         'quantidade',
