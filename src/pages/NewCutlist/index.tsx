@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Steps, Spin, Button, Grid } from 'antd';
+import { Steps, Spin, Button, Grid, Popconfirm } from 'antd';
 import { Container, Loading, NavMenu } from './styles';
 import AppContainer from '../../components/AppContainer';
 
@@ -210,6 +210,19 @@ const NewCutlist: React.FC = () => {
           />
         )}
         <NavMenu>
+          {page === 1 && (
+            <Button
+              block
+              type="default"
+              style={{ marginBottom: '8px' }}
+              onClick={() => {
+                handleClearLocalStorage();
+                window.location.reload();
+              }}
+            >
+              Resetar Dados
+            </Button>
+          )}
           <div
             style={{
               display: 'flex',
