@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Typography, Form, Radio, Input, Select, Grid } from 'antd';
+import { Typography, Form, Radio, Input, Select, Grid, DatePicker } from 'antd';
 
 import { useCustomer } from '../../../hooks/Customer';
 import { useAuth } from '../../../hooks/Auth';
@@ -53,7 +53,7 @@ const DataPage: React.FC<IDataPageProps> = ({
 
       if (!allOrderData.ps) {
         // eslint-disable-next-line no-param-reassign
-        allOrderData.ps = '-';
+        allOrderData.ps = undefined;
       }
 
       if (!allOrderData.paymentStatus) {
@@ -181,6 +181,12 @@ const DataPage: React.FC<IDataPageProps> = ({
             </Radio.Button>
             <Radio.Button value="Receber na Entrega">Receber</Radio.Button>
           </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          name="deliveryDate"
+          label="Data de Entrega (Padrão 5 dias úteis)"
+        >
+          <DatePicker />
         </Form.Item>
         <Form.Item label="Desconto">
           <Radio.Group
