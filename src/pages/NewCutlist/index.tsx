@@ -57,6 +57,14 @@ const NewCutlist: React.FC = () => {
       setAllMaterials([...allMaterialsFromHook]);
     }
 
+    const customerFromLocalStorage = localStorage.getItem(
+      '@JRMCompensados:customerSelected',
+    );
+
+    if (customerFromLocalStorage) {
+      setSelectedCustomer(JSON.parse(customerFromLocalStorage));
+    }
+
     loadCustomersFromApi();
     loadMaterialsFromApi();
     setLoading(false);
