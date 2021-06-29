@@ -87,9 +87,17 @@ const NewCutlist: React.FC = () => {
     [totalPrice],
   );
 
+  const handleClearLocalStorage = useCallback(() => {
+    localStorage.removeItem('@JRMCompensados:cutlist');
+    localStorage.removeItem('@JRMCompensados:customerSelected');
+    localStorage.removeItem('@JRMCompensados:selectedPriceBase');
+  }, []);
+
   const handleUpdateOrderData = useCallback(
     async (orderDataFromSection: IOrderData) => {
       await createOrder(selectedCustomer, orderDataFromSection, cutlist);
+
+      handleClearLocalStorage();
     },
     [cutlist, selectedCustomer],
   );
