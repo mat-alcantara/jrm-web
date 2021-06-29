@@ -72,7 +72,13 @@ const NewCutlist: React.FC = () => {
     );
 
     if (cutlistFromLocalStorage) {
-      setCutlist(JSON.parse(cutlistFromLocalStorage));
+      const parsedCutlist: ICutlist[] = JSON.parse(cutlistFromLocalStorage);
+
+      parsedCutlist.forEach((cut) =>
+        setTotalPrice((prevValue) => prevValue + cut.price),
+      );
+
+      setCutlist(parsedCutlist);
     }
 
     // Load stored discount
@@ -115,7 +121,7 @@ const NewCutlist: React.FC = () => {
     (updatedPriceBase: number) => {
       let priceSum = 0;
 
-      cutlist.forEach((cut) => {
+      const cutlistWithPriceUpdated = cutlist.map((cut) => {
         const materialUsed = allMaterials.find(
           (material) => material.id === cut.material_id,
         );
@@ -136,16 +142,24 @@ const NewCutlist: React.FC = () => {
         }
 
         priceSum += cut.price;
+
+        return cut;
       });
 
       setPriceBase(updatedPriceBase);
       setTotalPrice(priceSum);
+
       localStorage.setItem(
         '@JRMCompensados:selectedPriceBase',
         JSON.stringify(updatedPriceBase),
       );
+
+      localStorage.setItem(
+        '@JRMCompensados:cutlist',
+        JSON.stringify(cutlistWithPriceUpdated),
+      );
     },
-    [priceBase, totalPrice],
+    [priceBase, totalPrice, cutlist, allMaterials],
   );
 
   // Loading page while not load data from API
