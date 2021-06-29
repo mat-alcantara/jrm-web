@@ -21,6 +21,7 @@ interface IOrderContext {
   generatePDF(id: string): Promise<void>;
   loadOrders(): Promise<IOrder[]>;
   updateOrderStatus(id: string, orderStatus: string): Promise<void>;
+  updateDeliveryDate(id: string, deliveryDate?: Date): Promise<void>;
 }
 
 const OrderContext = createContext<IOrderContext>({} as IOrderContext);
@@ -153,6 +154,30 @@ export const OrderProvider: React.FC = ({ children }) => {
     [],
   );
 
+  const updateDeliveryDate = useCallback(
+    async (id: string, deliveryDate?: Date) => {
+      try {
+        const token = getToken();
+
+        await api.put(
+          `/delivery/${id}`,
+          { deliveryDate },
+          {
+            headers: {
+              Authorization: `bearer ${token}`,
+            },
+          },
+        );
+      } catch {
+        addToast({
+          type: 'error',
+          title: 'Ocorreu um erro ao atualizar a data de entrega do pedido',
+        });
+      }
+    },
+    [],
+  );
+
   return (
     <OrderContext.Provider
       value={{
@@ -161,6 +186,7 @@ export const OrderProvider: React.FC = ({ children }) => {
         generatePDF,
         createOrder,
         updateOrderStatus,
+        updateDeliveryDate,
       }}
     >
       {children}
