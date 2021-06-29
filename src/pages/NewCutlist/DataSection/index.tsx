@@ -33,6 +33,7 @@ const DataPage: React.FC<IDataPageProps> = ({
   const [form] = Form.useForm();
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
   const [isEstimate, setIsEstimate] = useState<boolean>(false);
+  const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
 
   const { updateCustomerAddress } = useCustomer();
   const { user } = useAuth();
@@ -61,9 +62,9 @@ const DataPage: React.FC<IDataPageProps> = ({
         allOrderData.paymentStatus = 'Receber na Entrega';
       }
 
-      handleUpdateOrderData({ ...allOrderData, seller });
+      handleUpdateOrderData({ ...allOrderData, seller, deliveryDate });
     },
-    [addressUpdate],
+    [addressUpdate, deliveryDate],
   );
 
   const handleSubmitCustomerAddress = useCallback(
@@ -76,6 +77,15 @@ const DataPage: React.FC<IDataPageProps> = ({
     },
     [addressUpdate],
   );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function onChange(_: any, dateString: string) {
+    const date = new Date(dateString);
+
+    date.setDate(date.getDate() + 1);
+
+    setDeliveryDate(date);
+  }
 
   return (
     <DataPageContainer>
@@ -182,11 +192,8 @@ const DataPage: React.FC<IDataPageProps> = ({
             <Radio.Button value="Receber na Entrega">Receber</Radio.Button>
           </Radio.Group>
         </Form.Item>
-        <Form.Item
-          name="deliveryDate"
-          label="Data de Entrega (Padrão 5 dias úteis)"
-        >
-          <DatePicker />
+        <Form.Item label="Data de Entrega">
+          <DatePicker onChange={onChange} />
         </Form.Item>
         <Form.Item label="Desconto">
           <Radio.Group

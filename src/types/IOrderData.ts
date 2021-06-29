@@ -6,4 +6,5 @@ export default interface IOrderData {
   ps?: string;
   pricePercent: number;
   delivery_type: string;
+  deliveryDate?: Date;
 }

@@ -75,6 +75,8 @@ export const OrderProvider: React.FC = ({ children }) => {
     ) => {
       const token = getToken();
 
+      console.log(orderData.deliveryDate);
+
       const cutlistWithoutId = cutlist.map((cut) => {
         return {
           material_id: cut.material_id,
@@ -103,6 +105,18 @@ export const OrderProvider: React.FC = ({ children }) => {
           Authorization: `bearer ${token}`,
         },
       });
+
+      if (orderData.deliveryDate) {
+        await api.put(
+          `/delivery/${orderCreated.data.id}`,
+          orderData.deliveryDate,
+          {
+            headers: {
+              Authorization: `bearer ${token}`,
+            },
+          },
+        );
+      }
 
       await generatePDF(orderCreated.data.id);
 
