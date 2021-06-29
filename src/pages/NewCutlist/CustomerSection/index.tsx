@@ -54,6 +54,11 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
       if (customerSelectedByAutocomplete) {
         setSelectedCustomer(customerSelectedByAutocomplete);
       }
+
+      localStorage.setItem(
+        '@JRMCompensados:userSelected',
+        JSON.stringify(customerSelectedByAutocomplete),
+      );
     },
     [selectedCustomer, allCustomers],
   );
