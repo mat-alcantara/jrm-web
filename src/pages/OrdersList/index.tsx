@@ -156,11 +156,9 @@ const AllOrders: React.FC = () => {
           orderUpdated = 'Liberado para Transporte';
           break;
         case 'Liberado para Transporte':
-          orderUpdated = 'Transportado';
-          break;
-        case 'Transportado':
           orderUpdated = 'Entregue';
           break;
+
         case 'Entregue':
           orderUpdated = 'Em Produção';
           break;
