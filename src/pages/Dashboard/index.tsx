@@ -11,6 +11,7 @@ import IOrder from '../../types/IOrder';
 import ICustomer from '../../types/ICustomer';
 
 import AppContainer from '../../components/AppContainer';
+import Tags from '../../components/Tags';
 
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
@@ -45,6 +46,7 @@ const Dashboard: React.FC = () => {
   return (
     <AppContainer>
       <Container>
+        <Tags />
         <Row
           justify="center"
           style={{
