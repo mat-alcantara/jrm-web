@@ -6,7 +6,6 @@ import { useReactToPrint } from 'react-to-print';
 // import { sortCutlistData } from '../../utils/sortCutlistData';
 
 import G0P0 from '../../assets/G0P0.svg';
-import G1P2 from '../../assets/G1P2.svg';
 
 import {
   Container,
@@ -24,88 +23,177 @@ const Tags: React.FC = () => {
     content: () => componentRef.current,
   });
 
+  const times = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+  ];
+
   return (
     <Container>
-      <div style={{ display: 'none' }}>
+      <div style={{ display: 'none' }} className="print-container">
         <TagContainer ref={componentRef}>
-          <Typography.Title level={3} style={{ textAlign: 'center' }}>
-            311 - Mateus Alcantara
-          </Typography.Title>
+          <div style={{ height: '90vh' }}>
+            <Typography.Title
+              level={4}
+              style={{ textAlign: 'center', marginBottom: '0px' }}
+            >
+              311 - Mateus Alcantara
+            </Typography.Title>
+            <Typography.Title
+              level={5}
+              style={{ textAlign: 'center', marginTop: '0px' }}
+            >
+              Frade
+            </Typography.Title>
 
-          <OrderDataContainer>
-            <Typography>Data de Entrega: 05/07/2021</Typography>
-            <Typography>Loja: Frade</Typography>
-            <Typography>Tipo de entrega: Entrega</Typography>
-            <Typography>
-              Endereço do cliente: Travessa dos Coqueiros, n° 40
-            </Typography>
-          </OrderDataContainer>
-          <Checklist>
-            <ChecklistItem>
-              <FiSquare size={20} style={{ marginRight: '8px' }} />
-              <Typography.Text>
-                1 - 500 [0] x 200 [0] - MDF BRANCO TX 2 FACES COMUM 15MM
-              </Typography.Text>
-            </ChecklistItem>
-            <ChecklistItem>
-              <FiSquare size={20} style={{ marginRight: '8px' }} />
-              <Typography.Text>
-                2 - 850 [1] x 400 [2] - MDF BRANCO TX 2 FACES COMUM 15MM
-              </Typography.Text>
-            </ChecklistItem>
-            <ChecklistItem>
-              <FiSquare size={20} style={{ marginRight: '8px' }} />
-              <Typography.Text>
-                1 - 600 [0] x 100 [0] - MDF BRANCO TX 2 FACES COMUM 15MM
-              </Typography.Text>
-            </ChecklistItem>
-          </Checklist>
-          <Divider />
+            <OrderDataContainer>
+              <Typography>Data de Entrega: 05/07/2021</Typography>
+              <Typography>Tipo de entrega: Entrega</Typography>
+              <Typography>Telefone: (24) 99971-0064</Typography>
+              <Typography>
+                Endereço do cliente: Travessa dos Coqueiros, n° 40 - Frade,
+                Angra dos Reis
+              </Typography>
+              <Typography>Observações: Cliente com urgencia</Typography>
+            </OrderDataContainer>
+            <Checklist>
+              <ChecklistItem>
+                <FiSquare size={15} style={{ marginRight: '4px' }} />
+                <Typography.Text>
+                  1 - 500 [ 0 ] x 200 [ 0 ] - MDF BRANCO TX 2 FACES COMUM 15MM
+                </Typography.Text>
+              </ChecklistItem>
+              <ChecklistItem>
+                <FiSquare size={15} style={{ marginRight: '4px' }} />
+                <Typography.Text>
+                  1 - 500 [ 0 ] x 200 [ 0 ] - MDF BRANCO TX 2 FACES COMUM 15MM
+                </Typography.Text>
+              </ChecklistItem>
+              <ChecklistItem>
+                <FiSquare size={15} style={{ marginRight: '4px' }} />
+                <Typography.Text>
+                  1 - 500 [ 0 ] x 200 [ 0 ] - MDF BRANCO TX 2 FACES COMUM 15MM
+                </Typography.Text>
+              </ChecklistItem>
+            </Checklist>
+            <Divider />
+          </div>
           <TagList>
-            <TagItem>
-              <img src={G0P0} alt="Etiqueta" />
-              <Typography.Text strong style={{ fontSize: '16px' }}>
-                500 x 200
-              </Typography.Text>
-              <Typography.Text>
-                MDF BRANCO TX 2 FACES COMUM 15MM
-              </Typography.Text>
-              <Typography.Text>Mateus Alcantara</Typography.Text>
-              <Typography.Text type="secondary">Peça 01/04</Typography.Text>
-            </TagItem>
-            <TagItem>
-              <img src={G1P2} alt="Etiqueta" />
-              <Typography.Text strong style={{ fontSize: '16px' }}>
-                850 x 400
-              </Typography.Text>
-              <Typography.Text>
-                MDF BRANCO TX 2 FACES COMUM 15MM
-              </Typography.Text>
-              <Typography.Text>Mateus Alcantara</Typography.Text>
-              <Typography.Text type="secondary">Peça 02/04</Typography.Text>
-            </TagItem>
-            <TagItem>
-              <img src={G1P2} alt="Etiqueta" />
-              <Typography.Text strong style={{ fontSize: '16px' }}>
-                850 x 400
-              </Typography.Text>
-              <Typography.Text>
-                MDF BRANCO TX 2 FACES COMUM 15MM
-              </Typography.Text>
-              <Typography.Text>Mateus Alcantara</Typography.Text>
-              <Typography.Text type="secondary">Peça 03/04</Typography.Text>
-            </TagItem>
-            <TagItem>
-              <img src={G0P0} alt="Etiqueta" />
-              <Typography.Text strong style={{ fontSize: '16px' }}>
-                600 x 100
-              </Typography.Text>
-              <Typography.Text>
-                MDF BRANCO TX 2 FACES COMUM 15MM
-              </Typography.Text>
-              <Typography.Text>Mateus Alcantara</Typography.Text>
-              <Typography.Text type="secondary">Peça 04/04</Typography.Text>
-            </TagItem>
+            {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+            {times.map((_time) => (
+              <>
+                <div className="page-break" />
+                <TagItem>
+                  <img src={G0P0} alt="Etiqueta" />
+                  <Typography.Text strong style={{ fontSize: '13px' }}>
+                    500 x 200
+                  </Typography.Text>
+                  <Typography.Text>
+                    MDF BRANCO TX 2 FACES COMUM 15MM
+                  </Typography.Text>
+                  <Typography.Text>12580 - Mateus Alcantara</Typography.Text>
+                  <Typography.Text>Peça 01/04</Typography.Text>
+                </TagItem>
+              </>
+            ))}
           </TagList>
         </TagContainer>
       </div>
