@@ -169,7 +169,7 @@ const Tags: React.FC<TagsProps> = ({ id }) => {
           </div>
           <TagList>
             {tagCutlist
-              ?.sort((a, b) => a.gside - b.gside)
+              ?.sort((a, b) => b.gside - a.gside)
               .map((cut, index) => {
                 return (
                   <>

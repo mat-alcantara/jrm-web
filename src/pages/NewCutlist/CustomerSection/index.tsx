@@ -4,6 +4,8 @@ import { CheckCircleOutlined } from '@ant-design/icons';
 
 import { Link } from 'react-router-dom';
 
+import { useCustomer } from '../../../hooks/Customer';
+
 import {
   CustomerPageContainer,
   CustomerAutocompleteAndButton,
@@ -17,15 +19,14 @@ import ICustomer from '../../../types/ICustomer';
 interface ICustomerSelectionProps {
   selectedCustomer: ICustomer | undefined;
   setSelectedCustomer(customerData: ICustomer): void;
-  allCustomers: ICustomer[];
 }
 
 const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
   selectedCustomer,
   setSelectedCustomer,
-  allCustomers,
 }) => {
   const breakpoints = Grid.useBreakpoint();
+  const { loadCustomers } = useCustomer();
 
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<
     { value: string; id: string }[]
@@ -33,13 +34,18 @@ const CustomerSelection: React.FC<ICustomerSelectionProps> = ({
   const [searchedOptions, setSearchedOptions] = useState<
     { value: string; id: string }[]
   >([]);
+  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
 
   useEffect(() => {
     async function loadAutoCompleteOptions() {
-      const allOptions = allCustomers.map((customer) => {
+      const allCustomersFromApi = await loadCustomers();
+
+      const allOptions = allCustomersFromApi.map((customer) => {
         return { value: customer.name, id: customer.id };
       });
       setAutoCompleteOptions([...allOptions]);
+
+      setAllCustomers([...allCustomersFromApi]);
     }
 
     loadAutoCompleteOptions();

@@ -61,7 +61,6 @@ const Header: React.FC = () => {
                   Liberados para Transporte
                 </Link>
               </Item>
-
               <Item>
                 <Link to="/orders/entregue">Entregues</Link>
               </Item>

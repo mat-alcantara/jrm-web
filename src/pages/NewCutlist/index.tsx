@@ -4,11 +4,9 @@ import { Steps, Spin, Button, Grid } from 'antd';
 import { Container, Loading, NavMenu } from './styles';
 import AppContainer from '../../components/AppContainer';
 
-import { useCustomer } from '../../hooks/Customer';
 import { useOrder } from '../../hooks/Order';
 import { useMaterial } from '../../hooks/Material';
 
-import AuthSection from './AuthSection';
 import CustomerSection from './CustomerSection';
 import CutlistSection from './CutlistSection';
 import DataSection from './DataSection';
@@ -24,7 +22,6 @@ const NewCutlist: React.FC = () => {
   const breakpoints = Grid.useBreakpoint();
 
   //* Hooks
-  const { loadCustomers } = useCustomer();
   const { createOrder } = useOrder();
   const { loadMaterials } = useMaterial();
 
@@ -32,8 +29,7 @@ const NewCutlist: React.FC = () => {
   // General Data
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
+  // const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [allMaterials, setAllMaterials] = useState<IMaterial[]>([]);
 
   const [totalPrice, setTotalPrice] = useState(0);
@@ -46,11 +42,6 @@ const NewCutlist: React.FC = () => {
   const [cutlist, setCutlist] = useState<ICutlist[]>([]);
 
   useEffect(() => {
-    async function loadCustomersFromApi() {
-      const customersFromHook = await loadCustomers();
-      setAllCustomers((prevValue) => [...prevValue, ...customersFromHook]);
-    }
-
     async function loadMaterialsFromApi() {
       const allMaterialsFromHook = await loadMaterials();
 
@@ -90,7 +81,6 @@ const NewCutlist: React.FC = () => {
       setPriceBase(JSON.parse(priceBaseFromLocalStorage));
     }
 
-    loadCustomersFromApi();
     loadMaterialsFromApi();
     setLoading(false);
   }, []);
@@ -172,13 +162,13 @@ const NewCutlist: React.FC = () => {
   }
 
   // Require authentication to return new cutlist page
-  if (!isAuthenticated) {
-    return (
-      <AppContainer>
-        <AuthSection setIsAuthenticated={setIsAuthenticated} />
-      </AppContainer>
-    );
-  }
+  // if (!isAuthenticated) {
+  //   return (
+  //     <AppContainer>
+  //       <AuthSection setIsAuthenticated={setIsAuthenticated} />
+  //     </AppContainer>
+  //   );
+  // }
 
   return (
     <AppContainer>
@@ -187,7 +177,6 @@ const NewCutlist: React.FC = () => {
           <CustomerSection
             selectedCustomer={selectedCustomer}
             setSelectedCustomer={setSelectedCustomer}
-            allCustomers={allCustomers}
           />
         )}
         {page === 2 && (
