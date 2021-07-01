@@ -16,6 +16,7 @@ interface ICustomerContext {
   ): Promise<void>;
   removeCustomer(id: string): Promise<void>;
   loadCustomers(): Promise<ICustomer[]>;
+  loadCustomerFromId(id: string): Promise<ICustomer>;
   updateCustomerAddress(addressData: IAddressData, id: string): Promise<void>;
 }
 
@@ -38,6 +39,17 @@ export const CustomerProvider: React.FC = ({ children }) => {
     });
 
     return allCustomersFromApi.data;
+  }, []);
+
+  const loadCustomerFromId = useCallback(async (id: string) => {
+    const token = getToken();
+    const customersFromApi = await api.get<ICustomer>(`/customers/${id}`, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    });
+
+    return customersFromApi.data;
   }, []);
 
   const createCustomer = useCallback(
@@ -102,6 +114,7 @@ export const CustomerProvider: React.FC = ({ children }) => {
         removeCustomer,
         loadCustomers,
         updateCustomerAddress,
+        loadCustomerFromId,
       }}
     >
       {children}
