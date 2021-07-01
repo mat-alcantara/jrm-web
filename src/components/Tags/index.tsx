@@ -193,7 +193,7 @@ const Tags: React.FC<TagsProps> = ({ id }) => {
       </div>
 
       <Button type="link" onClick={handlePrint}>
-        Imprimir etiquetas
+        Etiquetas
       </Button>
     </Container>
   );

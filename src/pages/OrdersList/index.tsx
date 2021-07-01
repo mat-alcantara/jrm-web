@@ -8,6 +8,7 @@ import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
 
 import AntButton from '../../components/AntButton';
+import Tags from '../../components/Tags';
 
 import { Container } from './styles';
 
@@ -158,7 +159,6 @@ const AllOrders: React.FC = () => {
         case 'Liberado para Transporte':
           orderUpdated = 'Entregue';
           break;
-
         case 'Entregue':
           orderUpdated = 'Em Produção';
           break;
@@ -247,6 +247,7 @@ const AllOrders: React.FC = () => {
             <AntButton type="link" onClick={() => generatePDF(record.key)}>
               Gerar PDF
             </AntButton>
+            <Tags id={record.key} />
             {buttonMessage && (
               <Popconfirm
                 title="Atualizar o status do pedido?"

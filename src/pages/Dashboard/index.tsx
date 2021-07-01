@@ -11,7 +11,6 @@ import IOrder from '../../types/IOrder';
 import ICustomer from '../../types/ICustomer';
 
 import AppContainer from '../../components/AppContainer';
-import Tags from '../../components/Tags';
 
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
@@ -46,7 +45,6 @@ const Dashboard: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <Tags id="9a73829d-9b16-44aa-91ca-ce46471a2211" />
         <Row
           justify="center"
           style={{
