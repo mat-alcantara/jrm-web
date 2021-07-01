@@ -12,8 +12,6 @@ import { useCustomer } from '../../hooks/Customer';
 
 import { sortCutlistData } from '../../utils/sortCutlistData';
 
-import G0P0 from '../../assets/G0P0.svg';
-
 import {
   Container,
   TagContainer,
@@ -61,11 +59,14 @@ const Tags: React.FC<TagsProps> = ({ id }) => {
 
       const allMaterialsFromHook = await loadMaterials();
 
-      const allCutlistsFormated = orderFromHook.cutlist.map((cut) => {
+      const allCutlistsFormated: CutlistProps[] = [];
+
+      orderFromHook.cutlist.forEach((cut) => {
         const materialUsed = allMaterials?.find(
           (material) => material.id === cut.material_id,
         );
 
+        // Return GSide, PSide and Avatar
         const dataFromSortedCutlist = sortCutlistData({
           side_a_size: cut.side_a_size,
           side_b_size: cut.side_b_size,
@@ -73,16 +74,19 @@ const Tags: React.FC<TagsProps> = ({ id }) => {
           side_b_border: cut.side_b_border,
         });
 
-        return {
-          ...dataFromSortedCutlist,
-          material: materialUsed?.name || 'Material removido',
-        };
+        // Create x tags according with number of pieces
+        for (let i = 0; i < cut.quantidade; i += 1) {
+          allCutlistsFormated.push({
+            ...dataFromSortedCutlist,
+            material: materialUsed?.name || 'Material removido',
+          });
+        }
       });
 
       setAllMaterials([...allMaterialsFromHook]);
       setOrder(orderFromHook);
       setCustomer(customerFromHook);
-      setTagCutlist([...allCutlistsFormated]);
+      setTagCutlist(allCutlistsFormated);
     };
 
     loadDataFromHook(id);
@@ -166,7 +170,7 @@ const Tags: React.FC<TagsProps> = ({ id }) => {
                     </Typography.Text>
                     <Typography.Text>{`${cut.material}`}</Typography.Text>
                     <Typography.Text>{`${order?.order_code} - ${customer?.name}`}</Typography.Text>
-                    <Typography.Text>{`Peça ${index + 1}/04`}</Typography.Text>
+                    <Typography.Text>{`Peça ${index + 1} / 4`}</Typography.Text>
                   </TagItem>
                 </>
               );
