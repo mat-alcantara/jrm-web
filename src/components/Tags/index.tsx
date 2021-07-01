@@ -96,7 +96,11 @@ const Tags: React.FC<TagsProps> = ({ id }) => {
     <Container>
       <div style={{ display: 'none' }} className="print-container">
         <TagContainer ref={componentRef}>
-          <div style={{ height: '90vh' }}>
+          <div
+            style={{
+              height: tagCutlist && tagCutlist?.length >= 10 ? '90vh' : '',
+            }}
+          >
             <Typography.Title
               level={4}
               style={{ textAlign: 'center', marginBottom: '0px' }}
