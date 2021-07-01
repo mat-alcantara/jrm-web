@@ -91,7 +91,7 @@ const CreateCustomer: React.FC = () => {
               // uppercase first letter and add rest unchanged
               return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
             })
-            .replace(/\s/g, '');
+            .trim();
 
           return updatedInput;
         }
@@ -99,6 +99,7 @@ const CreateCustomer: React.FC = () => {
         return input;
       };
 
+      // const name = `${capitalizeAndStrip(`${firstname} ${lastname}`)}`;
       const name = `${capitalizeAndStrip(firstname)} ${capitalizeAndStrip(
         lastname,
       )}`;
