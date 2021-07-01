@@ -1,10 +1,13 @@
 import { Button, Divider, Typography } from 'antd';
 import { FiSquare } from 'react-icons/fi';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 // import { sortCutlistData } from '../../utils/sortCutlistData';
 
+import IOrder from 'types/IOrder';
+import ICustomer from 'types/ICustomer';
+import IMaterial from 'types/IMaterial';
 import G0P0 from '../../assets/G0P0.svg';
 
 import {
@@ -17,8 +20,23 @@ import {
   ChecklistItem,
 } from './styles';
 
-const Tags: React.FC = () => {
+// interface TagsProps {
+//   order: IOrder;
+//   customer: ICustomer;
+//   materials: IMaterial[];
+// }
+
+interface TagsProps {
+  id: string;
+}
+
+const Tags: React.FC<TagsProps> = ({ id: string }) => {
   const componentRef = useRef(null);
+
+  const [customer, setCustomer] = useState<ICustomer>();
+  const [order, setOrder] = useState<IOrder>();
+  const [allMaterials, setAllMaterials] = useState<IMaterial[]>();
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
@@ -171,6 +189,11 @@ const Tags: React.FC = () => {
                 <FiSquare size={15} style={{ marginRight: '4px' }} />
                 <Typography.Text>
                   1 - 500 [ 0 ] x 200 [ 0 ] - MDF BRANCO TX 2 FACES COMUM 15MM
+                </Typography.Text>
+              </ChecklistItem>
+              <ChecklistItem>
+                <Typography.Text style={{ marginTop: '8px' }}>
+                  Total de peças: 05 peça(s)
                 </Typography.Text>
               </ChecklistItem>
             </Checklist>

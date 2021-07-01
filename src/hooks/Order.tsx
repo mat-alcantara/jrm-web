@@ -20,6 +20,7 @@ interface IOrderContext {
   removeOrder(id: string): Promise<void>;
   generatePDF(id: string): Promise<void>;
   loadOrders(): Promise<IOrder[]>;
+  loadOrderFromId(id: string): Promise<IOrder>;
   updateOrderStatus(id: string, orderStatus: string): Promise<void>;
   updateDeliveryDate(id: string, deliveryDate?: Date): Promise<void>;
 }
@@ -42,6 +43,18 @@ export const OrderProvider: React.FC = ({ children }) => {
     });
 
     return allOrdersData.data;
+  }, []);
+
+  const loadOrderFromId = useCallback(async (id: string) => {
+    const token = getToken();
+
+    const ordersData = await api.get<IOrder>(`/orders/${id}`, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    });
+
+    return ordersData.data;
   }, []);
 
   const generatePDF = useCallback(async (id: string) => {
@@ -185,6 +198,7 @@ export const OrderProvider: React.FC = ({ children }) => {
   return (
     <OrderContext.Provider
       value={{
+        loadOrderFromId,
         loadOrders,
         removeOrder,
         generatePDF,
