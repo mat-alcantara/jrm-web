@@ -285,8 +285,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               allowClear
               onKeyUp={(e) => {
                 if (e.key === 'ArrowRight') {
-                  // @ts-ignore
-                  document.getElementById('quantidade-input').focus();
+                  document.getElementById('quantidade-input')?.focus();
                 }
               }}
               style={{
@@ -338,11 +337,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               style={{ width: '100%' }}
               onKeyUp={(e) => {
                 if (e.key === 'ArrowRight') {
-                  // @ts-ignore
-                  document.getElementById('side-a-input').focus();
+                  document.getElementById('side-a-input')?.focus();
                 } else if (e.key === 'ArrowLeft') {
-                  // @ts-ignore
-                  document.getElementById('material-input').focus();
+                  document.getElementById('material-input')?.focus();
                 }
               }}
             />
@@ -369,11 +366,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               style={{ width: '100%' }}
               onKeyUp={(e) => {
                 if (e.key === 'ArrowRight') {
-                  // @ts-ignore
-                  document.getElementById('border-a-input').focus();
+                  document.getElementById('border-a-input')?.focus();
                 } else if (e.key === 'ArrowLeft') {
-                  // @ts-ignore
-                  document.getElementById('quantidade-input').focus();
+                  document.getElementById('quantidade-input')?.focus();
                 }
               }}
             />
@@ -396,11 +391,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               placeholder="Fita A"
               onKeyUp={(e) => {
                 if (e.key === 'ArrowRight') {
-                  // @ts-ignore
-                  document.getElementById('side-b-input').focus();
+                  document.getElementById('side-b-input')?.focus();
                 } else if (e.key === 'ArrowLeft') {
-                  // @ts-ignore
-                  document.getElementById('side-a-input').focus();
+                  document.getElementById('side-a-input')?.focus();
                 }
               }}
             >
@@ -431,11 +424,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               style={{ width: '100%' }}
               onKeyUp={(e) => {
                 if (e.key === 'ArrowRight') {
-                  // @ts-ignore
-                  document.getElementById('border-b-input').focus();
+                  document.getElementById('border-b-input')?.focus();
                 } else if (e.key === 'ArrowLeft') {
-                  // @ts-ignore
-                  document.getElementById('border-a-input').focus();
+                  document.getElementById('border-a-input')?.focus();
                 }
               }}
             />
@@ -458,11 +449,9 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               id="border-b-input"
               onKeyUp={(e) => {
                 if (e.key === 'ArrowRight') {
-                  // @ts-ignore
-                  document.getElementById('submit-button').focus();
+                  document.getElementById('submit-button')?.focus();
                 } else if (e.key === 'ArrowLeft') {
-                  // @ts-ignore
-                  document.getElementById('side-b-input').focus();
+                  document?.getElementById('side-b-input')?.focus();
                 }
               }}
             >
@@ -481,8 +470,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             style={{ width: breakpoints.sm ? '' : '350px' }}
             onKeyUp={(event) => {
               if (event.key === 'ArrowLeft') {
-                // @ts-ignore
-                document.getElementById('border-b-input').focus();
+                document.getElementById('border-b-input')?.focus();
               }
             }}
           >
