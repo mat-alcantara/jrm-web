@@ -104,7 +104,6 @@ const CreateCustomer: React.FC = () => {
         lastname,
       )}`;
 
-      console.log(name);
       const telephone = tel.replace(/[^A-Z0-9]/gi, '');
       const state = 'Rio de Janeiro';
       const emailHandled = email || undefined; // Empty email returns undefined
