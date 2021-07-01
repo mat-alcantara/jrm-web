@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useCallback, useState, useEffect } from 'react';
 import {
   Typography,
@@ -14,8 +13,6 @@ import {
 } from 'antd';
 import { v4 } from 'uuid';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-
-// import { useMaterial } from '../../../hooks/Material';
 
 import { CutlistPageContainer, InputCutlistContainer } from './styles';
 
