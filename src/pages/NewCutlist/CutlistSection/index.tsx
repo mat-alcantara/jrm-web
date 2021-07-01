@@ -233,9 +233,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         'side_b_border',
       ]);
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      document.getElementById('material-input').focus();
+      document.getElementById('material-input')?.focus();
     },
     [listData, allMaterials, defaultMaterial, priceBase],
   );
