@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import {
   Typography,
   Divider,
@@ -48,6 +48,14 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   // const { createMaterial } = useMaterial();
   const [form] = Form.useForm();
   const breakpoints = Grid.useBreakpoint();
+
+  const materialRef = useRef(null);
+  const quantityRef = useRef(null);
+  const sideARef = useRef(null);
+  const borderARef = useRef(null);
+  const sideBRef = useRef(null);
+  const borderBRef = useRef(null);
+  const buttonRef = useRef(null);
 
   const [listData, setListData] = useState<
     {
@@ -273,9 +281,17 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             ]}
           >
             <Select
+              ref={materialRef}
               placeholder="Material"
               showSearch
               allowClear
+              onKeyDown={(e) => {
+                if (e.key === 'ArrowRight') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  quantityRef.current.focus();
+                }
+              }}
               style={{
                 width: '100%',
                 fontSize: breakpoints.sm ? '' : '10px',
@@ -319,7 +335,11 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               },
             ]}
           >
-            <InputNumber placeholder="Qtd" style={{ width: '100%' }} />
+            <InputNumber
+              ref={quantityRef}
+              placeholder="Qtd"
+              style={{ width: '100%' }}
+            />
           </Form.Item>
 
           {/* Input do lado A */}
@@ -337,7 +357,11 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               },
             ]}
           >
-            <InputNumber placeholder="Lado A" style={{ width: '100%' }} />
+            <InputNumber
+              ref={sideARef}
+              placeholder="Lado A"
+              style={{ width: '100%' }}
+            />
           </Form.Item>
 
           {/* Input da fita A */}
@@ -352,7 +376,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               },
             ]}
           >
-            <Select placeholder="Fita A">
+            <Select ref={borderARef} placeholder="Fita A">
               <Select.Option value={0}>0</Select.Option>
               <Select.Option value={1}>1</Select.Option>
               <Select.Option value={2}>2</Select.Option>
@@ -374,7 +398,11 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               },
             ]}
           >
-            <InputNumber placeholder="Lado B" style={{ width: '100%' }} />
+            <InputNumber
+              ref={sideBRef}
+              placeholder="Lado B"
+              style={{ width: '100%' }}
+            />
           </Form.Item>
 
           {/* Input da fita B */}
@@ -389,7 +417,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               },
             ]}
           >
-            <Select placeholder="Fita B">
+            <Select ref={borderBRef} placeholder="Fita B">
               <Select.Option value={0}>0</Select.Option>
               <Select.Option value={1}>1</Select.Option>
               <Select.Option value={2}>2</Select.Option>
@@ -402,6 +430,7 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             type="primary"
             block={!breakpoints.sm}
             style={{ width: breakpoints.sm ? '' : '350px' }}
+            ref={buttonRef}
           >
             Adicionar
           </AntButton>
