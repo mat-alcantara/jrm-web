@@ -49,14 +49,6 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
   const [form] = Form.useForm();
   const breakpoints = Grid.useBreakpoint();
 
-  const materialRef = useRef(null);
-  const quantityRef = useRef(null);
-  const sideARef = useRef(null);
-  const borderARef = useRef(null);
-  const sideBRef = useRef(null);
-  const borderBRef = useRef(null);
-  const buttonRef = useRef(null);
-
   const [listData, setListData] = useState<
     {
       key: string;
@@ -242,6 +234,10 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
         'side_a_border',
         'side_b_border',
       ]);
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      document.getElementById('material-input').focus();
     },
     [listData, allMaterials, defaultMaterial, priceBase],
   );
@@ -281,15 +277,16 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             ]}
           >
             <Select
-              ref={materialRef}
+              id="material-input"
+              autoFocus
               placeholder="Material"
               showSearch
               allowClear
-              onKeyDown={(e) => {
+              onKeyUp={(e) => {
                 if (e.key === 'ArrowRight') {
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
-                  quantityRef.current.focus();
+                  document.getElementById('quantidade-input').focus();
                 }
               }}
               style={{
@@ -336,9 +333,20 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             ]}
           >
             <InputNumber
-              ref={quantityRef}
+              id="quantidade-input"
               placeholder="Qtd"
               style={{ width: '100%' }}
+              onKeyUp={(e) => {
+                if (e.key === 'ArrowRight') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('side-a-input').focus();
+                } else if (e.key === 'ArrowLeft') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('material-input').focus();
+                }
+              }}
             />
           </Form.Item>
 
@@ -358,9 +366,20 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             ]}
           >
             <InputNumber
-              ref={sideARef}
+              id="side-a-input"
               placeholder="Lado A"
               style={{ width: '100%' }}
+              onKeyUp={(e) => {
+                if (e.key === 'ArrowRight') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('border-a-input').focus();
+                } else if (e.key === 'ArrowLeft') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('quantidade-input').focus();
+                }
+              }}
             />
           </Form.Item>
 
@@ -376,7 +395,21 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               },
             ]}
           >
-            <Select ref={borderARef} placeholder="Fita A">
+            <Select
+              id="border-a-input"
+              placeholder="Fita A"
+              onKeyUp={(e) => {
+                if (e.key === 'ArrowRight') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('side-b-input').focus();
+                } else if (e.key === 'ArrowLeft') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('side-a-input').focus();
+                }
+              }}
+            >
               <Select.Option value={0}>0</Select.Option>
               <Select.Option value={1}>1</Select.Option>
               <Select.Option value={2}>2</Select.Option>
@@ -399,9 +432,20 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
             ]}
           >
             <InputNumber
-              ref={sideBRef}
               placeholder="Lado B"
+              id="side-b-input"
               style={{ width: '100%' }}
+              onKeyUp={(e) => {
+                if (e.key === 'ArrowRight') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('border-b-input').focus();
+                } else if (e.key === 'ArrowLeft') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('border-a-input').focus();
+                }
+              }}
             />
           </Form.Item>
 
@@ -417,7 +461,21 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
               },
             ]}
           >
-            <Select ref={borderBRef} placeholder="Fita B">
+            <Select
+              placeholder="Fita B"
+              id="border-b-input"
+              onKeyUp={(e) => {
+                if (e.key === 'ArrowRight') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('submit-button').focus();
+                } else if (e.key === 'ArrowLeft') {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  document.getElementById('side-b-input').focus();
+                }
+              }}
+            >
               <Select.Option value={0}>0</Select.Option>
               <Select.Option value={1}>1</Select.Option>
               <Select.Option value={2}>2</Select.Option>
@@ -427,10 +485,17 @@ const CutlistPage: React.FC<ICutlistPageProps> = ({
           {/* Confirm Button */}
           <AntButton
             htmlType="submit"
+            id="submit-button"
             type="primary"
             block={!breakpoints.sm}
             style={{ width: breakpoints.sm ? '' : '350px' }}
-            ref={buttonRef}
+            onKeyUp={(event) => {
+              if (event.key === 'ArrowLeft') {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                document.getElementById('border-b-input').focus();
+              }
+            }}
           >
             Adicionar
           </AntButton>
