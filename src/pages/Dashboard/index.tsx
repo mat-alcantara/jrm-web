@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <Tags />
+        <Tags id="faf9ecf5-84e7-4634-9e68-d1ee51bbbd74" />
         <Row
           justify="center"
           style={{

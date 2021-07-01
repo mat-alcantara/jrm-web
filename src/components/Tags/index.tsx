@@ -1,13 +1,17 @@
 import { Button, Divider, Typography } from 'antd';
 import { FiSquare } from 'react-icons/fi';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
-
-// import { sortCutlistData } from '../../utils/sortCutlistData';
 
 import IOrder from 'types/IOrder';
 import ICustomer from 'types/ICustomer';
 import IMaterial from 'types/IMaterial';
+import { useMaterial } from '../../hooks/Material';
+import { useOrder } from '../../hooks/Order';
+import { useCustomer } from '../../hooks/Customer';
+
+import { sortCutlistData } from '../../utils/sortCutlistData';
+
 import G0P0 from '../../assets/G0P0.svg';
 
 import {
@@ -20,129 +24,69 @@ import {
   ChecklistItem,
 } from './styles';
 
-// interface TagsProps {
-//   order: IOrder;
-//   customer: ICustomer;
-//   materials: IMaterial[];
-// }
+type CutlistProps = {
+  gside: number;
+  pside: number;
+  avatar: string;
+  material: string;
+};
 
 interface TagsProps {
   id: string;
 }
 
-const Tags: React.FC<TagsProps> = ({ id: string }) => {
+const Tags: React.FC<TagsProps> = ({ id }) => {
   const componentRef = useRef(null);
+
+  const { loadMaterials } = useMaterial();
+  const { loadOrderFromId } = useOrder();
+  const { loadCustomerFromId } = useCustomer();
 
   const [customer, setCustomer] = useState<ICustomer>();
   const [order, setOrder] = useState<IOrder>();
   const [allMaterials, setAllMaterials] = useState<IMaterial[]>();
+  const [tagCutlist, setTagCutlist] = useState<CutlistProps[]>();
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
-  const times = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-  ];
+  useEffect(() => {
+    const loadDataFromHook = async (orderId: string) => {
+      const orderFromHook = await loadOrderFromId(orderId);
+
+      const customerFromHook = await loadCustomerFromId(
+        orderFromHook.customerId,
+      );
+
+      const allMaterialsFromHook = await loadMaterials();
+
+      const allCutlistsFormated = orderFromHook.cutlist.map((cut) => {
+        const materialUsed = allMaterials?.find(
+          (material) => material.id === cut.material_id,
+        );
+
+        const dataFromSortedCutlist = sortCutlistData({
+          side_a_size: cut.side_a_size,
+          side_b_size: cut.side_b_size,
+          side_a_border: cut.side_a_border,
+          side_b_border: cut.side_b_border,
+        });
+
+        return {
+          ...dataFromSortedCutlist,
+          material: materialUsed?.name || 'Material removido',
+        };
+      });
+
+      setAllMaterials([...allMaterialsFromHook]);
+      setOrder(orderFromHook);
+      setCustomer(customerFromHook);
+      setTagCutlist([...allCutlistsFormated]);
+    };
+
+    loadDataFromHook(id);
+  }, []);
 
   return (
     <Container>
@@ -153,70 +97,80 @@ const Tags: React.FC<TagsProps> = ({ id: string }) => {
               level={4}
               style={{ textAlign: 'center', marginBottom: '0px' }}
             >
-              311 - Mateus Alcantara
+              {`${order?.order_code} - ${customer?.name}`}
             </Typography.Title>
             <Typography.Title
               level={5}
               style={{ textAlign: 'center', marginTop: '0px' }}
             >
-              Frade
+              {order?.orderStore}
             </Typography.Title>
 
             <OrderDataContainer>
-              <Typography>Data de Entrega: 05/07/2021</Typography>
-              <Typography>Tipo de entrega: Entrega</Typography>
-              <Typography>Telefone: (24) 99971-0064</Typography>
-              <Typography>
-                Endereço do cliente: Travessa dos Coqueiros, n° 40 - Frade,
-                Angra dos Reis
-              </Typography>
-              <Typography>Observações: Cliente com urgencia</Typography>
+              <Typography>{`Data de Entrega: ${order?.deliveryDate}`}</Typography>
+              <Typography>{`Tipo de entrega: ${order?.delivery_type}`}</Typography>
+              <Typography>{`Telefone: ${customer?.telephone}`}</Typography>
+              {order?.delivery_type === 'Entrega' && (
+                <Typography>
+                  {`Endereço do cliente: ${customer?.street} - ${customer?.area}, ${customer?.city}`}
+                </Typography>
+              )}
+              {order?.ps && (
+                <Typography>{`Observações: ${order?.ps}`}</Typography>
+              )}
             </OrderDataContainer>
             <Checklist>
-              <ChecklistItem>
-                <FiSquare size={15} style={{ marginRight: '4px' }} />
-                <Typography.Text>
-                  1 - 500 [ 0 ] x 200 [ 0 ] - MDF BRANCO TX 2 FACES COMUM 15MM
-                </Typography.Text>
-              </ChecklistItem>
-              <ChecklistItem>
-                <FiSquare size={15} style={{ marginRight: '4px' }} />
-                <Typography.Text>
-                  1 - 500 [ 0 ] x 200 [ 0 ] - MDF BRANCO TX 2 FACES COMUM 15MM
-                </Typography.Text>
-              </ChecklistItem>
-              <ChecklistItem>
-                <FiSquare size={15} style={{ marginRight: '4px' }} />
-                <Typography.Text>
-                  1 - 500 [ 0 ] x 200 [ 0 ] - MDF BRANCO TX 2 FACES COMUM 15MM
-                </Typography.Text>
-              </ChecklistItem>
-              <ChecklistItem>
-                <Typography.Text style={{ marginTop: '8px' }}>
-                  Total de peças: 05 peça(s)
-                </Typography.Text>
-              </ChecklistItem>
+              {order?.cutlist.map((cut) => {
+                const materialUsed = allMaterials?.find(
+                  (material) => material.id === cut.material_id,
+                );
+
+                return (
+                  <ChecklistItem key={cut.id}>
+                    <FiSquare size={15} style={{ marginRight: '4px' }} />
+                    {cut.side_a_size >= cut.side_b_size && (
+                      <Typography.Text>
+                        {`${cut.quantidade} - ${cut.side_a_size} [ ${
+                          cut.side_a_border
+                        } ] x ${cut.side_b_size} [ ${cut.side_b_border} ] - ${
+                          (materialUsed && materialUsed.name) ||
+                          'Material removido'
+                        }`}
+                      </Typography.Text>
+                    )}
+                    {cut.side_b_size > cut.side_a_size && (
+                      <Typography.Text>
+                        {`${cut.quantidade} - ${cut.side_b_size} [ ${
+                          cut.side_b_border
+                        } ] x ${cut.side_a_size} [ ${cut.side_a_border} ] - ${
+                          (materialUsed && materialUsed.name) ||
+                          'Material removido'
+                        }`}
+                      </Typography.Text>
+                    )}
+                  </ChecklistItem>
+                );
+              })}
             </Checklist>
             <Divider />
           </div>
           <TagList>
-            {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-            {times.map((_time) => (
-              <>
-                <div className="page-break" />
-                <TagItem>
-                  <img src={G0P0} alt="Etiqueta" />
-                  <Typography.Text strong style={{ fontSize: '13px' }}>
-                    500 x 200
-                  </Typography.Text>
-                  <Typography.Text>
-                    MDF BRANCO TX 2 FACES COMUM 15MM
-                  </Typography.Text>
-                  <Typography.Text>12580 - Mateus Alcantara</Typography.Text>
-                  <Typography.Text>Peça 01/04</Typography.Text>
-                </TagItem>
-              </>
-            ))}
+            {tagCutlist?.map((cut, index) => {
+              return (
+                <>
+                  <div className="page-break" />
+                  <TagItem>
+                    <img src={cut.avatar} alt="Etiqueta" />
+                    <Typography.Text strong style={{ fontSize: '13px' }}>
+                      {`${cut.gside} x ${cut.pside}`}
+                    </Typography.Text>
+                    <Typography.Text>{`${cut.material}`}</Typography.Text>
+                    <Typography.Text>{`${order?.order_code} - ${customer?.name}`}</Typography.Text>
+                    <Typography.Text>{`Peça ${index + 1}/04`}</Typography.Text>
+                  </TagItem>
+                </>
+              );
+            })}
           </TagList>
         </TagContainer>
       </div>
