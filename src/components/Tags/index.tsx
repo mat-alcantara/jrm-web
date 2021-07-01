@@ -62,7 +62,7 @@ const Tags: React.FC<TagsProps> = ({ id }) => {
       const allCutlistsFormated: CutlistProps[] = [];
 
       orderFromHook.cutlist.forEach((cut) => {
-        const materialUsed = allMaterials?.find(
+        const materialUsed = allMaterialsFromHook?.find(
           (material) => material.id === cut.material_id,
         );
 
@@ -155,26 +155,39 @@ const Tags: React.FC<TagsProps> = ({ id }) => {
                   </ChecklistItem>
                 );
               })}
+              <Typography.Text
+                style={{
+                  marginTop: '15px',
+                  marginBottom: '32px',
+                  float: 'left',
+                }}
+              >
+                {`Numero de peças: ${tagCutlist?.length} peça(s)`}
+              </Typography.Text>
             </Checklist>
             <Divider />
           </div>
           <TagList>
-            {tagCutlist?.map((cut, index) => {
-              return (
-                <>
-                  <div className="page-break" />
-                  <TagItem>
-                    <img src={cut.avatar} alt="Etiqueta" />
-                    <Typography.Text strong style={{ fontSize: '13px' }}>
-                      {`${cut.gside} x ${cut.pside}`}
-                    </Typography.Text>
-                    <Typography.Text>{`${cut.material}`}</Typography.Text>
-                    <Typography.Text>{`${order?.order_code} - ${customer?.name}`}</Typography.Text>
-                    <Typography.Text>{`Peça ${index + 1} / 4`}</Typography.Text>
-                  </TagItem>
-                </>
-              );
-            })}
+            {tagCutlist
+              ?.sort((a, b) => a.gside - b.gside)
+              .map((cut, index) => {
+                return (
+                  <>
+                    <div className="page-break" />
+                    <TagItem>
+                      <img src={cut.avatar} alt="Etiqueta" />
+                      <Typography.Text strong style={{ fontSize: '13px' }}>
+                        {`${cut.gside} x ${cut.pside}`}
+                      </Typography.Text>
+                      <Typography.Text>{`${cut.material}`}</Typography.Text>
+                      <Typography.Text>{`${order?.order_code} - ${customer?.name}`}</Typography.Text>
+                      <Typography.Text>
+                        {`Peça ${index + 1}/${tagCutlist.length}`}
+                      </Typography.Text>
+                    </TagItem>
+                  </>
+                );
+              })}
           </TagList>
         </TagContainer>
       </div>
