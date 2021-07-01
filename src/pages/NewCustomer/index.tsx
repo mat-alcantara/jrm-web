@@ -87,7 +87,7 @@ const CreateCustomer: React.FC = () => {
       const capitalizeAndStrip = (input: string) => {
         if (input) {
           const updatedInput = input
-            .replace(/\w+/g, (txt) => {
+            .replace(/\S+/g, (txt) => {
               // uppercase first letter and add rest unchanged
               return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
             })
@@ -104,6 +104,7 @@ const CreateCustomer: React.FC = () => {
         lastname,
       )}`;
 
+      console.log(name);
       const telephone = tel.replace(/[^A-Z0-9]/gi, '');
       const state = 'Rio de Janeiro';
       const emailHandled = email || undefined; // Empty email returns undefined
