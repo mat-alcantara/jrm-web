@@ -20,6 +20,7 @@ interface IDataPageProps {
   totalPrice: number;
   handleAppyDiscount(updatedPriceBase: number): void;
   priceBase: number;
+  handleUpdateCustomerAddress(street: string, area: string, city: string): void;
 }
 
 const DataPage: React.FC<IDataPageProps> = ({
@@ -28,6 +29,7 @@ const DataPage: React.FC<IDataPageProps> = ({
   totalPrice,
   handleAppyDiscount,
   priceBase,
+  handleUpdateCustomerAddress,
 }) => {
   const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
@@ -77,11 +79,17 @@ const DataPage: React.FC<IDataPageProps> = ({
     async (addressData: IAddressData) => {
       if (selectedCustomer?.id) {
         await updateCustomerAddress(addressData, selectedCustomer.id);
+
+        handleUpdateCustomerAddress(
+          addressData.street,
+          addressData.area,
+          addressData.city,
+        );
       }
 
       setAddressUpdate(false);
     },
-    [addressUpdate],
+    [addressUpdate, selectedCustomer],
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

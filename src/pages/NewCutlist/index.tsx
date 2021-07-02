@@ -107,6 +107,24 @@ const NewCutlist: React.FC = () => {
     [cutlist, selectedCustomer],
   );
 
+  const handleUpdateCustomerAddress = useCallback(
+    (street: string, area: string, city: string) => {
+      setSelectedCustomer((prev) => {
+        if (prev) {
+          localStorage.setItem(
+            '@JRMCompensados:customerSelected',
+            JSON.stringify({ ...prev, street, area, city }),
+          );
+
+          return { ...prev, street, area, city };
+        }
+
+        return undefined;
+      });
+    },
+    [selectedCustomer],
+  );
+
   const handleAppyDiscount = useCallback(
     (updatedPriceBase: number) => {
       let priceSum = 0;
@@ -191,6 +209,7 @@ const NewCutlist: React.FC = () => {
         )}
         {page === 3 && (
           <DataSection
+            handleUpdateCustomerAddress={handleUpdateCustomerAddress}
             priceBase={priceBase}
             selectedCustomer={selectedCustomer}
             handleUpdateOrderData={handleUpdateOrderData}
