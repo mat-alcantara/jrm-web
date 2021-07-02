@@ -1,13 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Table, Space, Typography, Popconfirm, Input } from 'antd';
+import {
+  Table,
+  Space,
+  Typography,
+  Popconfirm,
+  Input,
+  Button,
+  Form,
+  Radio,
+  DatePicker,
+} from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import Modal from 'react-modal';
 import AppContainer from '../../components/AppContainer';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
 
-import AntButton from '../../components/AntButton';
 import Tags from '../../components/Tags';
 
 import { Container } from './styles';
@@ -26,6 +36,19 @@ interface IOrdersParams {
   type: string;
 }
 
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    padding: '64px 128px',
+    width: '800px',
+  },
+};
+
 const AllOrders: React.FC = () => {
   const {
     loadOrders,
@@ -36,11 +59,14 @@ const AllOrders: React.FC = () => {
   } = useOrder();
   const { loadCustomers } = useCustomer();
   const { type } = useParams<IOrdersParams>();
+  const [form] = Form.useForm();
 
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
   const [tableDataSource, setTableDataSource] = useState<IDataSource[]>([]);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [orderSearch, setOrderSearch] = useState<string>('');
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
 
   const handleUpdateTableDataSource = useCallback(() => {
     const filteredDataSource = dataSource.filter((data) => {
@@ -62,6 +88,14 @@ const AllOrders: React.FC = () => {
       ...filteredDataSource.sort((a, b) => a.order_code - b.order_code),
     ]);
   }, [tableDataSource, dataSource, orderSearch]);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
 
   useEffect(() => {
     let ordersFilter: string | null;
@@ -176,6 +210,19 @@ const AllOrders: React.FC = () => {
     [dataSource],
   );
 
+  const handleSubmitEstimate = useCallback(() => {
+    console.log('ok');
+  }, [deliveryDate]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function onChangeDate(_: any, dateString: string) {
+    const date = new Date(dateString);
+
+    date.setDate(date.getDate() + 1);
+
+    setDeliveryDate(date);
+  }
+
   const columns = [
     {
       title: 'Codigo',
@@ -242,13 +289,13 @@ const AllOrders: React.FC = () => {
               cancelText="Não"
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
             >
-              <AntButton type="link">Deletar</AntButton>
+              <Button type="link">Deletar</Button>
             </Popconfirm>
-            <AntButton type="link" onClick={() => generatePDF(record.key)}>
+            <Button type="link" onClick={() => generatePDF(record.key)}>
               Gerar PDF
-            </AntButton>
-            <Tags id={record.key} />
-            {buttonMessage && (
+            </Button>
+            {record.orderStatus === 'Em Produção' && <Tags id={record.key} />}
+            {buttonMessage && record.orderStatus !== 'Orçamento' && (
               <Popconfirm
                 title="Atualizar o status do pedido?"
                 onConfirm={() =>
@@ -258,10 +305,88 @@ const AllOrders: React.FC = () => {
                 cancelText="Não"
                 icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               >
-                <AntButton type="primary" style={{ width: '200px' }}>
+                <Button type="primary" style={{ width: '200px' }}>
                   {buttonMessage}
-                </AntButton>
+                </Button>
               </Popconfirm>
+            )}
+            {buttonMessage && record.orderStatus === 'Orçamento' && (
+              <>
+                <Button
+                  onClick={openModal}
+                  type="primary"
+                  style={{ width: '200px' }}
+                >
+                  {buttonMessage}
+                </Button>
+                <Modal
+                  isOpen={modalIsOpen}
+                  onRequestClose={closeModal}
+                  style={customStyles}
+                  contentLabel="Atualizar orçamento"
+                >
+                  <Typography.Title
+                    level={3}
+                    style={{ textAlign: 'center', marginBottom: '32px' }}
+                  >
+                    Atualize o pedido antes de continuar
+                  </Typography.Title>
+                  <Form
+                    onFinish={handleSubmitEstimate}
+                    form={form}
+                    name="control-hooks"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    layout="horizontal"
+                    labelAlign="left"
+                    style={{ textAlign: 'left' }}
+                  >
+                    <Form.Item
+                      label="Tipo de pagamento"
+                      name="paymentStatus"
+                      required={false}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Por favor, selecione o tipo de pagamento!',
+                        },
+                      ]}
+                    >
+                      <Radio.Group>
+                        <Radio.Button value="Pago">Pago</Radio.Button>
+                        <Radio.Button value="Parcialmente Pago">
+                          Parcialmente Pago
+                        </Radio.Button>
+                        <Radio.Button value="Receber na Entrega">
+                          Receber
+                        </Radio.Button>
+                      </Radio.Group>
+                    </Form.Item>
+                    <Form.Item label="Data de Entrega">
+                      <DatePicker onChange={onChangeDate} />
+                    </Form.Item>
+                    <Form.Item name="ps" label="Observações">
+                      <Input />
+                    </Form.Item>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '16px',
+                      }}
+                    >
+                      <Button type="primary" htmlType="submit">
+                        Aprovar
+                      </Button>
+                      <Button type="default" onClick={() => setIsOpen(false)}>
+                        Cancelar
+                      </Button>
+                    </div>
+                  </Form>
+                </Modal>
+              </>
             )}
           </Space>
         );
