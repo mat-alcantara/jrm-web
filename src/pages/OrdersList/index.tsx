@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   Table,
   Space,
@@ -40,6 +40,10 @@ interface IOrdersParams {
   type: string;
 }
 
+interface IAddressForm extends IAddressData {
+  orderId: string;
+}
+
 const customStyles = {
   content: {
     top: '50%',
@@ -52,6 +56,8 @@ const customStyles = {
     width: '800px',
   },
 };
+
+Modal.setAppElement('#root');
 
 const AllOrders: React.FC = () => {
   const {
@@ -66,6 +72,7 @@ const AllOrders: React.FC = () => {
   const { type } = useParams<IOrdersParams>();
   const [form] = Form.useForm();
   const [addressForm] = Form.useForm();
+  const history = useHistory();
 
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
   const [tableDataSource, setTableDataSource] = useState<IDataSource[]>([]);
@@ -77,6 +84,7 @@ const AllOrders: React.FC = () => {
   const [customerAddresses, setCustomerAddresses] = useState<
     { orderId: string; customerAddress: string; customerId: string }[]
   >([]);
+  const [orderId, setOrderId] = useState<string>('');
 
   const handleUpdateTableDataSource = useCallback(() => {
     const filteredDataSource = dataSource.filter((data) => {
@@ -99,7 +107,8 @@ const AllOrders: React.FC = () => {
     ]);
   }, [tableDataSource, dataSource, orderSearch]);
 
-  function openModal() {
+  function openModal(id: string) {
+    setOrderId(id);
     setIsOpen(true);
   }
 
@@ -247,40 +256,46 @@ const AllOrders: React.FC = () => {
 
       await updateOrderStatus(id, orderUpdated);
 
-      window.location.reload();
+      if (type === 'orcamento') {
+        history.push('/orders/producao');
+      } else {
+        window.location.reload();
+      }
     },
     [dataSource],
   );
 
   const handleSubmitEstimate = useCallback(
-    async ({ ps, paymentStatus, delivery_type, id }) => {
+    async ({ ps, paymentStatus, delivery_type }) => {
       // Update delivery date
       if (deliveryDate) {
-        await updateDeliveryDate(id, deliveryDate);
+        await updateDeliveryDate(orderId, deliveryDate);
       } else {
-        await updateDeliveryDate(id);
+        await updateDeliveryDate(orderId);
       }
 
-      await handleUpdateOrder({ ps, paymentStatus, delivery_type }, id);
-      await handleUpdateOrderStatus(id, 'Orçamento');
+      await handleUpdateOrder({ ps, paymentStatus, delivery_type }, orderId);
+      await handleUpdateOrderStatus(orderId, 'Orçamento');
     },
     [deliveryDate],
   );
 
   const handleSubmitCustomerAddress = useCallback(
-    async (addressData: IAddressData) => {
+    async (addressData: IAddressForm) => {
       const selectedCustomer = customerAddresses.find(
-        (customer) => customer.orderId === addressData.id,
+        (customer) => customer.orderId === orderId,
       );
 
-      console.log(selectedCustomer);
-
-      // if (selectedCustomer) {
-      //   await updateCustomerAddress(
-      //     { ...addressData },
-      //     selectedCustomer.customerId,
-      //   );
-      // }
+      if (selectedCustomer) {
+        await updateCustomerAddress(
+          {
+            area: addressData.area,
+            city: addressData.city,
+            street: addressData.street,
+          },
+          selectedCustomer.customerId,
+        );
+      }
 
       setAddressUpdate(false);
     },
@@ -386,7 +401,7 @@ const AllOrders: React.FC = () => {
             {buttonMessage && record.orderStatus === 'Orçamento' && (
               <>
                 <Button
-                  onClick={openModal}
+                  onClick={() => openModal(record.key)}
                   type="primary"
                   style={{ width: '200px' }}
                 >
@@ -414,15 +429,6 @@ const AllOrders: React.FC = () => {
                     labelAlign="left"
                     style={{ textAlign: 'left' }}
                   >
-                    <Form.Item
-                      name="id"
-                      style={{ display: 'none' }}
-                      initialValue={record.key}
-                    >
-                      <Select>
-                        <Select.Option value={record.key}>ID</Select.Option>
-                      </Select>
-                    </Form.Item>
                     <Form.Item
                       label="Tipo de pagamento"
                       name="paymentStatus"
@@ -506,7 +512,7 @@ const AllOrders: React.FC = () => {
                     <Form
                       onFinish={handleSubmitCustomerAddress}
                       form={addressForm}
-                      name="control-hooks"
+                      name="address-hooks"
                       labelCol={{ span: 8 }}
                       wrapperCol={{ span: 16 }}
                       layout="horizontal"
@@ -526,15 +532,6 @@ const AllOrders: React.FC = () => {
                         Endereço do cliente não fornecido. Atualize para
                         continuar...
                       </Typography.Title>
-                      <Form.Item
-                        style={{ display: 'none' }}
-                        name="id"
-                        initialValue={record.key}
-                      >
-                        <Select>
-                          <Select.Option value={record.key}>ID</Select.Option>
-                        </Select>
-                      </Form.Item>
                       <Form.Item
                         name="street"
                         label="Endereço"
