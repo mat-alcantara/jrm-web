@@ -10,6 +10,7 @@ import {
   Form,
   Radio,
   DatePicker,
+  Select,
 } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import Modal from 'react-modal';
@@ -56,6 +57,7 @@ const AllOrders: React.FC = () => {
     generatePDF,
     updateOrderStatus,
     updateDeliveryDate,
+    handleUpdateOrder,
   } = useOrder();
   const { loadCustomers } = useCustomer();
   const { type } = useParams<IOrdersParams>();
@@ -200,9 +202,6 @@ const AllOrders: React.FC = () => {
           orderUpdated = 'Em Produção';
       }
 
-      if (orderStatus === 'Orçamento') {
-        await updateDeliveryDate(id);
-      }
       await updateOrderStatus(id, orderUpdated);
 
       window.location.reload();
@@ -210,9 +209,19 @@ const AllOrders: React.FC = () => {
     [dataSource],
   );
 
-  const handleSubmitEstimate = useCallback(() => {
-    console.log('ok');
-  }, [deliveryDate]);
+  const handleSubmitEstimate = useCallback(
+    async ({ ps, paymentStatus, id }) => {
+      // Update delivery date
+      if (deliveryDate) {
+        await updateDeliveryDate(id, deliveryDate);
+      } else {
+        await updateDeliveryDate(id);
+      }
+
+      await handleUpdateOrder({ ps, paymentStatus }, id);
+    },
+    [deliveryDate],
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChangeDate(_: any, dateString: string) {
@@ -341,6 +350,15 @@ const AllOrders: React.FC = () => {
                     labelAlign="left"
                     style={{ textAlign: 'left' }}
                   >
+                    <Form.Item
+                      name="id"
+                      style={{ display: 'none' }}
+                      initialValue={record.key}
+                    >
+                      <Select>
+                        <Select.Option value={record.key}>ID</Select.Option>
+                      </Select>
+                    </Form.Item>
                     <Form.Item
                       label="Tipo de pagamento"
                       name="paymentStatus"

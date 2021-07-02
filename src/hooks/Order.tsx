@@ -11,6 +11,8 @@ import ICutlist from '../types/ICutlist';
 import ICustomer from '../types/ICustomer';
 import IOrderData from '../types/IOrderData';
 
+type IOrderUpdate = Partial<IOrder>;
+
 interface IOrderContext {
   createOrder(
     selectedCustomer: ICustomer | undefined,
@@ -23,6 +25,7 @@ interface IOrderContext {
   loadOrderFromId(id: string): Promise<IOrder>;
   updateOrderStatus(id: string, orderStatus: string): Promise<void>;
   updateDeliveryDate(id: string, deliveryDate?: Date): Promise<void>;
+  handleUpdateOrder(orderData: IOrderUpdate, id: string): Promise<void>;
 }
 
 const OrderContext = createContext<IOrderContext>({} as IOrderContext);
@@ -195,6 +198,35 @@ export const OrderProvider: React.FC = ({ children }) => {
     [],
   );
 
+  const handleUpdateOrder = useCallback(
+    async (orderData: IOrderUpdate, id: string) => {
+      try {
+        const token = getToken();
+
+        await api.put(
+          `/orders/${id}`,
+          { orderData },
+          {
+            headers: {
+              Authorization: `bearer ${token}`,
+            },
+          },
+        );
+
+        addToast({
+          type: 'success',
+          title: 'Status do pedido atualizado com sucesso',
+        });
+      } catch {
+        addToast({
+          type: 'error',
+          title: 'Ocorreu um erro ao atualizar o pedido',
+        });
+      }
+    },
+    [],
+  );
+
   return (
     <OrderContext.Provider
       value={{
@@ -205,6 +237,7 @@ export const OrderProvider: React.FC = ({ children }) => {
         createOrder,
         updateOrderStatus,
         updateDeliveryDate,
+        handleUpdateOrder,
       }}
     >
       {children}
