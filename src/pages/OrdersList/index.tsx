@@ -219,6 +219,7 @@ const AllOrders: React.FC = () => {
       }
 
       await handleUpdateOrder({ ps, paymentStatus }, id);
+      await handleUpdateOrderStatus(id, 'Orçamento');
     },
     [deliveryDate],
   );

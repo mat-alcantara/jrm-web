@@ -205,7 +205,7 @@ export const OrderProvider: React.FC = ({ children }) => {
 
         await api.put(
           `/orders/${id}`,
-          { orderData },
+          { ...orderData },
           {
             headers: {
               Authorization: `bearer ${token}`,
