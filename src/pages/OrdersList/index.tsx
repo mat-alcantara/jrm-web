@@ -69,6 +69,10 @@ const AllOrders: React.FC = () => {
   const [orderSearch, setOrderSearch] = useState<string>('');
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
+  const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
+  const [customerAddresses, setCustomerAddresses] = useState<
+    { orderId: string; customerAddress: string }[]
+  >([]);
 
   const handleUpdateTableDataSource = useCallback(() => {
     const filteredDataSource = dataSource.filter((data) => {
@@ -166,8 +170,30 @@ const AllOrders: React.FC = () => {
       ]);
     }
 
+    async function loadCustomersAddresses() {
+      if (type === 'orcamento') {
+        const allOrdersFromHook = await loadOrders();
+
+        const allCustomersFromHook = await loadCustomers();
+
+        allOrdersFromHook.forEach((order) => {
+          const selectedCustomer = allCustomersFromHook.find(
+            (customer) => customer.id === order.customerId,
+          );
+
+          if (selectedCustomer) {
+            setCustomerAddresses((prevValue) => [
+              ...prevValue,
+              { orderId: order.id, customerAddress: selectedCustomer.street },
+            ]);
+          }
+        });
+      }
+    }
+
     loadDataFromHook();
     handleUpdateTableDataSource();
+    loadCustomersAddresses();
   }, []);
 
   const handleRemoveOrder = useCallback(
@@ -386,6 +412,31 @@ const AllOrders: React.FC = () => {
                     </Form.Item>
                     <Form.Item name="ps" label="Observações">
                       <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Tipo de Entrega"
+                      name="delivery_type"
+                      required={false}
+                    >
+                      <Radio.Group>
+                        <Radio.Button
+                          value="Entrega"
+                          // onClick={() =>
+                          //   selectedCustomer?.street ===
+                          //   'Endereço não informado'
+                          //     ? setAddressUpdate(true)
+                          //     : setAddressUpdate(false)
+                          // }
+                        >
+                          Entrega
+                        </Radio.Button>
+                        <Radio.Button
+                          value="Retirar na Loja"
+                          onClick={() => setAddressUpdate(false)}
+                        >
+                          Retirar na Loja
+                        </Radio.Button>
+                      </Radio.Group>
                     </Form.Item>
                     <div
                       style={{
