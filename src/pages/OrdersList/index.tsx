@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import Modal from 'react-modal';
+import IAddressData from 'types/IAddressData';
 import AppContainer from '../../components/AppContainer';
 
 import { useOrder } from '../../hooks/Order';
@@ -22,6 +23,8 @@ import { useCustomer } from '../../hooks/Customer';
 import Tags from '../../components/Tags';
 
 import { Container } from './styles';
+
+import { areas } from '../../utils/listOfAreas';
 
 interface IDataSource {
   key: string;
@@ -59,7 +62,7 @@ const AllOrders: React.FC = () => {
     updateDeliveryDate,
     handleUpdateOrder,
   } = useOrder();
-  const { loadCustomers } = useCustomer();
+  const { loadCustomers, updateCustomerAddress } = useCustomer();
   const { type } = useParams<IOrdersParams>();
   const [form] = Form.useForm();
 
@@ -71,7 +74,7 @@ const AllOrders: React.FC = () => {
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
   const [customerAddresses, setCustomerAddresses] = useState<
-    { orderId: string; customerAddress: string }[]
+    { orderId: string; customerAddress: string; customerId: string }[]
   >([]);
 
   const handleUpdateTableDataSource = useCallback(() => {
@@ -102,6 +105,15 @@ const AllOrders: React.FC = () => {
   function closeModal() {
     setIsOpen(false);
   }
+
+  const options = {
+    areaOptions: areas.sort().map((area: string) => {
+      return {
+        value: area,
+        label: area,
+      };
+    }),
+  };
 
   useEffect(() => {
     let ordersFilter: string | null;
@@ -184,7 +196,11 @@ const AllOrders: React.FC = () => {
           if (selectedCustomer) {
             setCustomerAddresses((prevValue) => [
               ...prevValue,
-              { orderId: order.id, customerAddress: selectedCustomer.street },
+              {
+                orderId: order.id,
+                customerAddress: selectedCustomer.street,
+                customerId: selectedCustomer.id,
+              },
             ]);
           }
         });
@@ -248,6 +264,20 @@ const AllOrders: React.FC = () => {
       await handleUpdateOrderStatus(id, 'Orçamento');
     },
     [deliveryDate],
+  );
+
+  const handleSubmitCustomerAddress = useCallback(
+    async (addressData: IAddressData) => {
+      const selectedCustomer = customerAddresses.find(
+        (customer) => customer.orderId === addressData.id,
+      );
+      if (selectedCustomer) {
+        await updateCustomerAddress(addressData, selectedCustomer.customerId);
+      }
+
+      setAddressUpdate(false);
+    },
+    [addressUpdate],
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -421,12 +451,16 @@ const AllOrders: React.FC = () => {
                       <Radio.Group>
                         <Radio.Button
                           value="Entrega"
-                          // onClick={() =>
-                          //   selectedCustomer?.street ===
-                          //   'Endereço não informado'
-                          //     ? setAddressUpdate(true)
-                          //     : setAddressUpdate(false)
-                          // }
+                          onClick={() => {
+                            const selectedCustomer = customerAddresses.find(
+                              (customer) => customer.orderId === record.key,
+                            );
+
+                            selectedCustomer?.customerAddress ===
+                            'Endereço não informado'
+                              ? setAddressUpdate(true)
+                              : setAddressUpdate(false);
+                          }}
                         >
                           Entrega
                         </Radio.Button>
@@ -438,6 +472,95 @@ const AllOrders: React.FC = () => {
                         </Radio.Button>
                       </Radio.Group>
                     </Form.Item>
+                    {addressUpdate && (
+                      <Form
+                        onFinish={handleSubmitCustomerAddress}
+                        form={form}
+                        name="control-hooks"
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                        layout="horizontal"
+                        labelAlign="left"
+                        style={{ textAlign: 'left' }}
+                      >
+                        <Typography.Title
+                          level={5}
+                          type="danger"
+                          style={{
+                            marginTop: '32px',
+                            marginBottom: '32px',
+
+                            textAlign: 'center',
+                          }}
+                        >
+                          Endereço do cliente não fornecido. Atualize para
+                          continuar...
+                        </Typography.Title>
+                        <Form.Item
+                          style={{ display: 'none' }}
+                          name="id"
+                          initialValue={record.key}
+                        >
+                          <Select>
+                            <Select.Option value={record.key}>ID</Select.Option>
+                          </Select>
+                        </Form.Item>
+                        <Form.Item
+                          name="street"
+                          label="Endereço"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Por favor, digite um endereço!',
+                            },
+                          ]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          label="Bairro"
+                          name="area"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Por favor, selecione um bairro!',
+                            },
+                          ]}
+                        >
+                          <Select showSearch>
+                            {options.areaOptions.map((area) => (
+                              <Select.Option value={area.value}>
+                                {area.label}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                        <Form.Item
+                          label="Cidade"
+                          name="city"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Por favor, selecione a cidade!',
+                            },
+                          ]}
+                        >
+                          <Radio.Group>
+                            <Radio.Button value="Angra dos Reis">
+                              Angra dos Reis
+                            </Radio.Button>
+                            <Radio.Button value="Paraty">Paraty</Radio.Button>
+                            <Radio.Button value="Rio de Janeiro">
+                              Rio de Janeiro
+                            </Radio.Button>
+                          </Radio.Group>
+                        </Form.Item>
+
+                        <Button block htmlType="submit" type="primary">
+                          Atualizar endereço
+                        </Button>
+                      </Form>
+                    )}
                     <div
                       style={{
                         display: 'flex',
@@ -447,7 +570,11 @@ const AllOrders: React.FC = () => {
                         gap: '16px',
                       }}
                     >
-                      <Button type="primary" htmlType="submit">
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        disabled={!!addressUpdate}
+                      >
                         Aprovar
                       </Button>
                       <Button type="default" onClick={() => setIsOpen(false)}>
