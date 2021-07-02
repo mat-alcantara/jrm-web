@@ -26,43 +26,44 @@ const Tags: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            <Typography.Title
-              type="secondary"
-              level={2}
-              style={{ margin: '0' }}
-            >
-              PEDIDO DE CORTE
-            </Typography.Title>
-            <Typography.Title
-              type="secondary"
-              level={2}
-              style={{ margin: '0' }}
-            >
-              # 17
-            </Typography.Title>
-          </div>
-          <Divider />
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
             <img
               src={Logo}
               alt="Logotipo"
               style={{ width: '150px', height: 'auto', marginBottom: '16px' }}
             />
-
+            <Typography.Title
+              type="secondary"
+              level={2}
+              style={{ marginTop: '0' }}
+            >
+              PEDIDO DE CORTE #17
+            </Typography.Title>
+          </div>
+          <Divider style={{ margin: '0' }} />
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              fontSize: '10px',
+            }}
+          >
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: 'row',
+                justifyContent: 'center',
                 marginTop: '16px',
-                gap: '16px',
+                gap: '32px',
               }}
             >
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'center',
+                  marginTop: '0px',
+                }}
+              >
                 <Typography.Text>
                   Rua Julieta Conceição Reis 280
                 </Typography.Text>
@@ -72,6 +73,7 @@ const Tags: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
+                    margin: '0 auto',
                     gap: '8px',
                   }}
                 >
@@ -83,9 +85,10 @@ const Tags: React.FC = () => {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
+                  textAlign: 'center',
                 }}
               >
-                <Typography.Text>Travessa dos Coqueiros, 40</Typography.Text>
+                <Typography.Text>Endereço da Japuíba, 999</Typography.Text>
                 <Typography.Text>Japuíba, Angra dos Reis - RJ</Typography.Text>
                 <Typography.Text
                   style={{
@@ -93,6 +96,7 @@ const Tags: React.FC = () => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     gap: '8px',
+                    margin: '0 auto',
                   }}
                 >
                   <FaWhatsapp />
@@ -107,7 +111,7 @@ const Tags: React.FC = () => {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              marginTop: '32px',
+              marginTop: '48px',
             }}
           >
             <div
@@ -115,6 +119,7 @@ const Tags: React.FC = () => {
             >
               <Typography.Title level={5}>Dados</Typography.Title>
               <Divider style={{ margin: '0px 0px 8px 0px' }} />
+
               <Typography.Text>
                 Tipo de Entrega: Retirar na Loja
               </Typography.Text>
