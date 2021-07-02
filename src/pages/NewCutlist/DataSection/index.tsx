@@ -192,7 +192,7 @@ const DataPage: React.FC<IDataPageProps> = ({
           <DatePicker onChange={onChangeDate} disabled={!!isEstimate} />
         </Form.Item>
         <Form.Item name="ps" label="Observações">
-          <Input />
+          <Input disabled={!!isEstimate} />
         </Form.Item>
         <Form.Item label="Desconto">
           <Radio.Group
