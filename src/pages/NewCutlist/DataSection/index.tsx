@@ -57,6 +57,11 @@ const DataPage: React.FC<IDataPageProps> = ({
         allOrderData.ps = undefined;
       }
 
+      if (!allOrderData.delivery_type) {
+        // eslint-disable-next-line no-param-reassign
+        allOrderData.delivery_type = 'Retirar na Loja';
+      }
+
       if (!allOrderData.paymentStatus) {
         // eslint-disable-next-line no-param-reassign
         allOrderData.paymentStatus = 'Receber na Entrega';
@@ -154,14 +159,8 @@ const DataPage: React.FC<IDataPageProps> = ({
           label="Tipo de Entrega"
           name="delivery_type"
           required={false}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, selecione o tipo de entrega!',
-            },
-          ]}
         >
-          <Radio.Group>
+          <Radio.Group disabled={!!isEstimate}>
             <Radio.Button
               value="Entrega"
               onClick={() =>
@@ -180,9 +179,6 @@ const DataPage: React.FC<IDataPageProps> = ({
             </Radio.Button>
           </Radio.Group>
         </Form.Item>
-        <Form.Item name="ps" label="Observações">
-          <Input />
-        </Form.Item>
         <Form.Item label="Tipo de pagamento" name="paymentStatus">
           <Radio.Group disabled={!!isEstimate}>
             <Radio.Button value="Pago">Pago</Radio.Button>
@@ -193,7 +189,10 @@ const DataPage: React.FC<IDataPageProps> = ({
           </Radio.Group>
         </Form.Item>
         <Form.Item label="Data de Entrega">
-          <DatePicker onChange={onChangeDate} />
+          <DatePicker onChange={onChangeDate} disabled={!!isEstimate} />
+        </Form.Item>
+        <Form.Item name="ps" label="Observações">
+          <Input />
         </Form.Item>
         <Form.Item label="Desconto">
           <Radio.Group
