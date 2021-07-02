@@ -65,6 +65,7 @@ const AllOrders: React.FC = () => {
   const { loadCustomers, updateCustomerAddress } = useCustomer();
   const { type } = useParams<IOrdersParams>();
   const [form] = Form.useForm();
+  const [addressForm] = Form.useForm();
 
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
   const [tableDataSource, setTableDataSource] = useState<IDataSource[]>([]);
@@ -252,7 +253,7 @@ const AllOrders: React.FC = () => {
   );
 
   const handleSubmitEstimate = useCallback(
-    async ({ ps, paymentStatus, id }) => {
+    async ({ ps, paymentStatus, delivery_type, id }) => {
       // Update delivery date
       if (deliveryDate) {
         await updateDeliveryDate(id, deliveryDate);
@@ -260,7 +261,7 @@ const AllOrders: React.FC = () => {
         await updateDeliveryDate(id);
       }
 
-      await handleUpdateOrder({ ps, paymentStatus }, id);
+      await handleUpdateOrder({ ps, paymentStatus, delivery_type }, id);
       await handleUpdateOrderStatus(id, 'Orçamento');
     },
     [deliveryDate],
@@ -271,9 +272,15 @@ const AllOrders: React.FC = () => {
       const selectedCustomer = customerAddresses.find(
         (customer) => customer.orderId === addressData.id,
       );
-      if (selectedCustomer) {
-        await updateCustomerAddress(addressData, selectedCustomer.customerId);
-      }
+
+      console.log(selectedCustomer);
+
+      // if (selectedCustomer) {
+      //   await updateCustomerAddress(
+      //     { ...addressData },
+      //     selectedCustomer.customerId,
+      //   );
+      // }
 
       setAddressUpdate(false);
     },
@@ -472,95 +479,7 @@ const AllOrders: React.FC = () => {
                         </Radio.Button>
                       </Radio.Group>
                     </Form.Item>
-                    {addressUpdate && (
-                      <Form
-                        onFinish={handleSubmitCustomerAddress}
-                        form={form}
-                        name="control-hooks"
-                        labelCol={{ span: 8 }}
-                        wrapperCol={{ span: 16 }}
-                        layout="horizontal"
-                        labelAlign="left"
-                        style={{ textAlign: 'left' }}
-                      >
-                        <Typography.Title
-                          level={5}
-                          type="danger"
-                          style={{
-                            marginTop: '32px',
-                            marginBottom: '32px',
 
-                            textAlign: 'center',
-                          }}
-                        >
-                          Endereço do cliente não fornecido. Atualize para
-                          continuar...
-                        </Typography.Title>
-                        <Form.Item
-                          style={{ display: 'none' }}
-                          name="id"
-                          initialValue={record.key}
-                        >
-                          <Select>
-                            <Select.Option value={record.key}>ID</Select.Option>
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          name="street"
-                          label="Endereço"
-                          rules={[
-                            {
-                              required: true,
-                              message: 'Por favor, digite um endereço!',
-                            },
-                          ]}
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          label="Bairro"
-                          name="area"
-                          rules={[
-                            {
-                              required: true,
-                              message: 'Por favor, selecione um bairro!',
-                            },
-                          ]}
-                        >
-                          <Select showSearch>
-                            {options.areaOptions.map((area) => (
-                              <Select.Option value={area.value}>
-                                {area.label}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          label="Cidade"
-                          name="city"
-                          rules={[
-                            {
-                              required: true,
-                              message: 'Por favor, selecione a cidade!',
-                            },
-                          ]}
-                        >
-                          <Radio.Group>
-                            <Radio.Button value="Angra dos Reis">
-                              Angra dos Reis
-                            </Radio.Button>
-                            <Radio.Button value="Paraty">Paraty</Radio.Button>
-                            <Radio.Button value="Rio de Janeiro">
-                              Rio de Janeiro
-                            </Radio.Button>
-                          </Radio.Group>
-                        </Form.Item>
-
-                        <Button block htmlType="submit" type="primary">
-                          Atualizar endereço
-                        </Button>
-                      </Form>
-                    )}
                     <div
                       style={{
                         display: 'flex',
@@ -568,6 +487,7 @@ const AllOrders: React.FC = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '16px',
+                        marginTop: '32px',
                       }}
                     >
                       <Button
@@ -582,6 +502,95 @@ const AllOrders: React.FC = () => {
                       </Button>
                     </div>
                   </Form>
+                  {addressUpdate && (
+                    <Form
+                      onFinish={handleSubmitCustomerAddress}
+                      form={addressForm}
+                      name="control-hooks"
+                      labelCol={{ span: 8 }}
+                      wrapperCol={{ span: 16 }}
+                      layout="horizontal"
+                      labelAlign="left"
+                      style={{ textAlign: 'left' }}
+                    >
+                      <Typography.Title
+                        level={5}
+                        type="danger"
+                        style={{
+                          marginTop: '32px',
+                          marginBottom: '32px',
+
+                          textAlign: 'center',
+                        }}
+                      >
+                        Endereço do cliente não fornecido. Atualize para
+                        continuar...
+                      </Typography.Title>
+                      <Form.Item
+                        style={{ display: 'none' }}
+                        name="id"
+                        initialValue={record.key}
+                      >
+                        <Select>
+                          <Select.Option value={record.key}>ID</Select.Option>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item
+                        name="street"
+                        label="Endereço"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Por favor, digite um endereço!',
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label="Bairro"
+                        name="area"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Por favor, selecione um bairro!',
+                          },
+                        ]}
+                      >
+                        <Select showSearch>
+                          {options.areaOptions.map((area) => (
+                            <Select.Option value={area.value}>
+                              {area.label}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                      <Form.Item
+                        label="Cidade"
+                        name="city"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Por favor, selecione a cidade!',
+                          },
+                        ]}
+                      >
+                        <Radio.Group>
+                          <Radio.Button value="Angra dos Reis">
+                            Angra dos Reis
+                          </Radio.Button>
+                          <Radio.Button value="Paraty">Paraty</Radio.Button>
+                          <Radio.Button value="Rio de Janeiro">
+                            Rio de Janeiro
+                          </Radio.Button>
+                        </Radio.Group>
+                      </Form.Item>
+
+                      <Button block htmlType="submit" type="primary">
+                        Atualizar endereço
+                      </Button>
+                    </Form>
+                  )}
                 </Modal>
               </>
             )}

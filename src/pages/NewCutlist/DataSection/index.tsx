@@ -31,6 +31,7 @@ const DataPage: React.FC<IDataPageProps> = ({
 }) => {
   const breakpoints = Grid.useBreakpoint();
   const [form] = Form.useForm();
+  const [addressForm] = Form.useForm();
   const [addressUpdate, setAddressUpdate] = useState<boolean>(false);
   const [isEstimate, setIsEstimate] = useState<boolean>(false);
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
@@ -211,93 +212,89 @@ const DataPage: React.FC<IDataPageProps> = ({
           {`Valor: R$ ${totalPrice},00`}
         </Typography.Title>
 
-        {addressUpdate && (
-          <Form
-            onFinish={handleSubmitCustomerAddress}
-            form={form}
-            name="control-hooks"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            layout="horizontal"
-            labelAlign="left"
-            style={{ textAlign: 'left' }}
-          >
-            <Typography.Title
-              level={5}
-              type="danger"
-              style={{
-                marginTop: '32px',
-                marginBottom: '32px',
-
-                textAlign: 'center',
-              }}
-            >
-              Endereço do cliente não fornecido. Atualize para continuar...
-            </Typography.Title>
-            <Form.Item
-              name="street"
-              label="Endereço"
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, digite um endereço!',
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Bairro"
-              name="area"
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, selecione um bairro!',
-                },
-              ]}
-            >
-              <Select showSearch>
-                {options.areaOptions.map((area) => (
-                  <Select.Option value={area.value}>{area.label}</Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Cidade"
-              name="city"
-              rules={[
-                {
-                  required: true,
-                  message: 'Por favor, selecione a cidade!',
-                },
-              ]}
-            >
-              <Radio.Group>
-                <Radio.Button value="Angra dos Reis">
-                  Angra dos Reis
-                </Radio.Button>
-                <Radio.Button value="Paraty">Paraty</Radio.Button>
-                <Radio.Button value="Rio de Janeiro">
-                  Rio de Janeiro
-                </Radio.Button>
-              </Radio.Group>
-            </Form.Item>
-
-            <AntButton block htmlType="submit" type="primary">
-              Atualizar endereço
-            </AntButton>
-          </Form>
-        )}
         <AntButton
           block
           htmlType="submit"
           type="primary"
           disabled={!!addressUpdate}
-          style={{ marginTop: '16px', marginBottom: '64px' }}
+          style={{ marginTop: '16px' }}
         >
           Confirmar
         </AntButton>
       </Form>
+      {addressUpdate && (
+        <Form
+          onFinish={handleSubmitCustomerAddress}
+          form={addressForm}
+          name="control-hooks"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          layout="horizontal"
+          labelAlign="left"
+          style={{ marginTop: '16px', marginBottom: '64px', textAlign: 'left' }}
+        >
+          <Typography.Title
+            level={5}
+            type="danger"
+            style={{
+              marginTop: '32px',
+              marginBottom: '32px',
+
+              textAlign: 'center',
+            }}
+          >
+            Endereço do cliente não fornecido. Atualize para continuar...
+          </Typography.Title>
+          <Form.Item
+            name="street"
+            label="Endereço"
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, digite um endereço!',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Bairro"
+            name="area"
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, selecione um bairro!',
+              },
+            ]}
+          >
+            <Select showSearch>
+              {options.areaOptions.map((area) => (
+                <Select.Option value={area.value}>{area.label}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Cidade"
+            name="city"
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, selecione a cidade!',
+              },
+            ]}
+          >
+            <Radio.Group>
+              <Radio.Button value="Angra dos Reis">Angra dos Reis</Radio.Button>
+              <Radio.Button value="Paraty">Paraty</Radio.Button>
+              <Radio.Button value="Rio de Janeiro">Rio de Janeiro</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+
+          <AntButton block htmlType="submit" type="primary">
+            Atualizar endereço
+          </AntButton>
+        </Form>
+      )}
     </DataPageContainer>
   );
 };
