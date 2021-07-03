@@ -19,4 +19,5 @@ export default interface IOrder {
   price: number;
   delivery_type: DeliveryTypeEnumDTO;
   cutlist: ICutlist[];
+  created_at?: Date;
 }

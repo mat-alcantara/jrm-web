@@ -3,7 +3,6 @@ import { Row, Col, Typography, Grid, Divider } from 'antd';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
-import { useAuth } from '../../hooks/Auth';
 
 import { Container } from './styles';
 
@@ -16,7 +15,6 @@ import OrderResume from '../../components/OrderResume';
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
   const { loadCustomers } = useCustomer();
-  const { signOut } = useAuth();
   const breakpoints = Grid.useBreakpoint();
 
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
@@ -35,17 +33,13 @@ const Dashboard: React.FC = () => {
       setAllCustomers([...allCustomersFromHook]);
     }
 
-    try {
-      loadOrdersFromHook();
-      loadCustomersFromHook();
-    } catch {
-      signOut();
-    }
+    loadOrdersFromHook();
+    loadCustomersFromHook();
   }, []);
 
   return (
     <AppContainer>
-      <OrderResume />
+      <OrderResume orderId="53eb9b35-cae7-40cf-aada-1ea2a772fd3c" />
       <Container>
         <Row
           justify="center"

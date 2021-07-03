@@ -1,9 +1,15 @@
 /* eslint-disable react/jsx-wrap-multilines */
 import { Divider, Typography, List, Button } from 'antd';
 import { FaWhatsapp } from 'react-icons/fa';
-import React, { useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
+
+// import { format } from 'date-fns';
 
 import { useReactToPrint } from 'react-to-print';
+import IOrder from 'types/IOrder';
+import ICustomer from 'types/ICustomer';
+import { useCustomer } from '../../hooks/Customer';
+import { useOrder } from '../../hooks/Order';
 import {
   Container,
   Footer,
@@ -15,7 +21,11 @@ import {
   LowerContainer,
 } from './styles';
 
-const OrderResume: React.FC = () => {
+interface OrderResumeProps {
+  orderId: string;
+}
+
+const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
   const listData = [
     {
       key: '1',
@@ -49,11 +59,29 @@ const OrderResume: React.FC = () => {
     },
   ];
 
+  const { loadOrderFromId } = useOrder();
+  const { loadCustomerFromId } = useCustomer();
+
+  const [order, setOrder] = useState<IOrder>();
+  const [customer, setCustomer] = useState<ICustomer>();
+
   const componentRef = useRef(null);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  const handleLoadData = useCallback(async () => {
+    const orderFromHook = await loadOrderFromId(orderId);
+    const customerFromHook = await loadCustomerFromId(orderFromHook.customerId);
+
+    setOrder(orderFromHook);
+    setCustomer(customerFromHook);
+
+    if (handlePrint) {
+      handlePrint();
+    }
+  }, [order, customer]);
 
   return (
     <>
@@ -67,13 +95,23 @@ const OrderResume: React.FC = () => {
               <Typography.Title level={3} style={{ marginTop: '0' }}>
                 JRM Compensados
               </Typography.Title>
-              <Typography.Title
-                type="secondary"
-                level={3}
-                style={{ marginTop: '0' }}
-              >
-                PEDIDO DE CORTE
-              </Typography.Title>
+              {order?.orderStatus === 'Orçamento' ? (
+                <Typography.Title
+                  type="secondary"
+                  level={3}
+                  style={{ marginTop: '0' }}
+                >
+                  ORÇAMENTO DE CORTE
+                </Typography.Title>
+              ) : (
+                <Typography.Title
+                  type="secondary"
+                  level={3}
+                  style={{ marginTop: '0' }}
+                >
+                  PEDIDO DE CORTE
+                </Typography.Title>
+              )}
             </Header>
             <Divider style={{ margin: '0' }} />
             <UpperContainer>
@@ -116,6 +154,11 @@ const OrderResume: React.FC = () => {
                     (24) 99969-4543
                   </Typography.Text>
                 </div>
+                <div>
+                  <Typography.Text>
+                    Email: jrmcompensados@hotmail.com
+                  </Typography.Text>
+                </div>
               </JRMInfo>
               <CodeAndDataInfo>
                 <div>
@@ -123,14 +166,14 @@ const OrderResume: React.FC = () => {
                     Código do pedido
                   </Typography.Title>
                   <Divider style={{ margin: '0px 0px 4px 0px' }} />
-                  <Typography.Text>17</Typography.Text>
+                  <Typography.Text>{`# ${order?.order_code}`}</Typography.Text>
                 </div>
                 <div>
                   <Typography.Title level={5} style={{ marginBottom: '0px' }}>
                     Data do Pedido
                   </Typography.Title>
                   <Divider style={{ margin: '0px 0px 4px 0px' }} />
-                  <Typography.Text>01/07/2021</Typography.Text>
+                  <Typography.Text>21/10/1996</Typography.Text>
                 </div>
               </CodeAndDataInfo>
             </UpperContainer>
@@ -141,37 +184,48 @@ const OrderResume: React.FC = () => {
                   Pedido
                 </Typography.Title>
                 <Divider style={{ margin: '0px 0px 8px 0px' }} />
-
-                <Typography.Text>
-                  Tipo de Entrega: Retirar na Loja
-                </Typography.Text>
-
-                <Typography.Text>Loja do Pedido: Japuíba</Typography.Text>
-                <Typography.Text>
-                  Status do Pagamento: Receber na Entrega
-                </Typography.Text>
-                <Typography.Text>Vendedor: Vitória</Typography.Text>
-                {/* <Typography.Text>
-                  Observações: Todas estas questões, devidamente ponderadas,
-                  levantam dúvidas sobre se a estrutura atual da organização
-                  desafia a capacidade de equalização das condições
-                  inegavelmente apropriadas.
-                </Typography.Text> */}
-                <Typography.Text style={{ fontWeight: 'bold' }}>
-                  Prazo: Até 08/07/21
-                </Typography.Text>
+                <Typography.Text>{`Loja do Pedido: ${order?.orderStore}`}</Typography.Text>
+                <Typography.Text>{`Vendedor: ${order?.seller}`}</Typography.Text>
+                {order?.orderStatus !== 'Orçamento' && (
+                  <>
+                    <Typography.Text>
+                      {`Tipo de Entrega: ${order?.delivery_type}`}
+                    </Typography.Text>
+                    <Typography.Text>
+                      {`Status do Pagamento: ${order?.paymentStatus}`}
+                    </Typography.Text>
+                    {order?.ps && (
+                      <Typography.Text>
+                        {`Observações: ${order.ps}`}
+                      </Typography.Text>
+                    )}
+                    <Typography.Text style={{ fontWeight: 'bold' }}>
+                      {`Prazo: Até ${order?.deliveryDate}`}
+                    </Typography.Text>
+                  </>
+                )}
               </div>
               <div>
                 <Typography.Title style={{ marginBottom: '0px' }} level={5}>
                   Cliente
                 </Typography.Title>
                 <Divider style={{ margin: '0px 0px 8px 0px' }} />
-                <Typography.Text>Nome: Diego Bu</Typography.Text>
-                <Typography.Text>
-                  Endereço: Endereço não informado, Japuíba
-                </Typography.Text>
+                <Typography.Text>{`Nome: ${customer?.name}`}</Typography.Text>
+                {customer?.street !== 'Endereço não informado' && (
+                  <Typography.Text>
+                    {`Endereço: ${customer?.street}, ${customer?.area}`}
+                  </Typography.Text>
+                )}
 
-                <Typography.Text>Telefone: (21) 98660 - 1910</Typography.Text>
+                <Typography.Text>
+                  {`Telefone: (${customer?.telephone[0].substring(
+                    0,
+                    2,
+                  )}) ${customer?.telephone[0].substring(
+                    2,
+                    7,
+                  )} - ${customer?.telephone[0].substring(7, 11)}`}
+                </Typography.Text>
               </div>
             </LowerContainer>
             <List
@@ -215,8 +269,8 @@ const OrderResume: React.FC = () => {
           </Footer>
         </Container>
       </div>
-      <Button type="link" onClick={handlePrint}>
-        Imprimir PDF
+      <Button type="link" onClick={handleLoadData}>
+        Comprovante
       </Button>
     </>
   );
