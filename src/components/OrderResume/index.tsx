@@ -10,6 +10,7 @@ import IOrder from 'types/IOrder';
 import ICustomer from 'types/ICustomer';
 import { useCustomer } from '../../hooks/Customer';
 import { useOrder } from '../../hooks/Order';
+import { useMaterial } from '../../hooks/Material';
 import {
   Container,
   Footer,
@@ -26,44 +27,16 @@ interface OrderResumeProps {
 }
 
 const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
-  const listData = [
-    {
-      key: '1',
-      title:
-        '2 - MDF BRANCO TX 2 FACES COMUM 15MM - 1080 [ 2 ] x 340 [ 2 ] | R$ 78',
-    },
-    {
-      key: '2',
-      title:
-        '4 - MDF BRANCO TX 2 FACES COMUM 15MM - 830 [ 2 ] x 310 [ 2 ] | R$ 112',
-    },
-    {
-      key: '3',
-      title:
-        '6 - MDF BRANCO TX 2 FACES COMUM 15MM - 325 [ 1 ] x 310 [ 0 ] | R$ 60',
-    },
-    {
-      key: '4',
-      title:
-        '2 - MDF BRANCO TX 2 FACES COMUM 15MM - 265 [ 0 ] x 310 [ 0 ] | R$ 14',
-    },
-    {
-      key: '5',
-      title:
-        '2 - MDF BRANCO TX 2 FACES COMUM 15MM - 333 [ 0 ] x 265 [ 0 ] | R$ 16',
-    },
-    {
-      key: '6',
-      title:
-        '1 - MDF BRANCO LOUSA 2 FACES COMUM 2.8MM - 1030 [ 0 ] x 830 [ 0 ] | R$ 42',
-    },
-  ];
-
   const { loadOrderFromId } = useOrder();
   const { loadCustomerFromId } = useCustomer();
+  const { loadMaterials } = useMaterial();
 
   const [order, setOrder] = useState<IOrder>();
   const [customer, setCustomer] = useState<ICustomer>();
+  const [listData, setListData] = useState<{ key: string; title: string }[]>(
+    [],
+  );
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
   const componentRef = useRef(null);
 
@@ -74,6 +47,27 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
   const handleLoadData = useCallback(async () => {
     const orderFromHook = await loadOrderFromId(orderId);
     const customerFromHook = await loadCustomerFromId(orderFromHook.customerId);
+    const allMaterials = await loadMaterials();
+
+    orderFromHook.cutlist.forEach((cut) => {
+      const materialUsed = allMaterials.find(
+        (material) => material.id === cut.material_id,
+      );
+
+      setListData((prevValue) => [
+        ...prevValue,
+        {
+          key: cut.id,
+          title: `${cut.quantidade} - ${
+            materialUsed?.name || 'Material Removido'
+          } - ${cut.side_a_size} [ ${cut.side_a_border} ] x ${
+            cut.side_b_size
+          } [ ${cut.side_b_border} ] | R$ ${cut.price},00`,
+        },
+      ]);
+
+      setTotalPrice((prevValue) => prevValue + cut.price);
+    });
 
     setOrder(orderFromHook);
     setCustomer(customerFromHook);
@@ -81,7 +75,7 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
     if (handlePrint) {
       handlePrint();
     }
-  }, [order, customer]);
+  }, [order, customer, totalPrice, listData]);
 
   return (
     <>
@@ -173,7 +167,7 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
                     Data do Pedido
                   </Typography.Title>
                   <Divider style={{ margin: '0px 0px 4px 0px' }} />
-                  <Typography.Text>21/10/1996</Typography.Text>
+                  <Typography.Text>{`${order?.created_at}`}</Typography.Text>
                 </div>
               </CodeAndDataInfo>
             </UpperContainer>
@@ -235,7 +229,9 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
               footer={
                 <div style={{ textAlign: 'right' }}>
                   Total:
-                  <strong style={{ marginLeft: '8px' }}>R$ 322,00</strong>
+                  <strong style={{ marginLeft: '8px' }}>
+                    {`R$ ${totalPrice},00`}
+                  </strong>
                 </div>
               }
               style={{ width: '100%', margin: '24px auto 0px auto' }}
