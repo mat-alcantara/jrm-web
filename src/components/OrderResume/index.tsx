@@ -3,7 +3,7 @@ import { Divider, Typography, List, Button } from 'antd';
 import { FaWhatsapp } from 'react-icons/fa';
 import React, { useCallback, useRef, useState } from 'react';
 
-// import { format } from 'date-fns';
+import { format } from 'date-fns';
 
 import { useReactToPrint } from 'react-to-print';
 import IOrder from 'types/IOrder';
@@ -160,14 +160,17 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
                     Código do pedido
                   </Typography.Title>
                   <Divider style={{ margin: '0px 0px 4px 0px' }} />
-                  <Typography.Text>{`# ${order?.order_code}`}</Typography.Text>
+                  <Typography.Text>{order?.order_code}</Typography.Text>
                 </div>
                 <div>
                   <Typography.Title level={5} style={{ marginBottom: '0px' }}>
                     Data do Pedido
                   </Typography.Title>
                   <Divider style={{ margin: '0px 0px 4px 0px' }} />
-                  <Typography.Text>{`${order?.created_at}`}</Typography.Text>
+                  <Typography.Text>
+                    {order?.created_at &&
+                      `${format(new Date(order.created_at), 'dd/MM/yyyy')}`}
+                  </Typography.Text>
                 </div>
               </CodeAndDataInfo>
             </UpperContainer>

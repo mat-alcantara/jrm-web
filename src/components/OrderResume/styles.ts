@@ -61,7 +61,7 @@ export const CodeAndDataInfo = styled.div`
   margin-top: 8px;
   gap: 8px;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
 `;
 
 export const LowerContainer = styled.div`
