@@ -138,7 +138,7 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
                   </Typography.Text>
                 </div>
                 <div>
-                  <Typography.Text>Endereço da Japuíba, 999</Typography.Text>
+                  <Typography.Text>Rua Japoranga, 1000</Typography.Text>
                   <Typography.Text>
                     Japuíba, Angra dos Reis - RJ
                   </Typography.Text>
@@ -260,9 +260,6 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
           {order?.orderStatus !== 'Orçamento' && (
             <Footer>
               <div>
-                <Typography.Title level={5} style={{ marginBottom: '32px' }}>
-                  Assinatura do cliente
-                </Typography.Title>
                 <Divider
                   style={{
                     margin: '0',
@@ -271,6 +268,7 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
                     height: '1px',
                   }}
                 />
+                <Typography.Text>Assinatura do cliente</Typography.Text>
               </div>
             </Footer>
           )}
