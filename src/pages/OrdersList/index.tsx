@@ -65,7 +65,6 @@ const AllOrders: React.FC = () => {
   const {
     loadOrders,
     removeOrder,
-    generatePDF,
     updateOrderStatus,
     updateDeliveryDate,
     handleUpdateOrder,
@@ -249,6 +248,9 @@ const AllOrders: React.FC = () => {
           orderUpdated = 'Liberado para Transporte';
           break;
         case 'Liberado para Transporte':
+          orderUpdated = 'Transportado';
+          break;
+        case 'Transportado':
           orderUpdated = 'Entregue';
           break;
         case 'Entregue':
@@ -357,13 +359,13 @@ const AllOrders: React.FC = () => {
             buttonMessage = 'Enviar para produção';
             break;
           case 'Em Produção':
-            buttonMessage = 'Concluir etapa';
+            buttonMessage = 'Confirmar corte';
             break;
           case 'Liberado para Transporte':
-            buttonMessage = 'Concluir etapa';
+            buttonMessage = 'Confirmar transporte';
             break;
           case 'Transportado':
-            buttonMessage = 'Concluir etapa';
+            buttonMessage = 'Confirmar recebimento';
             break;
           case 'Entregue':
             buttonMessage = 'Retornar para Produção';
@@ -383,11 +385,9 @@ const AllOrders: React.FC = () => {
             >
               <Button type="link">Deletar</Button>
             </Popconfirm>
-            <Button type="link" onClick={() => generatePDF(record.key)}>
-              Gerar PDF
-            </Button>
+
             <OrderResume orderId={record.key} />
-            {record.orderStatus === 'Em Produção' && <Tags id={record.key} />}
+            <Tags id={record.key} />
             {buttonMessage && record.orderStatus !== 'Orçamento' && (
               <Popconfirm
                 title="Atualizar o status do pedido?"
