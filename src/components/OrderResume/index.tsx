@@ -13,7 +13,6 @@ import { useOrder } from '../../hooks/Order';
 import { useMaterial } from '../../hooks/Material';
 import {
   Container,
-  Footer,
   MainContent,
   Header,
   UpperContainer,
@@ -88,7 +87,7 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
       <div style={{ display: 'none' }}>
         <Container
           ref={componentRef}
-          style={{ height: listData.length > 16 ? '200vh' : '100vh' }}
+          style={{ height: listData.length > 17 ? '200vh' : '100vh' }}
         >
           <MainContent>
             <Header>
@@ -257,7 +256,7 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
               )}
             />
           </MainContent>
-          {order?.orderStatus !== 'Orçamento' && (
+          {/* {order?.orderStatus !== 'Orçamento' && (
             <Footer>
               <div>
                 <Divider
@@ -271,7 +270,7 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
                 <Typography.Text>Assinatura do cliente</Typography.Text>
               </div>
             </Footer>
-          )}
+          )} */}
         </Container>
       </div>
       <Button type="link" onClick={handleLoadData}>
