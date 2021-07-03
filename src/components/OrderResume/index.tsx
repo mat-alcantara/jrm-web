@@ -4,7 +4,16 @@ import { FaWhatsapp } from 'react-icons/fa';
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
-import { Container } from './styles';
+import {
+  Container,
+  Footer,
+  MainContent,
+  Header,
+  UpperContainer,
+  JRMInfo,
+  CodeAndDataInfo,
+  LowerContainer,
+} from './styles';
 
 const Tags: React.FC = () => {
   const componentRef = useRef(null);
@@ -53,15 +62,8 @@ const Tags: React.FC = () => {
           ref={componentRef}
           style={{ height: listData.length > 16 ? '200vh' : '100vh' }}
         >
-          <div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
+          <MainContent>
+            <Header>
               <Typography.Title level={3} style={{ marginTop: '0' }}>
                 JRM Compensados
               </Typography.Title>
@@ -72,28 +74,12 @@ const Tags: React.FC = () => {
               >
                 PEDIDO DE CORTE
               </Typography.Title>
-            </div>
+            </Header>
             <Divider style={{ margin: '0' }} />
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                fontSize: '10px',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  marginTop: '8px',
-                  gap: '8px',
-                }}
-              >
+            <UpperContainer>
+              <JRMInfo>
                 <div
                   style={{
-                    display: 'flex',
-                    flexDirection: 'column',
                     marginTop: '0px',
                   }}
                 >
@@ -113,12 +99,7 @@ const Tags: React.FC = () => {
                     (24) 99964-4953
                   </Typography.Text>
                 </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
+                <div>
                   <Typography.Text>Endereço da Japuíba, 999</Typography.Text>
                   <Typography.Text>
                     Japuíba, Angra dos Reis - RJ
@@ -135,17 +116,8 @@ const Tags: React.FC = () => {
                     (24) 99969-4543
                   </Typography.Text>
                 </div>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  marginTop: '8px',
-                  gap: '8px',
-                  textAlign: 'center',
-                  fontSize: '16px',
-                }}
-              >
+              </JRMInfo>
+              <CodeAndDataInfo>
                 <div>
                   <Typography.Title level={5} style={{ marginBottom: '0px' }}>
                     Código do pedido
@@ -160,24 +132,11 @@ const Tags: React.FC = () => {
                   <Divider style={{ margin: '0px 0px 4px 0px' }} />
                   <Typography.Text>01/07/2021</Typography.Text>
                 </div>
-              </div>
-            </div>
+              </CodeAndDataInfo>
+            </UpperContainer>
 
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: '16px',
-              }}
-            >
-              <div
-                style={{
-                  width: '48%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
+            <LowerContainer>
+              <div>
                 <Typography.Title level={5} style={{ marginBottom: '0px' }}>
                   Pedido
                 </Typography.Title>
@@ -202,13 +161,7 @@ const Tags: React.FC = () => {
                   Prazo: Até 08/07/21
                 </Typography.Text>
               </div>
-              <div
-                style={{
-                  width: '48%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
+              <div>
                 <Typography.Title style={{ marginBottom: '0px' }} level={5}>
                   Cliente
                 </Typography.Title>
@@ -220,7 +173,7 @@ const Tags: React.FC = () => {
 
                 <Typography.Text>Telefone: (21) 98660 - 1910</Typography.Text>
               </div>
-            </div>
+            </LowerContainer>
             <List
               size="small"
               dataSource={listData}
@@ -244,9 +197,9 @@ const Tags: React.FC = () => {
                 </List.Item>
               )}
             />
-          </div>
-          <div>
-            <div style={{ width: '60%' }}>
+          </MainContent>
+          <Footer>
+            <div>
               <Typography.Title level={5} style={{ marginBottom: '32px' }}>
                 Assinatura do cliente
               </Typography.Title>
@@ -259,7 +212,7 @@ const Tags: React.FC = () => {
                 }}
               />
             </div>
-          </div>
+          </Footer>
         </Container>
       </div>
 

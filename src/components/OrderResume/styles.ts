@@ -21,3 +21,58 @@ export const Container = styled.div`
     page-break-after: auto;
   }
 `;
+
+export const MainContent = styled.div``;
+
+export const Footer = styled.div`
+  div {
+    width: 60%;
+  }
+`;
+
+export const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const UpperContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const JRMInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  gap: 8px;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+export const CodeAndDataInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  gap: 8px;
+  text-align: center;
+  font-size: 16px;
+`;
+
+export const LowerContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 16px;
+
+  > div {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+  }
+`;
