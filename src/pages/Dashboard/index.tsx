@@ -10,7 +10,6 @@ import IOrder from '../../types/IOrder';
 import ICustomer from '../../types/ICustomer';
 
 import AppContainer from '../../components/AppContainer';
-import OrderResume from '../../components/OrderResume';
 
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
@@ -39,7 +38,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <AppContainer>
-      <OrderResume orderId="53eb9b35-cae7-40cf-aada-1ea2a772fd3c" />
       <Container>
         <Row
           justify="center"

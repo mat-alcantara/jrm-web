@@ -45,32 +45,38 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
   });
 
   const handleLoadData = useCallback(async () => {
-    const orderFromHook = await loadOrderFromId(orderId);
-    const customerFromHook = await loadCustomerFromId(orderFromHook.customerId);
-    const allMaterials = await loadMaterials();
-
-    orderFromHook.cutlist.forEach((cut) => {
-      const materialUsed = allMaterials.find(
-        (material) => material.id === cut.material_id,
+    if (!order && !customer) {
+      const orderFromHook = await loadOrderFromId(orderId);
+      const customerFromHook = await loadCustomerFromId(
+        orderFromHook.customerId,
       );
+      const allMaterials = await loadMaterials();
 
-      setListData((prevValue) => [
-        ...prevValue,
-        {
+      const listDataFromOrders: { key: string; title: string }[] = [];
+      let totalPriceFromOrders = 0;
+
+      orderFromHook.cutlist.forEach((cut) => {
+        const materialUsed = allMaterials.find(
+          (material) => material.id === cut.material_id,
+        );
+
+        listDataFromOrders.push({
           key: cut.id,
           title: `${cut.quantidade} - ${
             materialUsed?.name || 'Material Removido'
           } - ${cut.side_a_size} [ ${cut.side_a_border} ] x ${
             cut.side_b_size
           } [ ${cut.side_b_border} ] | R$ ${cut.price},00`,
-        },
-      ]);
+        });
 
-      setTotalPrice((prevValue) => prevValue + cut.price);
-    });
+        totalPriceFromOrders += cut.price;
+      });
 
-    setOrder(orderFromHook);
-    setCustomer(customerFromHook);
+      setTotalPrice(totalPriceFromOrders);
+      setListData(listDataFromOrders);
+      setOrder(orderFromHook);
+      setCustomer(customerFromHook);
+    }
 
     if (handlePrint) {
       handlePrint();

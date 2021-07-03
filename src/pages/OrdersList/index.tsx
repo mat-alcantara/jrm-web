@@ -16,6 +16,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import Modal from 'react-modal';
 import IAddressData from 'types/IAddressData';
 import AppContainer from '../../components/AppContainer';
+import OrderResume from '../../components/OrderResume';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
@@ -382,6 +383,7 @@ const AllOrders: React.FC = () => {
             <Button type="link" onClick={() => generatePDF(record.key)}>
               Gerar PDF
             </Button>
+            <OrderResume orderId={record.key} />
             {record.orderStatus === 'Em Produção' && <Tags id={record.key} />}
             {buttonMessage && record.orderStatus !== 'Orçamento' && (
               <Popconfirm
