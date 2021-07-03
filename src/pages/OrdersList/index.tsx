@@ -11,6 +11,7 @@ import {
   Radio,
   DatePicker,
   Select,
+  Spin,
 } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import Modal from 'react-modal';
@@ -86,6 +87,7 @@ const AllOrders: React.FC = () => {
     { orderId: string; customerAddress: string; customerId: string }[]
   >([]);
   const [orderId, setOrderId] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleUpdateTableDataSource = useCallback(() => {
     const filteredDataSource = dataSource.filter((data) => {
@@ -221,6 +223,7 @@ const AllOrders: React.FC = () => {
     loadDataFromHook();
     handleUpdateTableDataSource();
     loadCustomersAddresses();
+    setLoading(false);
   }, []);
 
   const handleRemoveOrder = useCallback(
@@ -598,6 +601,10 @@ const AllOrders: React.FC = () => {
       },
     },
   ];
+
+  if (loading) {
+    return <Spin style={{ margin: 'auto auto' }} />;
+  }
 
   return (
     <AppContainer>
