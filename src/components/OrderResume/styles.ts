@@ -7,6 +7,10 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
+  .ant-list-item {
+    padding-left: 0px !important;
+  }
+
   @media print {
     html,
     body {

@@ -17,82 +17,32 @@ const Tags: React.FC = () => {
     {
       key: '1',
       title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
+        '2 - MDF BRANCO TX 2 FACES COMUM 15MM - 1080 [ 2 ] x 340 [ 2 ] | R$ 78',
     },
     {
-      key: '1',
+      key: '2',
       title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
+        '4 - MDF BRANCO TX 2 FACES COMUM 15MM - 830 [ 2 ] x 310 [ 2 ] | R$ 112',
     },
     {
-      key: '1',
+      key: '3',
       title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
+        '6 - MDF BRANCO TX 2 FACES COMUM 15MM - 325 [ 1 ] x 310 [ 0 ] | R$ 60',
     },
     {
-      key: '1',
+      key: '4',
       title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
+        '2 - MDF BRANCO TX 2 FACES COMUM 15MM - 265 [ 0 ] x 310 [ 0 ] | R$ 14',
     },
     {
-      key: '1',
+      key: '5',
       title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
+        '2 - MDF BRANCO TX 2 FACES COMUM 15MM - 333 [ 0 ] x 265 [ 0 ] | R$ 16',
     },
     {
-      key: '1',
+      key: '6',
       title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
-    },
-    {
-      key: '1',
-      title:
-        '1 - MDF BRANCO TX 2 FACES COMUM 15MM - 600 [2] x 500 [2] - R$ 30,00',
+        '1 - MDF BRANCO LOUSA 2 FACES COMUM 2.8MM - 1030 [ 0 ] x 830 [ 0 ] | R$ 42',
     },
   ];
 
@@ -112,11 +62,6 @@ const Tags: React.FC = () => {
                 alignItems: 'center',
               }}
             >
-              {/* <img
-              src={Logo}
-              alt="Logotipo"
-              style={{ width: '150px', height: 'auto', marginBottom: '16px' }}
-            /> */}
               <Typography.Title level={3} style={{ marginTop: '0' }}>
                 JRM Compensados
               </Typography.Title>
@@ -203,7 +148,7 @@ const Tags: React.FC = () => {
               >
                 <div>
                   <Typography.Title level={5} style={{ marginBottom: '0px' }}>
-                    Número do pedido
+                    Código do pedido
                   </Typography.Title>
                   <Divider style={{ margin: '0px 0px 4px 0px' }} />
                   <Typography.Text>17</Typography.Text>
@@ -247,12 +192,12 @@ const Tags: React.FC = () => {
                   Status do Pagamento: Receber na Entrega
                 </Typography.Text>
                 <Typography.Text>Vendedor: Vitória</Typography.Text>
-                <Typography.Text>
+                {/* <Typography.Text>
                   Observações: Todas estas questões, devidamente ponderadas,
                   levantam dúvidas sobre se a estrutura atual da organização
                   desafia a capacidade de equalização das condições
                   inegavelmente apropriadas.
-                </Typography.Text>
+                </Typography.Text> */}
                 <Typography.Text style={{ fontWeight: 'bold' }}>
                   Prazo: Até 08/07/21
                 </Typography.Text>
@@ -280,10 +225,15 @@ const Tags: React.FC = () => {
               size="small"
               dataSource={listData}
               itemLayout="horizontal"
-              footer={<div style={{ textAlign: 'right' }}>Total: R$ 50,00</div>}
+              footer={
+                <div style={{ textAlign: 'right' }}>
+                  Total:
+                  <strong style={{ marginLeft: '8px' }}>R$ 322,00</strong>
+                </div>
+              }
               style={{ width: '100%', margin: '24px auto 0px auto' }}
               renderItem={(item) => (
-                <List.Item style={{ textAlign: 'left' }}>
+                <List.Item style={{ textAlign: 'left', marginLeft: '0px' }}>
                   <List.Item.Meta
                     title={
                       <Typography style={{ fontSize: '10px' }}>
@@ -301,7 +251,12 @@ const Tags: React.FC = () => {
                 Assinatura do cliente
               </Typography.Title>
               <Divider
-                style={{ margin: '0', width: '100%', background: 'black' }}
+                style={{
+                  margin: '0',
+                  width: '100%',
+                  background: '#1B1E23',
+                  height: '1px',
+                }}
               />
             </div>
           </div>
