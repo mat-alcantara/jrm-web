@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Row, Col, Typography, Grid, Divider } from 'antd';
 
+import { useReactToPrint } from 'react-to-print';
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
 import { useAuth } from '../../hooks/Auth';
@@ -21,6 +22,12 @@ const Dashboard: React.FC = () => {
 
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
   const [allCustomers, setAllCustomers] = useState<ICustomer[]>([]);
+
+  const componentRef = useRef(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   useEffect(() => {
     async function loadOrdersFromHook() {
@@ -45,7 +52,10 @@ const Dashboard: React.FC = () => {
 
   return (
     <AppContainer>
-      <OrderResume />
+      <OrderResume componentRef={componentRef} />
+      <button type="button" onClick={handlePrint}>
+        Imprimir PDF
+      </button>
       <Container>
         <Row
           justify="center"

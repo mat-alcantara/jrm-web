@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-wrap-multilines */
-import { Button, Divider, Typography, List } from 'antd';
+import { Divider, Typography, List } from 'antd';
 import { FaWhatsapp } from 'react-icons/fa';
-import React, { useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import React, { MutableRefObject } from 'react';
 
 import {
   Container,
@@ -15,13 +14,11 @@ import {
   LowerContainer,
 } from './styles';
 
-const Tags: React.FC = () => {
-  const componentRef = useRef(null);
+interface OrderResumeProps {
+  componentRef: MutableRefObject<null>;
+}
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
+const OrderResume: React.FC<OrderResumeProps> = ({ componentRef }) => {
   const listData = [
     {
       key: '1',
@@ -57,7 +54,7 @@ const Tags: React.FC = () => {
 
   return (
     <>
-      <div>
+      <div style={{ display: 'none' }}>
         <Container
           ref={componentRef}
           style={{ height: listData.length > 16 ? '200vh' : '100vh' }}
@@ -215,12 +212,8 @@ const Tags: React.FC = () => {
           </Footer>
         </Container>
       </div>
-
-      <Button type="link" onClick={handlePrint}>
-        Resumo do pedido
-      </Button>
     </>
   );
 };
 
-export default Tags;
+export default OrderResume;
