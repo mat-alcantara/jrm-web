@@ -189,7 +189,7 @@ const AllOrders: React.FC = () => {
 
       setDataSource([...dataToSetDataSource]);
       setTableDataSource([
-        ...dataToSetDataSource.sort((a, b) => a.order_code - b.order_code),
+        ...dataToSetDataSource.sort((a, b) => b.order_code - a.order_code),
       ]);
     }
 
