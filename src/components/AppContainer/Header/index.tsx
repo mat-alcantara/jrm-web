@@ -62,6 +62,9 @@ const Header: React.FC = () => {
                 </Link>
               </Item>
               <Item>
+                <Link to="/orders/transportado">Transportados</Link>
+              </Item>
+              <Item>
                 <Link to="/orders/entregue">Entregues</Link>
               </Item>
               <Item>
