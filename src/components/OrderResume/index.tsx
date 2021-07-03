@@ -257,21 +257,23 @@ const OrderResume: React.FC<OrderResumeProps> = ({ orderId }) => {
               )}
             />
           </MainContent>
-          <Footer>
-            <div>
-              <Typography.Title level={5} style={{ marginBottom: '32px' }}>
-                Assinatura do cliente
-              </Typography.Title>
-              <Divider
-                style={{
-                  margin: '0',
-                  width: '100%',
-                  background: '#1B1E23',
-                  height: '1px',
-                }}
-              />
-            </div>
-          </Footer>
+          {order?.orderStatus !== 'Orçamento' && (
+            <Footer>
+              <div>
+                <Typography.Title level={5} style={{ marginBottom: '32px' }}>
+                  Assinatura do cliente
+                </Typography.Title>
+                <Divider
+                  style={{
+                    margin: '0',
+                    width: '100%',
+                    background: '#1B1E23',
+                    height: '1px',
+                  }}
+                />
+              </div>
+            </Footer>
+          )}
         </Container>
       </div>
       <Button type="link" onClick={handleLoadData}>

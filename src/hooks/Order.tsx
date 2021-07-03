@@ -148,11 +148,9 @@ export const OrderProvider: React.FC = ({ children }) => {
         await updateDeliveryDate(orderCreated.data.id, orderData.deliveryDate);
       }
 
-      await generatePDF(orderCreated.data.id);
-
       addToast({ type: 'success', title: 'Pedido criado com sucesso' });
 
-      history.push('/orders/producao');
+      history.push('/orders/todas');
     },
     [],
   );
