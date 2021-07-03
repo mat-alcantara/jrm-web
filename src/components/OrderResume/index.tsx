@@ -1,8 +1,9 @@
 /* eslint-disable react/jsx-wrap-multilines */
-import { Divider, Typography, List } from 'antd';
+import { Divider, Typography, List, Button } from 'antd';
 import { FaWhatsapp } from 'react-icons/fa';
-import React, { MutableRefObject } from 'react';
+import React, { useRef } from 'react';
 
+import { useReactToPrint } from 'react-to-print';
 import {
   Container,
   Footer,
@@ -14,11 +15,7 @@ import {
   LowerContainer,
 } from './styles';
 
-interface OrderResumeProps {
-  componentRef: MutableRefObject<null>;
-}
-
-const OrderResume: React.FC<OrderResumeProps> = ({ componentRef }) => {
+const OrderResume: React.FC = () => {
   const listData = [
     {
       key: '1',
@@ -51,6 +48,12 @@ const OrderResume: React.FC<OrderResumeProps> = ({ componentRef }) => {
         '1 - MDF BRANCO LOUSA 2 FACES COMUM 2.8MM - 1030 [ 0 ] x 830 [ 0 ] | R$ 42',
     },
   ];
+
+  const componentRef = useRef(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   return (
     <>
@@ -212,6 +215,9 @@ const OrderResume: React.FC<OrderResumeProps> = ({ componentRef }) => {
           </Footer>
         </Container>
       </div>
+      <Button type="link" onClick={handlePrint}>
+        Imprimir PDF
+      </Button>
     </>
   );
 };
