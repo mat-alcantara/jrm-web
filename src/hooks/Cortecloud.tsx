@@ -1,5 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React, { createContext, useCallback, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+} from 'react';
 
 import { database } from '../services/firebase';
 
@@ -8,7 +14,7 @@ interface ICortecloudOrder {
   name: string;
   store: 'Frade' | 'Japuíba';
   delivery: string;
-  orderStatus:
+  status:
     | 'Em Produção'
     | 'Liberado para Transporte'
     | 'Transportado'
@@ -17,6 +23,7 @@ interface ICortecloudOrder {
 
 interface ICortecloudContext {
   createCortecloud(orderData: ICortecloudOrder): Promise<void>;
+  orders: ICortecloudOrder[];
 }
 
 // {} as IAuthContext allows to init object empty
@@ -27,17 +34,46 @@ const CortecloudContext = createContext<ICortecloudContext>(
 
 // To use in App.tsx
 export const CortecloudProvider: React.FC = ({ children }) => {
+  const [orders, setOrders] = useState<ICortecloudOrder[]>([]);
+
+  useEffect(() => {
+    const cortecloudRef = database.ref(`cortecloud`);
+
+    cortecloudRef.on('value', (cortecloud) => {
+      const cortecloudData: ICortecloudOrder[] = cortecloud.val();
+
+      const parsedOrders = Object.entries(cortecloudData).map(
+        ([key, value]) => {
+          return {
+            id: key,
+            code: value.code,
+            name: value.name,
+            status: value.status,
+            store: value.store,
+            delivery: value.delivery,
+          };
+        },
+      );
+
+      setOrders(parsedOrders);
+    });
+
+    return () => {
+      cortecloudRef.off('value');
+    };
+  }, []);
+
   const createCortecloud = useCallback(
-    async ({ code, delivery, name, orderStatus, store }: ICortecloudOrder) => {
+    async ({ code, delivery, name, status, store }: ICortecloudOrder) => {
       const cortecloudRef = database.ref(`cortecloud/${code}`);
 
-      await cortecloudRef.set({ code, delivery, name, orderStatus, store });
+      await cortecloudRef.set({ code, delivery, name, status, store });
     },
     [],
   );
 
   return (
-    <CortecloudContext.Provider value={{ createCortecloud }}>
+    <CortecloudContext.Provider value={{ createCortecloud, orders }}>
       {children}
     </CortecloudContext.Provider>
   );

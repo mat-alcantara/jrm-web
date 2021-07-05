@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
               code: '1',
               delivery: '01/01/01',
               name: 'Mateus',
-              orderStatus: 'Entregue',
+              status: 'Entregue',
               store: 'Frade',
             })
           }
