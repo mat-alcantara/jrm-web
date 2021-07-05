@@ -52,6 +52,9 @@ const Header: React.FC = () => {
             <Item>
               <Link to="/newcutlist">Novo serviço</Link>
             </Item>
+            <Item>
+              <Link to="/newcortecloud">Cadastrar cortecloud</Link>
+            </Item>
             <SubMenu title="Pedidos">
               <Item>
                 <Link to="/orders/producao">Em Produção</Link>
