@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, Grid, Divider } from 'antd';
+import { Row, Col, Typography, Grid, Divider, Button } from 'antd';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
+import { useCortecloud } from '../../hooks/Cortecloud';
 
 import { Container } from './styles';
 
@@ -14,6 +15,7 @@ import AppContainer from '../../components/AppContainer';
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
   const { loadCustomers } = useCustomer();
+  const { createCortecloud } = useCortecloud();
   const breakpoints = Grid.useBreakpoint();
 
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
@@ -39,6 +41,19 @@ const Dashboard: React.FC = () => {
   return (
     <AppContainer>
       <Container>
+        <Button
+          onClick={() =>
+            createCortecloud({
+              code: '1',
+              delivery: '01/01/01',
+              name: 'Mateus',
+              orderStatus: 'Entregue',
+              store: 'Frade',
+            })
+          }
+        >
+          Criar
+        </Button>
         <Row
           justify="center"
           style={{
