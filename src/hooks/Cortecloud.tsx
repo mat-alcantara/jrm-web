@@ -7,7 +7,10 @@ import React, {
   useEffect,
 } from 'react';
 
+import { useHistory } from 'react-router-dom';
+
 import { database } from '../services/firebase';
+import { useToast } from './Toast';
 
 interface ICortecloudOrder {
   code: string;
@@ -34,6 +37,8 @@ const CortecloudContext = createContext<ICortecloudContext>(
 
 // To use in App.tsx
 export const CortecloudProvider: React.FC = ({ children }) => {
+  const { addToast } = useToast();
+  const history = useHistory();
   const [orders, setOrders] = useState<ICortecloudOrder[]>([]);
 
   useEffect(() => {
@@ -68,6 +73,10 @@ export const CortecloudProvider: React.FC = ({ children }) => {
       const cortecloudRef = database.ref(`cortecloud/${code}`);
 
       await cortecloudRef.set({ code, delivery, name, status, store });
+
+      addToast({ type: 'success', title: 'Cortecloud criado com sucesso' });
+
+      history.push('/dashboard');
     },
     [],
   );

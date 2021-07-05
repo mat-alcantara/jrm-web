@@ -15,7 +15,6 @@ import AppContainer from '../../components/AppContainer';
 const Dashboard: React.FC = () => {
   const { loadOrders } = useOrder();
   const { loadCustomers } = useCustomer();
-  const { createCortecloud } = useCortecloud();
   const breakpoints = Grid.useBreakpoint();
 
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
@@ -41,19 +40,6 @@ const Dashboard: React.FC = () => {
   return (
     <AppContainer>
       <Container>
-        <Button
-          onClick={() =>
-            createCortecloud({
-              code: '1',
-              delivery: '01/01/01',
-              name: 'Mateus',
-              status: 'Entregue',
-              store: 'Frade',
-            })
-          }
-        >
-          Criar
-        </Button>
         <Row
           justify="center"
           style={{
