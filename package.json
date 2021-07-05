@@ -20,6 +20,7 @@
     "axios": "^0.21.1",
     "craco-less": "^1.17.1",
     "date-fns": "^2.22.1",
+    "firebase": "^8.7.0",
     "formik": "^2.2.6",
     "polished": "^4.1.1",
     "react": "^17.0.2",

@@ -2,6 +2,7 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
 
 import api from '../services/api';
+import { auth } from '../services/firebase';
 
 interface User {
   id: string;
@@ -53,6 +54,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     const { token, user } = response.data;
 
+    await auth.signInWithEmailAndPassword(email, password);
+
     localStorage.setItem('@JRMCompensados:token', token);
     localStorage.setItem('@JRMCompensados:user', JSON.stringify(user));
 
@@ -62,6 +65,8 @@ export const AuthProvider: React.FC = ({ children }) => {
   const signOut = useCallback(() => {
     localStorage.removeItem('@JRMCompensados:token');
     localStorage.removeItem('@JRMCompensados:user');
+
+    auth.signOut();
 
     setData({} as IAuthState);
   }, []);
