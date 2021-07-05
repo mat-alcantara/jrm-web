@@ -27,6 +27,7 @@ interface ICortecloudOrder {
 interface ICortecloudContext {
   createCortecloud(orderData: ICortecloudOrder): Promise<void>;
   orders: ICortecloudOrder[];
+  updateStatus(id: string, updatedStatus: string): Promise<void>;
 }
 
 // {} as IAuthContext allows to init object empty
@@ -81,8 +82,26 @@ export const CortecloudProvider: React.FC = ({ children }) => {
     [],
   );
 
+  const updateStatus = useCallback(
+    async (code: string, updatedStatus: string) => {
+      const cortecloudRef = database.ref(`cortecloud/${code}`);
+
+      await cortecloudRef.set({ status: updatedStatus });
+
+      addToast({
+        type: 'success',
+        title: 'Status do pedido atualizado com sucesso',
+      });
+
+      window.location.reload();
+    },
+    [orders],
+  );
+
   return (
-    <CortecloudContext.Provider value={{ createCortecloud, orders }}>
+    <CortecloudContext.Provider
+      value={{ createCortecloud, orders, updateStatus }}
+    >
       {children}
     </CortecloudContext.Provider>
   );

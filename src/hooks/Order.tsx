@@ -190,6 +190,8 @@ export const OrderProvider: React.FC = ({ children }) => {
           type: 'success',
           title: 'Status do pedido atualizado com sucesso',
         });
+
+        window.location.reload();
       } catch {
         addToast({
           type: 'error',
