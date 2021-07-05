@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Table, Space, Typography, Popconfirm } from 'antd';
+import { Table, Space, Typography, Popconfirm, Button } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import { useMaterial } from '../../hooks/Material';
@@ -103,7 +103,7 @@ const MaterialsList: React.FC = () => {
             <AntButton type="link">Remover</AntButton>
           </Popconfirm>
 
-          <a href="/">Editar</a>
+          <Button type="link">Atualizar preço</Button>
         </Space>
       ),
     },

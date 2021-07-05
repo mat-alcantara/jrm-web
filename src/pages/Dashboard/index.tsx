@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, Grid, Divider, Button } from 'antd';
+import { Row, Col, Typography, Grid, Divider, Button, Popconfirm } from 'antd';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
@@ -72,16 +72,22 @@ const Dashboard: React.FC = () => {
                   {`${order.orderStore.toUpperCase()} - ${order.order_code}: ${
                     customerFound.name
                   } [${order.deliveryDate}]`}
-                  <Button
-                    type="primary"
-                    onClick={() =>
+                  <Popconfirm
+                    title="Tem certeza?"
+                    okText="Sim"
+                    cancelText="Não"
+                    onConfirm={() =>
                       updateOrderStatus(order.id, 'Liberado para Transporte')
                     }
-                    style={{ marginLeft: '16px' }}
-                    size="small"
                   >
-                    Produzido
-                  </Button>
+                    <Button
+                      type="primary"
+                      style={{ marginLeft: '16px' }}
+                      size="small"
+                    >
+                      Produzido
+                    </Button>
+                  </Popconfirm>
                 </p>
               );
             })}
@@ -111,14 +117,22 @@ const Dashboard: React.FC = () => {
                   {`${order.orderStore.toUpperCase()} - ${order.order_code}: ${
                     customerFound.name
                   } [${order.deliveryDate}]`}
-                  <Button
-                    type="primary"
-                    onClick={() => updateOrderStatus(order.id, 'Transportado')}
-                    style={{ marginLeft: '16px' }}
-                    size="small"
+                  <Popconfirm
+                    title="Tem certeza?"
+                    okText="Sim"
+                    cancelText="Não"
+                    onConfirm={() =>
+                      updateOrderStatus(order.id, 'Transportado')
+                    }
                   >
-                    Transportado
-                  </Button>
+                    <Button
+                      type="primary"
+                      style={{ marginLeft: '16px' }}
+                      size="small"
+                    >
+                      Transportado
+                    </Button>
+                  </Popconfirm>
                 </p>
               );
             })}
@@ -148,14 +162,20 @@ const Dashboard: React.FC = () => {
                   {`${order.orderStore.toUpperCase()} - ${order.order_code}: ${
                     customerFound.name
                   } [${order.deliveryDate}]`}
-                  <Button
-                    type="primary"
-                    onClick={() => updateOrderStatus(order.id, 'Entregue')}
-                    style={{ marginLeft: '16px' }}
-                    size="small"
+                  <Popconfirm
+                    title="Tem certeza?"
+                    okText="Sim"
+                    cancelText="Não"
+                    onConfirm={() => updateOrderStatus(order.id, 'Entregue')}
                   >
-                    Recebido
-                  </Button>
+                    <Button
+                      type="primary"
+                      style={{ marginLeft: '16px' }}
+                      size="small"
+                    >
+                      Recebido
+                    </Button>
+                  </Popconfirm>
                 </p>
               );
             })}
@@ -185,16 +205,22 @@ const Dashboard: React.FC = () => {
                   {`${order.store.toUpperCase()} - ${order.code}: ${
                     order.name
                   } [${order.delivery}]`}
-                  <Button
-                    type="primary"
-                    onClick={() =>
+                  <Popconfirm
+                    title="Tem certeza?"
+                    okText="Sim"
+                    cancelText="Não"
+                    onConfirm={() =>
                       updateStatus(order.code, 'Liberado para Transporte')
                     }
-                    style={{ marginLeft: '16px' }}
-                    size="small"
                   >
-                    Produzido
-                  </Button>
+                    <Button
+                      type="primary"
+                      style={{ marginLeft: '16px' }}
+                      size="small"
+                    >
+                      Produzido
+                    </Button>
+                  </Popconfirm>
                 </p>
               );
             })}
@@ -216,14 +242,20 @@ const Dashboard: React.FC = () => {
                   {`${order.store.toUpperCase()} - ${order.code}: ${
                     order.name
                   } [${order.delivery}]`}
-                  <Button
-                    type="primary"
-                    onClick={() => updateStatus(order.code, 'Transportado')}
-                    style={{ marginLeft: '16px' }}
-                    size="small"
+                  <Popconfirm
+                    title="Tem certeza?"
+                    okText="Sim"
+                    cancelText="Não"
+                    onConfirm={() => updateStatus(order.code, 'Transportado')}
                   >
-                    Transportado
-                  </Button>
+                    <Button
+                      type="primary"
+                      style={{ marginLeft: '16px' }}
+                      size="small"
+                    >
+                      Transportado
+                    </Button>
+                  </Popconfirm>
                 </p>
               );
             })}
@@ -245,14 +277,20 @@ const Dashboard: React.FC = () => {
                   {`${order.store.toUpperCase()} - ${order.code}: ${
                     order.name
                   } [${order.delivery}]`}
-                  <Button
-                    type="primary"
-                    onClick={() => updateStatus(order.code, 'Entregue')}
-                    style={{ marginLeft: '16px' }}
-                    size="small"
+                  <Popconfirm
+                    title="Tem certeza?"
+                    okText="Sim"
+                    cancelText="Não"
+                    onConfirm={() => updateStatus(order.code, 'Entregue')}
                   >
-                    Recebido
-                  </Button>
+                    <Button
+                      type="primary"
+                      style={{ marginLeft: '16px' }}
+                      size="small"
+                    >
+                      Recebido
+                    </Button>
+                  </Popconfirm>
                 </p>
               );
             })}
