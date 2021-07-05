@@ -46,7 +46,7 @@ export const CortecloudProvider: React.FC = ({ children }) => {
     const cortecloudRef = database.ref(`cortecloud`);
 
     cortecloudRef.on('value', (cortecloud) => {
-      const cortecloudData: ICortecloudOrder[] = cortecloud.val();
+      const cortecloudData: ICortecloudOrder[] = cortecloud.val() || {};
 
       const parsedOrders = Object.entries(cortecloudData).map(
         ([key, value]) => {
@@ -86,14 +86,12 @@ export const CortecloudProvider: React.FC = ({ children }) => {
     async (code: string, updatedStatus: string) => {
       const cortecloudRef = database.ref(`cortecloud/${code}`);
 
-      await cortecloudRef.set({ status: updatedStatus });
+      await cortecloudRef.update({ status: updatedStatus });
 
       addToast({
         type: 'success',
         title: 'Status do pedido atualizado com sucesso',
       });
-
-      window.location.reload();
     },
     [orders],
   );

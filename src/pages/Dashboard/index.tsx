@@ -15,7 +15,7 @@ import AppContainer from '../../components/AppContainer';
 const Dashboard: React.FC = () => {
   const { loadOrders, updateOrderStatus } = useOrder();
   const { loadCustomers } = useCustomer();
-  const { orders } = useCortecloud();
+  const { orders, updateStatus } = useCortecloud();
   const breakpoints = Grid.useBreakpoint();
 
   const [allOrders, setAllOrders] = useState<IOrder[]>([]);
@@ -43,9 +43,7 @@ const Dashboard: React.FC = () => {
       <Container>
         <Row justify="center">
           <Col sm={0} xs={24} style={{ margin: '0 auto 16px auto' }}>
-            <Typography.Title level={4} style={{ textAlign: 'center' }}>
-              Lista de Cortes
-            </Typography.Title>
+            <Typography.Title level={4}>Lista de Cortes</Typography.Title>
           </Col>
 
           <Col
@@ -53,10 +51,7 @@ const Dashboard: React.FC = () => {
             md={8}
             style={{ marginBottom: breakpoints.sm ? '0px' : '8px' }}
           >
-            <Typography.Title
-              level={breakpoints.sm ? 4 : 5}
-              style={{ textAlign: 'center' }}
-            >
+            <Typography.Title level={breakpoints.sm ? 4 : 5}>
               Em Produção
             </Typography.Title>
             {allOrders.map((order) => {
@@ -74,7 +69,9 @@ const Dashboard: React.FC = () => {
 
               return (
                 <p key={order.id}>
-                  {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
+                  {`${order.orderStore.toUpperCase()} - ${order.order_code}: ${
+                    customerFound.name
+                  } [${order.deliveryDate}]`}
                   <Button
                     type="primary"
                     onClick={() =>
@@ -93,10 +90,7 @@ const Dashboard: React.FC = () => {
             <Divider />
           </Col>
           <Col xs={24} md={8}>
-            <Typography.Title
-              level={breakpoints.sm ? 4 : 5}
-              style={{ textAlign: 'center' }}
-            >
+            <Typography.Title level={breakpoints.sm ? 4 : 5}>
               Liberados para transporte
             </Typography.Title>
             {allOrders.map((order) => {
@@ -114,7 +108,9 @@ const Dashboard: React.FC = () => {
 
               return (
                 <p key={order.id}>
-                  {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
+                  {`${order.orderStore.toUpperCase()} - ${order.order_code}: ${
+                    customerFound.name
+                  } [${order.deliveryDate}]`}
                   <Button
                     type="primary"
                     onClick={() => updateOrderStatus(order.id, 'Transportado')}
@@ -127,11 +123,11 @@ const Dashboard: React.FC = () => {
               );
             })}
           </Col>
+          <Col xs={24} sm={0}>
+            <Divider />
+          </Col>
           <Col xs={24} md={8}>
-            <Typography.Title
-              level={breakpoints.sm ? 4 : 5}
-              style={{ textAlign: 'center' }}
-            >
+            <Typography.Title level={breakpoints.sm ? 4 : 5}>
               Transportados
             </Typography.Title>
             {allOrders.map((order) => {
@@ -149,7 +145,9 @@ const Dashboard: React.FC = () => {
 
               return (
                 <p key={order.id}>
-                  {`${order.order_code} - ${customerFound.name} - ${order.deliveryDate}`}
+                  {`${order.orderStore.toUpperCase()} - ${order.order_code}: ${
+                    customerFound.name
+                  } [${order.deliveryDate}]`}
                   <Button
                     type="primary"
                     onClick={() => updateOrderStatus(order.id, 'Entregue')}
@@ -171,12 +169,10 @@ const Dashboard: React.FC = () => {
           }}
         >
           <Col xs={24} md={0}>
-            <Typography.Title level={4} style={{ textAlign: 'center' }}>
-              Cortecloud
-            </Typography.Title>
+            <Typography.Title level={4}>Cortecloud</Typography.Title>
           </Col>
           <Col md={8} xs={24}>
-            <Typography.Title level={4} style={{ textAlign: 'center' }}>
+            <Typography.Title level={4}>
               Cortecloud - Em produção
             </Typography.Title>
             {orders.map((order) => {
@@ -186,13 +182,28 @@ const Dashboard: React.FC = () => {
 
               return (
                 <p key={order.code}>
-                  {`${order.code} - ${order.name} - ${order.delivery}`}
+                  {`${order.store.toUpperCase()} - ${order.code}: ${
+                    order.name
+                  } [${order.delivery}]`}
+                  <Button
+                    type="primary"
+                    onClick={() =>
+                      updateStatus(order.code, 'Liberado para Transporte')
+                    }
+                    style={{ marginLeft: '16px' }}
+                    size="small"
+                  >
+                    Produzido
+                  </Button>
                 </p>
               );
             })}
           </Col>
+          <Col xs={24} sm={0}>
+            <Divider />
+          </Col>
           <Col md={8} xs={24}>
-            <Typography.Title level={4} style={{ textAlign: 'center' }}>
+            <Typography.Title level={4}>
               Cortecloud - Liberados para transporte
             </Typography.Title>
             {orders.map((order) => {
@@ -202,10 +213,23 @@ const Dashboard: React.FC = () => {
 
               return (
                 <p key={order.code}>
-                  {`${order.code} - ${order.name} - ${order.delivery}`}
+                  {`${order.store.toUpperCase()} - ${order.code}: ${
+                    order.name
+                  } [${order.delivery}]`}
+                  <Button
+                    type="primary"
+                    onClick={() => updateStatus(order.code, 'Transportado')}
+                    style={{ marginLeft: '16px' }}
+                    size="small"
+                  >
+                    Transportado
+                  </Button>
                 </p>
               );
             })}
+          </Col>
+          <Col xs={24} sm={0}>
+            <Divider />
           </Col>
           <Col md={8} xs={24}>
             <Typography.Title level={4}>
@@ -218,7 +242,17 @@ const Dashboard: React.FC = () => {
 
               return (
                 <p key={order.code}>
-                  {`${order.code} - ${order.name} - ${order.delivery}`}
+                  {`${order.store.toUpperCase()} - ${order.code}: ${
+                    order.name
+                  } [${order.delivery}]`}
+                  <Button
+                    type="primary"
+                    onClick={() => updateStatus(order.code, 'Entregue')}
+                    style={{ marginLeft: '16px' }}
+                    size="small"
+                  >
+                    Recebido
+                  </Button>
                 </p>
               );
             })}
