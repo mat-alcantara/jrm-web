@@ -11,6 +11,7 @@ interface IMaterialContext {
   removeMaterial(id: string): Promise<void>;
   createMaterial(data: Optional<IMaterial, 'id'>): Promise<IMaterial>;
   loadMaterials(): Promise<IMaterial[]>;
+  updatePrice(id: string, newPrice: number): Promise<void>;
 }
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
@@ -69,9 +70,37 @@ export const MaterialProvider: React.FC = ({ children }) => {
     addToast({ type: 'success', title: 'Material removido com sucesso' });
   }, []);
 
+  const updatePrice = useCallback(async (id: string, newPrice: number) => {
+    try {
+      const token = getToken();
+
+      await api.put(
+        `/materials/${id}`,
+        { price: newPrice },
+        {
+          headers: {
+            Authorization: `bearer ${token}`,
+          },
+        },
+      );
+
+      addToast({
+        type: 'success',
+        title: 'Preço do pedido atualizado com sucesso!',
+      });
+
+      window.location.reload();
+    } catch {
+      addToast({
+        type: 'error',
+        title: 'Ocorreu um erro na atualização do status do pedido',
+      });
+    }
+  }, []);
+
   return (
     <MaterialContext.Provider
-      value={{ removeMaterial, createMaterial, loadMaterials }}
+      value={{ removeMaterial, createMaterial, loadMaterials, updatePrice }}
     >
       {children}
     </MaterialContext.Provider>
