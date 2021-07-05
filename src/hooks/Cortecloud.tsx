@@ -4,6 +4,8 @@ import React, { createContext, useCallback, useState, useContext } from 'react';
 import IOrderStatus from '../types/OrderStatusEnumDTO';
 import IOrderStore from '../types/OrderStoreEnumDTO';
 
+import { database } from '../services/firebase';
+
 interface ICortecloudOrder {
   code: string;
   name: string;
@@ -13,7 +15,7 @@ interface ICortecloudOrder {
 }
 
 interface ICortecloudContext {
-  createOrder();
+  createCortecloud(orderData: ICortecloudOrder): Promise<void>;
 }
 
 // {} as IAuthContext allows to init object empty
@@ -24,8 +26,17 @@ const CortecloudContext = createContext<ICortecloudContext>(
 
 // To use in App.tsx
 export const CortecloudProvider: React.FC = ({ children }) => {
+  const createCortecloud = useCallback(
+    async ({ code, delivery, name, orderStatus, store }: ICortecloudOrder) => {
+      const cortecloudRef = database.ref(`cortecloud/${code}`);
+
+      await cortecloudRef.set({ code, delivery, name, orderStatus, store });
+    },
+    [],
+  );
+
   return (
-    <CortecloudContext.Provider value={{}}>
+    <CortecloudContext.Provider value={{ createCortecloud }}>
       {children}
     </CortecloudContext.Provider>
   );
