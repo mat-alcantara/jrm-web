@@ -7,6 +7,8 @@ import { useCortecloud } from '../../hooks/Cortecloud';
 
 import { Container } from './styles';
 
+import AppContainer from '../../components/AppContainer';
+
 interface ICortecloudOrder {
   code: string;
   name: string;
@@ -38,78 +40,86 @@ export const CreateCortecloud: React.FC = () => {
   );
 
   return (
-    <Container>
-      <Typography.Title level={2}>Cadastre um novo cortecloud</Typography.Title>
-      <Form
-        onFinish={handleSubmitCortecloud}
-        form={cortecloudRef}
-        name="cortecloud-control"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        layout="horizontal"
-        labelAlign="left"
-        style={{ marginTop: '16px', marginBottom: '64px', textAlign: 'left' }}
-      >
-        <Form.Item
-          name="code"
-          label="Código"
-          required={false}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, informe o código do pedido!',
-            },
-          ]}
+    <AppContainer>
+      <Container>
+        <Typography.Title level={2}>
+          Cadastre um novo cortecloud
+        </Typography.Title>
+        <Form
+          onFinish={handleSubmitCortecloud}
+          form={cortecloudRef}
+          name="cortecloud-control"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          layout="horizontal"
+          labelAlign="left"
+          style={{ marginTop: '16px', marginBottom: '64px', textAlign: 'left' }}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="name"
-          label="Cliente"
-          required={false}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, informe o nome do cliente!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="store"
-          label="Loja"
-          required={false}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, informe a loja do pedido!',
-            },
-          ]}
-        >
-          <Radio>
-            <Radio.Button value="Frade">Frade</Radio.Button>
-            <Radio.Button value="Japuíba">Japuíba</Radio.Button>
-          </Radio>
-        </Form.Item>
-        <Form.Item
-          name="delivery"
-          label="Data de entrega"
-          required={false}
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, informe a data de entrega do pedido!',
-            },
-          ]}
-        >
-          <DatePicker />
-        </Form.Item>
-        <Button htmlType="submit" block type="primary">
-          Cadastrar cortecloud
-        </Button>
-      </Form>
-    </Container>
+          <Form.Item
+            name="code"
+            label="Código"
+            required={false}
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, informe o código do pedido!',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label="Cliente"
+            required={false}
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, informe o nome do cliente!',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="store"
+            label="Loja"
+            required={false}
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, informe a loja do pedido!',
+              },
+            ]}
+          >
+            <Radio.Group style={{ width: '100%', textAlign: 'center' }}>
+              <Radio.Button style={{ width: '50%' }} value="Frade">
+                Frade
+              </Radio.Button>
+              <Radio.Button style={{ width: '50%' }} value="Japuíba">
+                Japuíba
+              </Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="delivery"
+            label="Data de entrega"
+            required={false}
+            rules={[
+              {
+                required: true,
+                message: 'Por favor, informe a data de entrega do pedido!',
+              },
+            ]}
+          >
+            <DatePicker style={{ width: '100%' }} />
+          </Form.Item>
+          <Button htmlType="submit" block type="primary">
+            Cadastrar cortecloud
+          </Button>
+        </Form>
+      </Container>
+    </AppContainer>
   );
 };
 

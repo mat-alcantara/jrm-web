@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, Grid, Divider, Button } from 'antd';
+import { Row, Col, Typography, Grid, Divider } from 'antd';
 
 import { useOrder } from '../../hooks/Order';
 import { useCustomer } from '../../hooks/Customer';
-import { useCortecloud } from '../../hooks/Cortecloud';
 
 import { Container } from './styles';
 

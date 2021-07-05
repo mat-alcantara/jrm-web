@@ -12,6 +12,7 @@ import NewMaterial from '../pages/NewMaterial';
 import MaterialsList from '../pages/MaterialsList';
 import OrdersList from '../pages/OrdersList';
 import Dashboard from '../pages/Dashboard';
+import { CreateCortecloud } from '../pages/Cortecloud';
 
 const routes: React.FC = () => (
   <Switch>
@@ -22,6 +23,7 @@ const routes: React.FC = () => (
     <Route path="/customerslist" exact component={CustomersList} isPrivate />
     <Route path="/newmaterial" exact component={NewMaterial} isPrivate />
     <Route path="/materialslist" exact component={MaterialsList} isPrivate />
+    <Route path="/newcortecloud" exact component={CreateCortecloud} isPrivate />
     <Route
       path="/orders/:type"
       exact
